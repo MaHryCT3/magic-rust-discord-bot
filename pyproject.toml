@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "magicrust-discord"
+version = "0.9.9"
+description = ""
+authors = ["MaHryCT3 <mahryct123@gmail.com>"]
+readme = "README.md"
+packages = [{include = "magicrust_discord"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+py-cord = "^2.5.0"
+pydantic = "^2.7.4"
+pydantic-settings = "^2.3.3"
+redis = "^5.0.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
