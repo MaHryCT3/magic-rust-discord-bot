@@ -6,7 +6,6 @@ repos:
       # Run the linter.
       - id: ruff
       # Run the formatter.
-      - id: ruff-format
   - repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:

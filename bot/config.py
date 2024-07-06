@@ -1,7 +1,7 @@
+import logging
 import sys
 
 from pydantic_settings import BaseSettings
-import logging
 
 
 class Settings(BaseSettings):
@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     DISCORD_BOT_TOKEN: str
     SENTRY_DSN: str = ''
 
-    REDIS_URL: str = 'redis://redis:6379'
+    REDIS_URL: str = 'redis://localhost:6379'
 
 
 settings = Settings(_env_file='.env')
