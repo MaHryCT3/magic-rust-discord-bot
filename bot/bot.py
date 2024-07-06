@@ -7,6 +7,7 @@ from bot.config import logger, settings
 COGS = [
     'apps.find_friends.setup',
     'apps.settings.setup',
+    'apps.bot_messages.setup',
 ]
 
 

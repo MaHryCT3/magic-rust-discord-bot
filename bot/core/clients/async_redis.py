@@ -1,12 +1,13 @@
 import json
 from typing import Any
 
-from redis.asyncio import StrictRedis
+from redis.asyncio import ConnectionPool, StrictRedis
 
 
 class AsyncRedisNameSpace:
     def __init__(self, url: str, namespace: str) -> None:
-        self._redis = StrictRedis.from_url(url)
+        connection_pool = ConnectionPool.from_url(url)
+        self._redis = StrictRedis(connection_pool=connection_pool, decode_responses=True)
         self.namespace = namespace
 
     async def get(self, key: str) -> Any:
@@ -18,12 +19,16 @@ class AsyncRedisNameSpace:
         await self._redis.set(self.make_key(key), value, ex=expire)
 
     async def mget_by_pattern(self, pattern: str = '*'):
-        keys = self._redis.keys(self.make_key(pattern))
-        return await self._redis.mget(keys)
+        keys = await self._redis.keys(self.make_key(pattern))
+        return [self._decode_response(answer) for answer in await self._redis.mget(keys)]
 
-    async def delete(self, key: int) -> int:
+    async def delete(self, key: str) -> int:
         full_key = self.make_key(key)
         return await self._redis.delete(full_key)
+
+    async def delete_by_pattern(self, pattern: str = '*'):
+        keys = await self._redis.keys(self.make_key(pattern))
+        return await self._redis.delete(*keys)
 
     def make_key(self, key: str) -> str:
         return f'{self.namespace}:{key}'
