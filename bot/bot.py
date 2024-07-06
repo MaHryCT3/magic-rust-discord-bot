@@ -5,8 +5,8 @@ from discord.bot import Bot
 from bot.config import logger, settings
 
 COGS = [
-    'find_friends.setup',
-    'settings.setup',
+    'apps.find_friends.setup',
+    'apps.settings.setup',
 ]
 
 

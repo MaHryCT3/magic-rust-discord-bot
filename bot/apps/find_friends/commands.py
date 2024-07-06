@@ -6,13 +6,13 @@ from discord.ext import commands
 from bot.core.localization import LocaleEnum, LocalizationDict
 from bot.core.redis_cooldown import RedisLocaleCooldown
 from bot.dynamic_settings import DynamicSettings
-from bot.find_friends.exceptions import (
+from bot.apps.find_friends.exceptions import (
     BaseFindFriendsError,
     CommandNotConfiguredError,
     UserOnCooldownError,
 )
-from bot.find_friends.modals import FindFriendModal
-from bot.users.utils import get_member_locale
+from bot.apps.find_friends.modals import FindFriendModal
+from bot.apps.users.utils import get_member_locale
 
 if TYPE_CHECKING:
     from bot import MagicRustBot

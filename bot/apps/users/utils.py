@@ -3,7 +3,7 @@ import discord
 from bot.config import logger
 from bot.core.localization import LocaleEnum
 from bot.dynamic_settings import DynamicSettings
-from bot.users.exceptions import UserHasNotRoleError
+from bot.apps.users.exceptions import UserHasNotRoleError
 
 
 def get_member_locale(member: discord.Member, raise_exception: bool = False) -> LocaleEnum | None:
