@@ -37,7 +37,7 @@ class FindFriendsCommands(commands.Cog):
         channel_id = DynamicSettings().find_friend_channels.get(locale)
         if not cooldown or not channel_id:
             raise CommandNotConfiguredError(locale=locale)
-        if cooldown_residue := self.redis_cooldown.get_user_cooldown_residue(ctx.author.id, locale, cooldown):
+        if cooldown_residue := await self.redis_cooldown.get_user_cooldown_residue(ctx.author.id, locale, cooldown):
             raise UserOnCooldownError(cooldown=cooldown, retry_after=cooldown_residue, locale=locale)
 
         # NOTE: Важно понимать, что здесь проверяет кулдаун на вызов модалки, но мы должны ограничить отправку сообщения

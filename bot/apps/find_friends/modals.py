@@ -24,11 +24,11 @@ class FindFriendModal(BaseLocalizationModal):
         self.redis_cooldown = redis_cooldown
 
     async def callback(self, interaction: Interaction):
-        if self.redis_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
+        if await self.redis_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
             raise
 
         await interaction.response.send_message(self.article, ephemeral=True)
-        self.redis_cooldown.set_user_cooldown(
+        await self.redis_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
             cooldown_in_seconds=DynamicSettings().find_friend_cooldown,

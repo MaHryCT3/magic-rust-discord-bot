@@ -1,7 +1,7 @@
 from typing import Any, Callable, TypeAlias
 
 from bot.config import logger, settings
-from bot.core.clients.redis_client import RedisNameSpace
+from bot.core.clients.redis import RedisNameSpace
 from bot.core.localization import LocaleEnum
 from bot.core.utils.singleton import Singleton
 
