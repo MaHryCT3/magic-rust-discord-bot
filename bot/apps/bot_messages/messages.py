@@ -1,17 +1,15 @@
 import discord
 from discord.commands import SlashCommandGroup
-from discord.ext import commands, tasks
+from discord.ext import commands
 
 from bot import MagicRustBot
 from bot.apps.bot_messages.autocomplete import (
     parse_autocomplete_time,
     select_time_autocomplete,
 )
-from bot.apps.bot_messages.embeds import SendMessageByBotEmbed
 from bot.apps.bot_messages.exceptions import BotMessageError
-from bot.apps.bot_messages.modals import SendMessageByBotModal, AddQueueMessageModal
+from bot.apps.bot_messages.modals import AddQueueMessageModal, SendMessageByBotModal
 from bot.apps.bot_messages.services import DelayedMessageService
-from bot.config import logger
 from bot.constants import DATETIME_FORMAT
 
 

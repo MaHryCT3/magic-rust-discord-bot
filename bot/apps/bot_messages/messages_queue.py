@@ -1,14 +1,11 @@
-import asyncio
-
 import discord
 from discord.commands import SlashCommandGroup
-from discord.ext import commands, pages, tasks
+from discord.ext import commands, tasks
 
 from bot import MagicRustBot
-from bot.apps.bot_messages.embeds import SendMessageByBotEmbed, QueueMessageEmbed
 from bot.apps.bot_messages.exceptions import BotMessageError
 from bot.apps.bot_messages.paginator import QueueMessagePaginator
-from bot.apps.bot_messages.services import DelayedMessageService, DelayedMessage
+from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
 from bot.apps.bot_messages.utils import send_delayed_message
 from bot.config import logger
 

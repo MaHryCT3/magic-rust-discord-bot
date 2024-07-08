@@ -15,7 +15,7 @@ COGS = [
 class MagicRustBot(Bot):
     def __init__(self, *args, **kwargs):
         intents = discord.Intents.default()
-        super().__init__(*args, intents=intents)
+        super().__init__(*args, intents=intents, **kwargs)
         self._load_cogs()
 
     def _load_cogs(self):
