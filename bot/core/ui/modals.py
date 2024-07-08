@@ -5,13 +5,20 @@ from bot.core.localization import LocaleEnum
 
 class InputText(discord.ui.InputText):
     def __set_name__(self, owner: 'BaseModal', name: str):
+        self.owner = owner
+
         if not hasattr(owner, 'inputs'):
             owner.inputs = []
+        else:
+            owner.inputs = owner.inputs.copy()
         self.input_position = len(owner.inputs)
         owner.inputs.append(self)
 
     def __get__(self, instance: 'BaseModal', owner):
         return instance.children[self.input_position].value
+
+    def __set__(self, instance: 'BaseModal', value):
+        instance.children[self.input_position].value = value
 
 
 class BaseModal(discord.ui.Modal):

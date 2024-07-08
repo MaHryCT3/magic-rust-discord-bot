@@ -10,6 +10,8 @@ from bot.core.clients.async_redis import AsyncRedisNameSpace
 @dataclass
 class DelayedMessage:
     channel_id: int
+    channel_name: str
+    channel_mention: str
     send_time: float
     before_text: str | None = None
     embed_content: str | None = None
@@ -23,6 +25,8 @@ class DelayedMessage:
     def from_dict(cls, data: dict) -> Self:
         return cls(
             channel_id=int(data['channel_id']),
+            channel_name=data['channel_name'],
+            channel_mention=data['channel_mention'],
             send_time=float(data['send_time']),
             before_text=data['before_text'],
             embed_content=data['embed_content'],

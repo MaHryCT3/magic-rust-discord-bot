@@ -11,3 +11,7 @@ class SendTimeParseError(BotMessageError):
 
 class SendTimeInPastError(BotMessageError):
     message: str = 'Нельзя сделать отложенное сообщение в прошлое'
+
+
+class QueueMessageIsEmpty(BotMessageError):
+    message: str = 'Очередь сообщений пуста'
