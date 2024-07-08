@@ -1,5 +1,6 @@
 from typing import Any, NoReturn
 
+import discord
 from discord.bot import Bot
 
 from bot.config import logger, settings
@@ -13,7 +14,8 @@ COGS = [
 
 class MagicRustBot(Bot):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        intents = discord.Intents.default()
+        super().__init__(*args, intents=intents)
         self._load_cogs()
 
     def _load_cogs(self):

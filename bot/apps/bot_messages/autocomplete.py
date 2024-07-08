@@ -16,7 +16,7 @@ MAX_DATE_INDEX: Final[int] = 10
 # ну да тут жесткий навал говна
 
 
-def parse_complete_time(raw_time: str) -> datetime.datetime:
+def parse_autocomplete_time(raw_time: str) -> datetime.datetime | None:
     if not raw_time:
         return None
     try:
@@ -24,8 +24,6 @@ def parse_complete_time(raw_time: str) -> datetime.datetime:
     except Exception as e:
         raise SendTimeParseError() from e
     if datetime.datetime.now(tz=settings.TIMEZONE) > date_time:
-        print(datetime.datetime.now(tz=settings.TIMEZONE))
-        print(date_time)
         raise SendTimeInPastError()
 
     return date_time
@@ -92,7 +90,7 @@ def _format_result(d: datetime.datetime | datetime.time) -> str:
 
 def _default_time_select() -> Iterable[datetime.datetime]:
     date_time = datetime.datetime.now(tz=settings.TIMEZONE) + datetime.timedelta(hours=1)
-    date_time = date_time.replace(hour=0, minute=0)
+    date_time = date_time.replace(minute=0)
     date_times = rrule(
         dtstart=date_time,
         count=SUGGESTION_COUNT,
@@ -137,7 +135,6 @@ def _get_select_time_suggestions(
 def _get_times_suggestions(time: datetime.time) -> Iterable[datetime.time]:
     results: Iterable[datetime.datetime] = rrule(
         dtstart=datetime.datetime.combine(date=datetime.date.today(), time=time),
-        # until=datetime.datetime.now() + datetime.timedelta(minutes=10 * SUGGESTION_COUNT),
         freq=MINUTELY,
         count=SUGGESTION_COUNT,
         byminute=[0, 10, 20, 30, 40, 50],
