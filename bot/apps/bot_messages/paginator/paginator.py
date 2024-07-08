@@ -1,8 +1,8 @@
 from operator import attrgetter
-
-from discord.ext import pages
 from typing import Self
+
 import discord
+from discord.ext import pages
 
 from bot.apps.bot_messages.embeds import QueueMessageEmbed
 from bot.apps.bot_messages.exceptions import QueueMessageIsEmpty
@@ -37,9 +37,9 @@ class QueueMessagePaginator(pages.Paginator):
         paginator.delayed_message_service = delayed_message_service
 
         page_buttons = [
-            pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.secondary, disabled=True, row=0),
-            pages.PaginatorButton("prev", emoji="⬅", style=discord.ButtonStyle.secondary, row=0),
-            pages.PaginatorButton("next", emoji="➡", style=discord.ButtonStyle.secondary, row=0),
+            pages.PaginatorButton('page_indicator', style=discord.ButtonStyle.secondary, disabled=True, row=0),
+            pages.PaginatorButton('prev', emoji='⬅', style=discord.ButtonStyle.secondary, row=0),
+            pages.PaginatorButton('next', emoji='➡', style=discord.ButtonStyle.secondary, row=0),
             QueueMessageDeleteButton(
                 delayed_message_service,
                 button_type='delete',
@@ -95,7 +95,7 @@ class QueueMessagePaginator(pages.Paginator):
         # далее идет копипаста self.goto_page, без использования .defer
         if self.show_indicator:
             try:
-                self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+                self.buttons['page_indicator']['object'].label = f'{self.current_page + 1}/{self.page_count + 1}'
             except KeyError:
                 pass
 

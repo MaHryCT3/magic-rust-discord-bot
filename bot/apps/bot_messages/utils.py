@@ -1,6 +1,5 @@
 from discord import Client
 
-from bot import MagicRustBot
 from bot.apps.bot_messages.embeds import SendMessageByBotEmbed
 from bot.apps.bot_messages.services import DelayedMessage
 

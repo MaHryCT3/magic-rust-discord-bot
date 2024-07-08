@@ -1,13 +1,9 @@
-import datetime
-
 import discord
 from discord import Interaction
 
 from bot.apps.bot_messages.embeds import SendMessageByBotEmbed
 from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
-from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
 from bot.config import logger
-from bot.constants import DATETIME_FORMAT
 
 
 class SendMessageByBotModal(BaseSendMessageByBotModal):

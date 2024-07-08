@@ -1,8 +1,9 @@
 import datetime
 
-from bot.apps.bot_messages.services import DelayedMessageService, DelayedMessage
-from bot.core.ui.modals import BaseModal, InputText
 import discord
+
+from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
+from bot.core.ui.modals import BaseModal, InputText
 
 
 class BaseSendMessageByBotModal(BaseModal):

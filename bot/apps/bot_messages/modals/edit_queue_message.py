@@ -1,18 +1,17 @@
 import datetime
 from typing import TYPE_CHECKING
-import discord
+
 from discord import Interaction
 
-from bot.apps.bot_messages.embeds import SendMessageByBotEmbed
-from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
-from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
-from bot.config import logger, settings
-from bot.constants import DATETIME_FORMAT
 from bot.apps.bot_messages.autocomplete import parse_autocomplete_time
+from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
+from bot.apps.bot_messages.services import DelayedMessage
+from bot.config import settings
+from bot.constants import DATETIME_FORMAT
 from bot.core.ui.modals import InputText
 
 if TYPE_CHECKING:
-    from bot.apps.bot_messages.paginator import QueueMessagePaginator
+    pass
 
 
 class EditQueueMessageModal(BaseSendMessageByBotModal):
