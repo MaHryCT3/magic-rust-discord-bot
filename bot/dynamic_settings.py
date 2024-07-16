@@ -3,7 +3,6 @@ from typing import Any, Callable, TypeAlias
 from bot.config import logger, settings
 from bot.core.clients.redis import RedisNameSpace
 from bot.core.localization import LocaleEnum
-from bot.core.utils.singleton import Singleton
 
 ChannelId: TypeAlias = int
 RoleId: TypeAlias = int
@@ -42,8 +41,8 @@ def cast_dict(key_cast: Callable, value_cast: Callable) -> Callable[[dict], dict
     return cast_func
 
 
-class DynamicSettings(metaclass=Singleton):
-    find_friend_cooldown: int = SettingValue()
+class DynamicSettings:
+    find_friend_cooldown: int = SettingValue(default_factory=int)
     find_friend_channels: dict[LocaleEnum, ChannelId] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, ChannelId),
@@ -73,3 +72,6 @@ class DynamicSettings(metaclass=Singleton):
     @classmethod
     def get_settings_attributes(cls):
         return [key for key, value in cls.__dict__.items() if isinstance(value, SettingValue)]
+
+
+dynamic_settings = DynamicSettings()

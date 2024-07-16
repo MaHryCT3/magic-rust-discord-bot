@@ -12,7 +12,7 @@ from bot.apps.find_friends.modals import FindFriendModal
 from bot.apps.users.utils import get_member_locale
 from bot.core.localization import LocaleEnum, LocalizationDict
 from bot.core.redis_cooldown import RedisLocaleCooldown
-from bot.dynamic_settings import DynamicSettings
+from bot.dynamic_settings import dynamic_settings
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -29,12 +29,13 @@ class FindFriendsCommands(commands.Cog):
                 LocaleEnum.en: 'Create a form to find a friend',
                 LocaleEnum.ru: 'Создать форму для поиска друга',
             }
-        )
+        ),
+        contexts={discord.InteractionContextType.guild},
     )
     async def friend(self, ctx: discord.ApplicationContext) -> None:
         locale = get_member_locale(ctx.author, raise_exception=True)
-        cooldown = DynamicSettings().find_friend_cooldown
-        channel_id = DynamicSettings().find_friend_channels.get(locale)
+        cooldown = dynamic_settings.find_friend_cooldown
+        channel_id = dynamic_settings.find_friend_channels.get(locale)
         if not cooldown or not channel_id:
             raise CommandNotConfiguredError(locale=locale)
         if cooldown_residue := await self.redis_cooldown.get_user_cooldown_residue(ctx.author.id, locale, cooldown):

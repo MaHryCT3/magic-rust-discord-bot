@@ -21,7 +21,7 @@ class BotMessagesCommandsCog(commands.Cog):
             administrator=True,
             ban_members=True,
         ),
-        guild_only=True,
+        contexts={discord.InteractionContextType.guild},
     )
 
     def __init__(self, bot: MagicRustBot, delayed_message_service: DelayedMessageService) -> None:
