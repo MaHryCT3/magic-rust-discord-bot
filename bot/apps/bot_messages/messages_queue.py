@@ -14,11 +14,11 @@ class MessageQueueCog(commands.Cog):
     queue_group = SlashCommandGroup(
         name='queue',
         description='Управление очередью сообщений',
-        guild_only=True,
         default_member_permissions=discord.Permissions(
             administrator=True,
             ban_members=True,
         ),
+        contexts={discord.InteractionContextType.guild},
     )
 
     def __init__(self, bot: MagicRustBot, delayed_message_service: DelayedMessageService):

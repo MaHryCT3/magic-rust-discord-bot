@@ -29,7 +29,8 @@ class FindFriendsCommands(commands.Cog):
                 LocaleEnum.en: 'Create a form to find a friend',
                 LocaleEnum.ru: 'Создать форму для поиска друга',
             }
-        )
+        ),
+        contexts={discord.InteractionContextType.guild},
     )
     async def friend(self, ctx: discord.ApplicationContext) -> None:
         locale = get_member_locale(ctx.author, raise_exception=True)

@@ -20,10 +20,8 @@ class SettingsCog(commands.Cog):
             administrator=True,
             ban_members=True,
         ),
-        guild_only=True,
+        contexts={discord.InteractionContextType.guild},
     )
-
-    locale_option = discord.Option(LocaleEnum)
 
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
@@ -39,7 +37,7 @@ class SettingsCog(commands.Cog):
         DynamicSettings().find_friend_cooldown = cooldown
         logger.info(f'{ctx.author}:{ctx.author.id} изменил кулдаун на {cooldown}')
         await ctx.respond(
-            f'Куладун для поиска друга изменена на {cooldown} секунд',
+            f'Кулдаун для поиска друга изменена на {cooldown} секунд',
             ephemeral=True,
         )
 
@@ -49,7 +47,7 @@ class SettingsCog(commands.Cog):
     async def friend_channels(
         self,
         ctx: discord.ApplicationContext,
-        locale: locale_option,
+        locale: discord.Option(LocaleEnum),
         channel: discord.TextChannel,
     ):
         dynamic_settings = DynamicSettings()
@@ -66,7 +64,9 @@ class SettingsCog(commands.Cog):
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
     )
-    async def locale_roles(self, ctx: discord.ApplicationContext, locale: locale_option, role: discord.Role):
+    async def locale_roles(
+        self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role
+    ):
         dynamic_settings = DynamicSettings()
         current_locale_roles = dynamic_settings.locale_roles
         current_locale_roles[role.id] = locale
