@@ -4,6 +4,10 @@ from discord.commands.core import valid_locales
 
 
 class LocaleEnum(StrEnum):
+    """
+    Language code
+    """
+
     en = 'en-US'
     ru = 'ru'
 
