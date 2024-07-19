@@ -4,6 +4,11 @@ from bot.core.localization import LocaleEnum
 
 
 class InputText(discord.ui.InputText):
+    def __init__(self, *args, **kwargs):
+        # Label kwarg required. Not handy on init with localization
+        kwargs.setdefault('label', ' ')
+        super().__init__(*args, **kwargs)
+
     def __set_name__(self, owner: 'BaseModal', name: str):
         self.owner = owner
 
