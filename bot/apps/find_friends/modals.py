@@ -72,7 +72,7 @@ class FindFriendModal(BaseLocalizationModal):
             self.message_input,
             self.server_input,
         )
-        await interaction.response.send_message(content=interaction.user.mention, embeds=[embed], ephemeral=True)
+        await interaction.response.send_message(content=interaction.user.mention, embeds=[embed])
         await self.redis_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
