@@ -1,16 +1,18 @@
-from bot import MagicRustBot
-
 import discord
 from discord.ext import commands
-from bot.dynamic_settings import dynamic_settings
+
 from bot.apps.users.utils import get_member_locale
 from bot.core.localization import LocaleEnum, LocalizationDict
+from bot.dynamic_settings import dynamic_settings
+
 
 class FindFriendEvents(commands.Cog):
-    respond_localization = LocalizationDict({
-        LocaleEnum.en: 'Use `/friend` command to find a friend',
-        LocaleEnum.ru: 'Для поиска друга воспользуйтесь командой `/friend`',
-    })
+    respond_localization = LocalizationDict(
+        {
+            LocaleEnum.en: 'Use `/friend` command to find a friend',
+            LocaleEnum.ru: 'Для поиска друга воспользуйтесь командой `/friend`',
+        }
+    )
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
