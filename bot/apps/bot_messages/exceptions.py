@@ -18,4 +18,4 @@ class QueueMessageIsEmpty(BotMessageError):
 
 
 class InvalidImageURL(BotMessageError):
-    message: str = 'Неверная ссылка на картинку. Проверьте правильность.'
+    message: str = 'Неверная ссылка на картинку. Проверьте ввод.'
