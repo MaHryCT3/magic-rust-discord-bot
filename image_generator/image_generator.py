@@ -12,6 +12,9 @@ import asyncio
 CARD_IMAGE_PATH = "image_generator/assets/images/card.png"
 CARD_TEXT_IMAGE_PATH = "image_generator/assets/images/card_text.png"
 CARD_PROGRESS_IMAGE_PATH = "image_generator/assets/images/card_progress.png"
+DISCORD_HEADER_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner.png"
+DISCORD_HEADER_EXTENSION_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner (extended).png"
+DISCORD_HEADER_TEXT_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner_text.png"
 
 
 @dataclass
@@ -87,10 +90,11 @@ class ImageTemplate:
     def __init__(self,
             main_image: Image.Image,
             text_fields_texture: Image.Image,
-            progress_fields_texture: Image.Image):
+            progress_fields_texture: Image.Image | None = None):
         self.main_image = main_image
         self.text_fields = [TextField.from_field(field) for field in self._get_fields(text_fields_texture)]
-        self.progress_fields = [ProgressBar.from_field(field) for field in self._get_fields(progress_fields_texture)]
+        if progress_fields_texture:
+            self.progress_fields = [ProgressBar.from_field(field) for field in self._get_fields(progress_fields_texture)]
 
     @classmethod
     def _get_fields(cls, field_texture: Image.Image) -> list[Field]:
@@ -151,6 +155,29 @@ class ServerCard(ImageTemplate):
         result.paste(players_count_rendered, self.text_fields[2].pivot, players_count_rendered)
         return result
 
+class Header(ImageTemplate):
+    text_field_names: dict[str, int] = {'discord_online': 0, 'ingame_online': 1}
+    text_field_settings: dict[int, TextField.TextSettings] = {
+        text_field_names['discord_online']: TextField.TextSettings(font="image_generator\\assets\\fonts\\SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255)),
+        text_field_names['ingame_online']: TextField.TextSettings(font="image_generator\\assets\\fonts\\SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255))
+    }
+
+    server_name_text: str
+    server_description_text: str
+
+    def __init__(self, extension_image: Image.Image, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.extension_image = extension_image
+        self.apply_text_settings_dict(self.text_field_settings)
+
+    def build(self, discord_online: str, ingame_online: str) -> Image.Image:
+        result: Image.Image = self.main_image.copy() if len(discord_online) < 3 else self.extension_image.copy()
+        discord_online_rendered = self.text_fields[self.text_field_names['discord_online']].get_image(discord_online)
+        ingame_online_rendered = self.text_fields[self.text_field_names['ingame_online']].get_image(ingame_online)
+        result.paste(discord_online_rendered, self.text_fields[0].pivot, discord_online_rendered)
+        result.paste(ingame_online_rendered, self.text_fields[1].pivot, ingame_online_rendered)
+        return result
+
 def players_to_progress(max_players: int, players: int, joining: int, queue: int) -> list[float]:
     players_sum = players + joining / 2.0 + queue
     if players_sum == 0:
@@ -193,6 +220,13 @@ def get_server_status_image() -> Image.Image:
             result.paste(image, (image.size[0]*j, image.size[1]*i))
     return result
 
+def get_dictord_header_image() -> Image.Image:
+    header_image = load_image(DISCORD_HEADER_IMAGE_PATH)
+    header_extension_image = load_image(DISCORD_HEADER_EXTENSION_IMAGE_PATH)
+    header_text_image = load_image(DISCORD_HEADER_TEXT_IMAGE_PATH)
+    header = Header(header_extension_image, header_image, header_text_image)
+    return header.build('820', '46,191')
+
 async def update_server_status_image():
     print(60-int(time())%60)
     image = get_server_status_image()
@@ -213,4 +247,5 @@ async def main():
     server_status_task = asyncio.ensure_future(repeat_every_minute(update_server_status_image))
     await server_status_task
 
-asyncio.run(main())
+#asyncio.run(main())
+get_dictord_header_image().show()
