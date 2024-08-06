@@ -12,6 +12,8 @@ pydantic = "^2.7.4"
 pydantic-settings = "^2.3.3"
 redis = "^5.0.6"
 python-dateutil = "^2.9.0.post0"
+pillow = "^10.4.0"
+requests = "^2.32.3"
 
 
 [tool.poetry.group.dev.dependencies]

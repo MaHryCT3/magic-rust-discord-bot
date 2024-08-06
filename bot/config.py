@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     SENTRY_DSN: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379'
+    SERVER_API_URL: str
 
 
 settings = Settings(_env_file='.env')
