@@ -1,7 +1,9 @@
 import datetime
 
 import discord
+import validators
 
+from bot.apps.bot_messages.exceptions import InvalidImageURL
 from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
 from bot.core.ui.modals import BaseModal, InputText
 
@@ -19,7 +21,6 @@ class BaseSendMessageByBotModal(BaseModal):
         placeholder='Прямая ссылка на картинку. Например, ссылку можно взять из дискорд чата',
         required=False,
     )
-    # TODO: Добавить в валидацию image_url
 
     def __init__(
         self,
@@ -40,6 +41,9 @@ class BaseSendMessageByBotModal(BaseModal):
         channel_name: str,
         channel_mention: str,
     ):
+        if validators.url(self.image_url):
+            raise InvalidImageURL()
+
         delayed_message = DelayedMessage(
             send_time=send_time.timestamp(),
             before_text=self.text_before,
