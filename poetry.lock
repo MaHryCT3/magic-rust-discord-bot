@@ -987,23 +987,6 @@ files = [
 ]
 
 [[package]]
-name = "urllib3"
-version = "2.2.2"
-description = "HTTP library with thread-safe connection pooling, file post, and more."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "urllib3-2.2.2-py3-none-any.whl", hash = "sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472"},
-    {file = "urllib3-2.2.2.tar.gz", hash = "sha256:dd505485549a7a552833da5e6063639d0d177c04f23bc3864e41e5dc5f612168"},
-]
-
-[package.extras]
-brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
-h2 = ["h2 (>=4,<5)"]
-socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
-zstd = ["zstandard (>=0.18.0)"]
-
-[[package]]
 name = "virtualenv"
 version = "20.26.3"
 description = "Virtual Python Environment builder"
@@ -1129,4 +1112,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "bb5e1bc49d6e002422a5fabfe5a344754cf72cdcfc396d7eb3d8f19b031f4fff"
+content-hash = "11fa8b94eac54c3fb7f49cde820a3016ded81a64c18d736cf22079533116fe26"

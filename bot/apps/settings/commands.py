@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from bot.config import logger
 from bot.core.localization import LocaleEnum
-from bot.dynamic_settings import DynamicSettings
+from bot.dynamic_settings import dynamic_settings
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -34,7 +34,7 @@ class SettingsCog(commands.Cog):
         ctx: discord.ApplicationContext,
         cooldown: discord.Option(int, description='В секундах'),
     ):
-        DynamicSettings().find_friend_cooldown = cooldown
+        dynamic_settings.find_friend_cooldown = cooldown
         logger.info(f'{ctx.author}:{ctx.author.id} изменил кулдаун на {cooldown}')
         await ctx.respond(
             f'Кулдаун для поиска друга изменена на {cooldown} секунд',
@@ -50,7 +50,6 @@ class SettingsCog(commands.Cog):
         locale: discord.Option(LocaleEnum),
         channel: discord.TextChannel,
     ):
-        dynamic_settings = DynamicSettings()
         current_channels = dynamic_settings.find_friend_channels
         current_channels[locale] = channel.id
 
@@ -64,9 +63,7 @@ class SettingsCog(commands.Cog):
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
     )
-    async def locale_roles(
-        self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role
-    ):
+    async def locale_roles(self, ctx: discord.ApplicationContext, locale: locale_option, role: discord.Role):
         dynamic_settings = DynamicSettings()
         current_locale_roles = dynamic_settings.locale_roles
         current_locale_roles[role.id] = locale

@@ -15,3 +15,7 @@ class SendTimeInPastError(BotMessageError):
 
 class QueueMessageIsEmpty(BotMessageError):
     message: str = 'Очередь сообщений пуста'
+
+
+class InvalidImageURL(BotMessageError):
+    message: str = 'Неверная ссылка на картинку. Проверьте ввод.'
