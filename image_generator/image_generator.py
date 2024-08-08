@@ -2,17 +2,14 @@ from image_generator.image_templates import ServerCard, Header
 from image_generator.config import settings
 from PIL import Image
 from requests import get
-from requests.exceptions import HTTPError
 from json import loads
-from time import time
-import asyncio
 
 CARD_IMAGE_PATH = "image_generator/assets/images/card.png"
 CARD_TEXT_IMAGE_PATH = "image_generator/assets/images/card_text.png"
 CARD_PROGRESS_IMAGE_PATH = "image_generator/assets/images/card_progress.png"
-DISCORD_HEADER_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner.png"
-DISCORD_HEADER_EXTENSION_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner (extended).png"
-DISCORD_HEADER_TEXT_IMAGE_PATH = "image_generator\\assets\\images\\Main Banner_text.png"
+DISCORD_HEADER_IMAGE_PATH = "image_generator/assets/images/Main Banner.png"
+DISCORD_HEADER_EXTENSION_IMAGE_PATH = "image_generator/assets/images/Main Banner (extended).png"
+DISCORD_HEADER_TEXT_IMAGE_PATH = "image_generator/assets/images/Main Banner_text.png"
 
 def players_to_progress(max_players: int, players: int, joining: int, queue: int) -> list[float]:
     players_sum = players + joining / 2.0 + queue
@@ -34,6 +31,9 @@ def get_servers_data() -> list[dict]:
         server_count += 1
         actual_servers.append(server_data)
     return actual_servers
+
+def get_discord_data() -> tuple[int, int]:
+    return (54, 14434)
 
 def load_image(path: str) -> Image.Image:
     image: Image.Image
@@ -57,41 +57,10 @@ def get_server_status_image() -> Image.Image:
             result.paste(image, (image.size[0]*j, image.size[1]*i))
     return result
 
-def get_dictord_header_image() -> Image.Image:
+def get_discord_header_image() -> Image.Image:
     header_image = load_image(DISCORD_HEADER_IMAGE_PATH)
     header_extension_image = load_image(DISCORD_HEADER_EXTENSION_IMAGE_PATH)
     header_text_image = load_image(DISCORD_HEADER_TEXT_IMAGE_PATH)
     header = Header(header_extension_image, header_image, header_text_image)
-    return header.build('820', '46,191')
-
-async def update_server_status_image():
-    image: Image.Image
-    try:
-        image = get_server_status_image()
-    except HTTPError:
-        print("API connection failed")
-        return
-    #image.save("image_generator\\result\\server_status.png")
-    print("Updated server status image")
-
-async def repeat_every_minute(func, *args, **kwargs):
-    seconds_until_minute = lambda: 60-int(time())%60
-    await asyncio.sleep(seconds_until_minute())
-    while True:
-        await asyncio.gather(
-            func(*args, **kwargs),
-            asyncio.sleep(seconds_until_minute()),
-        )
-
-async def main():
-    server_status_task = asyncio.ensure_future(repeat_every_minute(update_server_status_image))
-    #discord_header_task = asyncio.ensure_future(repeat_every_minute(update_server_status_image))
-    await server_status_task
-    #await discord_header_task
-
-def start_generation():
-    print('Started generation')
-    asyncio.run(main())
-
-if __name__ == "__main__":
-    start_generation()
+    voice_online, online = get_discord_data()
+    return header.build(str(voice_online), str(online))

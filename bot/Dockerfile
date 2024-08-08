@@ -7,5 +7,5 @@ COPY bot/requirements.txt ./
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Run your app
+COPY core/ ./core
 COPY bot/ ./bot

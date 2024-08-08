@@ -4,7 +4,7 @@ from typing import Self
 from uuid import UUID, uuid4
 
 from bot.config import logger, settings
-from bot.core.clients.async_redis import AsyncRedisNameSpace
+from core.clients.async_redis import AsyncRedisNameSpace
 
 
 @dataclass

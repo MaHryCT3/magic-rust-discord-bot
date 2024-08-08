@@ -8,7 +8,7 @@ from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
 from bot.apps.bot_messages.services import DelayedMessage
 from bot.config import settings
 from bot.constants import DATETIME_FORMAT
-from bot.core.ui.modals import InputText
+from core.ui.modals import InputText
 
 if TYPE_CHECKING:
     pass

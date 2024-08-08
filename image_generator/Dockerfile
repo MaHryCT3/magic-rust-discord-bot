@@ -7,5 +7,5 @@ COPY image_generator/requirements.txt ./
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Run your app
+COPY core/ ./core
 COPY image_generator/ ./image_generator

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from bot.apps.users.utils import get_member_locale
-from bot.core.localization import LocaleEnum, LocalizationDict
+from core.localization import LocaleEnum, LocalizationDict
 from bot.dynamic_settings import dynamic_settings
 
 

@@ -1,8 +1,8 @@
 from typing import Any, Callable, TypeAlias
 
 from bot.config import logger, settings
-from bot.core.clients.redis import RedisNameSpace
-from bot.core.localization import LocaleEnum
+from core.clients.redis import RedisNameSpace
+from core.localization import LocaleEnum
 
 ChannelId: TypeAlias = int
 RoleId: TypeAlias = int

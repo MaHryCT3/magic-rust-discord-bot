@@ -1,8 +1,8 @@
 import time
 
 from bot.config import logger, settings
-from bot.core.clients.async_redis import AsyncRedisNameSpace
-from bot.core.localization import LocaleEnum
+from core.clients.async_redis import AsyncRedisNameSpace
+from core.localization import LocaleEnum
 
 
 class RedisLocaleCooldown:

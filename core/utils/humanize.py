@@ -1,6 +1,6 @@
 from typing import Final, TypeAlias, TypedDict
 
-from bot.core.localization import LocaleEnum
+from core.localization import LocaleEnum
 
 ONE_HOUR_SECONDS: Final[int] = 3600
 

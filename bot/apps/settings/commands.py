@@ -5,7 +5,7 @@ from discord import SlashCommandGroup
 from discord.ext import commands
 
 from bot.config import logger
-from bot.core.localization import LocaleEnum
+from core.localization import LocaleEnum
 from bot.dynamic_settings import dynamic_settings
 
 if TYPE_CHECKING:

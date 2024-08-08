@@ -76,8 +76,8 @@ class ServerCard(ImageTemplate):
 class Header(ImageTemplate):
     text_field_names: dict[str, int] = {'discord_online': 0, 'ingame_online': 1}
     text_field_settings: dict[int, TextField.TextSettings] = {
-        text_field_names['discord_online']: TextField.TextSettings(font="image_generator\\assets\\fonts\\SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255)),
-        text_field_names['ingame_online']: TextField.TextSettings(font="image_generator\\assets\\fonts\\SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255))
+        text_field_names['discord_online']: TextField.TextSettings(font="image_generator/assets/fonts/SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255)),
+        text_field_names['ingame_online']: TextField.TextSettings(font="image_generator/assets/fonts/SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255))
     }
 
     server_name_text: str

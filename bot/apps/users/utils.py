@@ -2,7 +2,7 @@ import discord
 
 from bot.apps.users.exceptions import UserHasNotRoleError
 from bot.config import logger
-from bot.core.localization import LocaleEnum
+from core.localization import LocaleEnum
 from bot.dynamic_settings import dynamic_settings
 
 

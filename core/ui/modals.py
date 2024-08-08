@@ -1,6 +1,6 @@
 import discord
 
-from bot.core.localization import LocaleEnum
+from core.localization import LocaleEnum
 
 
 class InputText(discord.ui.InputText):
