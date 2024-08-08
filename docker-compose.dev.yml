@@ -7,3 +7,19 @@ services:
       - '6379:6379'
     volumes:
       - ./storage/redis:/data
+
+  image-generator:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./image_generator/Dockerfile
+    tty: true
+    command: python -m image_generator
+  
+  bot:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./bot/Dockerfile
+    tty: true
+    command: python -m bot

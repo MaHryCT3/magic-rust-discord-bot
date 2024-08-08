@@ -3,6 +3,7 @@ name = "magicrust-discord"
 version = "0.9.9"
 description = ""
 authors = ["MaHryCT3 <mahryct123@gmail.com>"]
+package-mode = false
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -13,13 +14,20 @@ pydantic-settings = "^2.3.3"
 redis = "^5.0.6"
 python-dateutil = "^2.9.0.post0"
 pillow = "^10.4.0"
-requests = "^2.32.3"
 validators = "^0.33.0"
 
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.10"
 pre-commit = "^3.7.1"
+
+
+[tool.poetry.group.image-generator.dependencies]
+pillow = "^10.4.0"
+redis = "^5.0.6"
+requests = "^2.32.3"
+pydantic = "^2.7.4"
+pydantic-settings = "^2.3.3"
 
 [build-system]
 requires = ["poetry-core"]

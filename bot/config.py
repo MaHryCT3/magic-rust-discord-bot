@@ -3,9 +3,11 @@ import sys
 from datetime import timedelta, timezone
 
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = ConfigDict(extra="ignore")
     DEBUG: bool = False
     TIMEZONE: timezone = timezone(offset=timedelta(hours=3), name='Europe/Moscow')
 
@@ -13,7 +15,6 @@ class Settings(BaseSettings):
     SENTRY_DSN: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379'
-    SERVER_API_URL: str
 
 
 settings = Settings(_env_file='.env')

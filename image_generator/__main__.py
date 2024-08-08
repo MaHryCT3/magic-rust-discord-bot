@@ -1,0 +1,3 @@
+from image_generator.image_generator import start_generation
+
+start_generation()
