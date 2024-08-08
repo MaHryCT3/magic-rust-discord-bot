@@ -63,8 +63,7 @@ class SettingsCog(commands.Cog):
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
     )
-    async def locale_roles(self, ctx: discord.ApplicationContext, locale: locale_option, role: discord.Role):
-        dynamic_settings = DynamicSettings()
+    async def locale_roles(self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role):
         current_locale_roles = dynamic_settings.locale_roles
         current_locale_roles[role.id] = locale
 
