@@ -2,14 +2,17 @@ import logging
 import sys
 from datetime import timedelta, timezone
 
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    model_config = ConfigDict(extra='ignore')
     DEBUG: bool = False
     TIMEZONE: timezone = timezone(offset=timedelta(hours=3), name='Europe/Moscow')
 
     DISCORD_BOT_TOKEN: str
+    MAGIC_RUST_GUILD_ID: str
     SENTRY_DSN: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379'

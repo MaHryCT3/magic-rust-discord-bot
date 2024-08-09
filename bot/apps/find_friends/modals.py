@@ -1,10 +1,10 @@
 from discord import InputTextStyle, Interaction
 
 from bot.apps.find_friends.embeds import FindFriendEmbed
-from bot.core.localization import LocaleEnum, LocalizationDict
-from bot.core.redis_cooldown import RedisLocaleCooldown
-from bot.core.ui.modals import BaseLocalizationModal, InputText
 from bot.dynamic_settings import dynamic_settings
+from core.localization import LocaleEnum, LocalizationDict
+from core.redis_cooldown import RedisLocaleCooldown
+from core.ui.modals import BaseLocalizationModal, InputText
 
 
 class FindFriendModal(BaseLocalizationModal):

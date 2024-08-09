@@ -1,7 +1,7 @@
 from discord.ext.commands.errors import CommandError
 
-from bot.core.localization import LocaleEnum
-from bot.core.utils.humanize import human_time
+from core.localization import LocaleEnum
+from core.utils.humanize import human_time
 
 
 class BaseFindFriendsError(CommandError):

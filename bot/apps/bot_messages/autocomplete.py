@@ -7,8 +7,8 @@ from dateutil.rrule import HOURLY, MINUTELY, rrule
 from bot.apps.bot_messages.exceptions import SendTimeInPastError, SendTimeParseError
 from bot.config import settings
 from bot.constants import DATETIME_FORMAT, TIME_FORMAT
-from bot.core.utils.date_time import add_timezone_info
-from bot.core.utils.math import round_to_value
+from core.utils.date_time import add_timezone_info
+from core.utils.math import round_to_value
 
 SUGGESTION_COUNT: Final[int] = 10
 MAX_DATE_INDEX: Final[int] = 10

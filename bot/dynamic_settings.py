@@ -1,8 +1,8 @@
 from typing import Any, Callable, TypeAlias
 
 from bot.config import logger, settings
-from bot.core.clients.redis import RedisNameSpace
-from bot.core.localization import LocaleEnum
+from core.clients.redis import RedisNameSpace
+from core.localization import LocaleEnum
 
 ChannelId: TypeAlias = int
 RoleId: TypeAlias = int
@@ -50,6 +50,10 @@ class DynamicSettings:
     locale_roles: dict[RoleId, LocaleEnum] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(RoleId, LocaleEnum),
+    )
+    server_status_channels: dict[LocaleEnum, ChannelId] = SettingValue(
+        default_factory=dict,
+        cast_on_load=cast_dict(LocaleEnum, ChannelId),
     )
 
     # Происходит загрузка настроек, значит не нужно сохранять их в редис в __set__

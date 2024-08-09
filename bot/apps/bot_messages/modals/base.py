@@ -5,7 +5,7 @@ import validators
 
 from bot.apps.bot_messages.exceptions import InvalidImageURL
 from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
-from bot.core.ui.modals import BaseModal, InputText
+from core.ui.modals import BaseModal, InputText
 
 
 class BaseSendMessageByBotModal(BaseModal):

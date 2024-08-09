@@ -5,8 +5,8 @@ from discord import SlashCommandGroup
 from discord.ext import commands
 
 from bot.config import logger
-from bot.core.localization import LocaleEnum
 from bot.dynamic_settings import dynamic_settings
+from core.localization import LocaleEnum
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -57,6 +57,25 @@ class SettingsCog(commands.Cog):
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы для поиска друга на {current_channels}')
         await ctx.respond(
             f'Канал для поиска друга для региона {locale} был установлен {channel}',
+            ephemeral=True,
+        )
+
+    @settings_group.command(
+        description='Изменить каналы статуса серверов',
+    )
+    async def server_status_channels(
+        self,
+        ctx: discord.ApplicationContext,
+        locale: discord.Option(LocaleEnum),
+        channel: discord.TextChannel,
+    ):
+        current_channels = dynamic_settings.server_status_channels
+        current_channels[locale] = channel.id
+
+        dynamic_settings.server_status_channels = current_channels
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы статуса серверов на {current_channels}')
+        await ctx.respond(
+            f'Канал статуса серверов для региона {locale} был установлен {channel}',
             ephemeral=True,
         )
 

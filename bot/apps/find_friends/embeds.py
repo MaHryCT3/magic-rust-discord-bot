@@ -1,8 +1,8 @@
 import discord
 
-from bot.core.localization import LocaleEnum, LocalizationDict
-from bot.core.utils.colors import get_random_blue_color
-from bot.core.utils.format_strings import bold_message
+from core.localization import LocaleEnum, LocalizationDict
+from core.utils.colors import get_random_blue_color
+from core.utils.format_strings import bold_message
 
 
 class FindFriendEmbed(discord.Embed):

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from bot.core.redis_cooldown import RedisLocaleCooldown
+from core.redis_cooldown import RedisLocaleCooldown
 
 from .commands import FindFriendsCommands
 from .events import FindFriendEvents
