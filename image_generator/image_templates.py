@@ -1,6 +1,8 @@
 from PIL import Image
 
-from image_generator.fields import *
+from image_generator.fields import Field, ProgressBar, TextField
+
+MAX_CHARACTERS_SHORT_IMAGE = 2
 
 
 class ImageTemplate:
@@ -102,7 +104,9 @@ class Header(ImageTemplate):
         self.apply_text_settings_dict(self.text_field_settings)
 
     def build(self, discord_online: str, ingame_online: str) -> Image.Image:
-        result: Image.Image = self.main_image.copy() if len(discord_online) < 3 else self.extension_image.copy()
+        result: Image.Image = (
+            self.main_image.copy() if len(discord_online) <= MAX_CHARACTERS_SHORT_IMAGE else self.extension_image.copy()
+        )
         discord_online_rendered = self.text_fields[self.text_field_names['discord_online']].get_image(discord_online)
         ingame_online_rendered = self.text_fields[self.text_field_names['ingame_online']].get_image(ingame_online)
         result.paste(discord_online_rendered, self.text_fields[0].pivot, discord_online_rendered)

@@ -7,6 +7,7 @@ from image_generator.config import settings
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
 
+SERVER_LASTUPDATE_TRESHOLD = 45
 CARD_IMAGE_PATH = 'image_generator/assets/images/card.png'
 CARD_TEXT_IMAGE_PATH = 'image_generator/assets/images/card_text.png'
 CARD_PROGRESS_IMAGE_PATH = 'image_generator/assets/images/card_progress.png'
@@ -31,7 +32,7 @@ def get_servers_data() -> list[dict]:
     server_count = 0
     actual_servers = []
     for server_data in data_dict.values():
-        if server_data['lastupdate'] > 45:
+        if server_data['lastupdate'] > SERVER_LASTUPDATE_TRESHOLD:
             continue
         server_count += 1
         actual_servers.append(server_data)
