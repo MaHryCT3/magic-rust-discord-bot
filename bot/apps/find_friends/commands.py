@@ -10,9 +10,9 @@ from bot.apps.find_friends.exceptions import (
 )
 from bot.apps.find_friends.modals import FindFriendModal
 from bot.apps.users.utils import get_member_locale
+from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum, LocalizationDict
 from core.redis_cooldown import RedisLocaleCooldown
-from bot.dynamic_settings import dynamic_settings
 
 if TYPE_CHECKING:
     from bot import MagicRustBot

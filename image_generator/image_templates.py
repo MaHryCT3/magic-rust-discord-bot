@@ -1,18 +1,24 @@
-from image_generator.fields import *
 from PIL import Image
+
+from image_generator.fields import *
+
 
 class ImageTemplate:
     text_fields: list[TextField]
     progress_fields: list[ProgressBar]
 
-    def __init__(self,
-            main_image: Image.Image,
-            text_fields_texture: Image.Image,
-            progress_fields_texture: Image.Image | None = None):
+    def __init__(
+        self,
+        main_image: Image.Image,
+        text_fields_texture: Image.Image,
+        progress_fields_texture: Image.Image | None = None,
+    ):
         self.main_image = main_image
         self.text_fields = [TextField.from_field(field) for field in self._get_fields(text_fields_texture)]
         if progress_fields_texture:
-            self.progress_fields = [ProgressBar.from_field(field) for field in self._get_fields(progress_fields_texture)]
+            self.progress_fields = [
+                ProgressBar.from_field(field) for field in self._get_fields(progress_fields_texture)
+            ]
 
     @classmethod
     def _get_fields(cls, field_texture: Image.Image) -> list[Field]:
@@ -34,11 +40,11 @@ class ImageTemplate:
                     if y < field.y_bounds[0]:
                         field.y_bounds = (y, field.y_bounds[0])
         return fields_dict.values()
-    
+
     def apply_text_settings_dict(self, settigns_dict: dict[int, TextField.TextSettings]):
         for field, text_settings in settigns_dict.items():
             self.text_fields[field].text_settings = text_settings
-    
+
     def apply_progress_settings_dict(self, settigns_dict: dict[int, ProgressBar.ProgressSettings]):
         for field, progress_settings in settigns_dict.items():
             self.progress_fields[field].progress_settings = progress_settings
@@ -66,18 +72,25 @@ class ServerCard(ImageTemplate):
         progress_rendered = self.progress_fields[0].get_image(progress)
         title_rendered = self.text_fields[self.text_field_names['title']].get_image(server_name)
         description_rendered = self.text_fields[self.text_field_names['description']].get_image(server_description)
-        players_count_rendered = self.text_fields[self.text_field_names['players_count']].get_image(f"{players}/{max_players}")
+        players_count_rendered = self.text_fields[self.text_field_names['players_count']].get_image(
+            f'{players}/{max_players}'
+        )
         result.paste(progress_rendered, self.progress_fields[0].pivot, progress_rendered)
         result.paste(title_rendered, self.text_fields[0].pivot, title_rendered)
         result.paste(description_rendered, self.text_fields[1].pivot, description_rendered)
         result.paste(players_count_rendered, self.text_fields[2].pivot, players_count_rendered)
         return result
 
+
 class Header(ImageTemplate):
     text_field_names: dict[str, int] = {'discord_online': 0, 'ingame_online': 1}
     text_field_settings: dict[int, TextField.TextSettings] = {
-        text_field_names['discord_online']: TextField.TextSettings(font="image_generator/assets/fonts/SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255)),
-        text_field_names['ingame_online']: TextField.TextSettings(font="image_generator/assets/fonts/SF-Pro-Display-Black.otf",font_color=(255, 255, 255, 255))
+        text_field_names['discord_online']: TextField.TextSettings(
+            font='image_generator/assets/fonts/SF-Pro-Display-Black.otf', font_color=(255, 255, 255, 255)
+        ),
+        text_field_names['ingame_online']: TextField.TextSettings(
+            font='image_generator/assets/fonts/SF-Pro-Display-Black.otf', font_color=(255, 255, 255, 255)
+        ),
     }
 
     server_name_text: str

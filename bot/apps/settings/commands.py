@@ -5,8 +5,8 @@ from discord import SlashCommandGroup
 from discord.ext import commands
 
 from bot.config import logger
-from core.localization import LocaleEnum
 from bot.dynamic_settings import dynamic_settings
+from core.localization import LocaleEnum
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -82,7 +82,9 @@ class SettingsCog(commands.Cog):
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
     )
-    async def locale_roles(self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role):
+    async def locale_roles(
+        self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role
+    ):
         current_locale_roles = dynamic_settings.locale_roles
         current_locale_roles[role.id] = locale
 

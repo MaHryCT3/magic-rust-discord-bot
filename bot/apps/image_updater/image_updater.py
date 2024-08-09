@@ -1,20 +1,21 @@
-from base64 import b64encode
 from io import BytesIO
+from time import time
 from typing import TYPE_CHECKING
 
-from discord import Attachment, File, NotFound
-from discord.ext import tasks, commands
-from core.clients.redis import RedisNameSpace
+from discord import File, NotFound
+from discord.ext import commands, tasks
+
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
+from core.clients.redis import RedisNameSpace
 from core.localization import LocaleEnum
-from time import time
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
 
 HEADER_UPDATE_SECONDS = 30.0
 SERVER_STATUS_UPDATE_SECONDS = 15.0
+
 
 class ImageUpdater(commands.Cog):
     def __init__(self, bot: 'MagicRustBot'):
@@ -25,7 +26,7 @@ class ImageUpdater(commands.Cog):
 
     def cog_unload(self):
         self.update_server_status.cancel()
-    
+
     @tasks.loop(seconds=SERVER_STATUS_UPDATE_SECONDS)
     async def update_server_status(self):
         print(-self.last_time + time())
@@ -41,7 +42,7 @@ class ImageUpdater(commands.Cog):
         except NotFound:
             last_message = None
         image_bytes: bytes = self.image_storage.get('server_status_image', as_bytes=True)
-        
+
         if not image_bytes:
             print('image not loaded')
         else:

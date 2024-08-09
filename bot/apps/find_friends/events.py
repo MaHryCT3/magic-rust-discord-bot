@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 
 from bot.apps.users.utils import get_member_locale
-from core.localization import LocaleEnum, LocalizationDict
 from bot.dynamic_settings import dynamic_settings
+from core.localization import LocaleEnum, LocalizationDict
 
 
 class FindFriendEvents(commands.Cog):

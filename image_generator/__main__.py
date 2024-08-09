@@ -1,4 +1,5 @@
 from image_generator.application import start_generation
+
 # import base64
 # from io import BytesIO
 # from image_generator.image_generator import get_server_status_image

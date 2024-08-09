@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .image_updater import ImageUpdater
 
 if TYPE_CHECKING:
