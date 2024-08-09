@@ -9,12 +9,15 @@ class RedisNameSpace:
         self._redis = StrictRedis.from_url(url)
         self.namespace = namespace
 
-    def get(self, key: str) -> Any:
+    def get(self, key: str, as_bytes: bool = False) -> Any:
         response = self._redis.get(self.make_key(key))
+        if as_bytes:
+            return response
         return self._decode_response(response)
 
     def set(self, key: str, value: Any, expire: int = None):
-        value = self._encode_redis_request(value)
+        if not isinstance(value, bytes):
+            value = self._encode_redis_request(value)
         self._redis.set(self.make_key(key), value, ex=expire)
 
     def mget_by_pattern(self, pattern: str = '*'):

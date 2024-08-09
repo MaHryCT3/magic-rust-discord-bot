@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     TIMEZONE: timezone = timezone(offset=timedelta(hours=3), name='Europe/Moscow')
 
     DISCORD_BOT_TOKEN: str
+    MAGIC_RUST_GUILD_ID: str
     SENTRY_DSN: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379'

@@ -51,6 +51,10 @@ class DynamicSettings:
         default_factory=dict,
         cast_on_load=cast_dict(RoleId, LocaleEnum),
     )
+    server_status_channels: dict[LocaleEnum, ChannelId] = SettingValue(
+        default_factory=dict,
+        cast_on_load=cast_dict(LocaleEnum, ChannelId),
+    )
 
     # Происходит загрузка настроек, значит не нужно сохранять их в редис в __set__
     _load_state: bool = False

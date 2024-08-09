@@ -1,3 +1,5 @@
+from io import BytesIO
+from typing import Callable
 from image_generator.image_generator import get_server_status_image, get_discord_header_image
 from image_generator.redis_namespaces import images_storage
 from PIL import Image
@@ -8,13 +10,17 @@ import asyncio
 IMAGE_EXPIRATION_TIME = 600
 
 async def update_server_status_image():
+    print('status update started')
     image: Image.Image
     try:
         image = get_server_status_image()
     except HTTPError:
         print("API connection failed")
         return
-    images_storage.set('server_status_image', image.tobytes(), IMAGE_EXPIRATION_TIME)
+    with BytesIO() as image_binary:
+        image.save(image_binary, 'PNG')
+        image_binary.seek(0)
+        images_storage.set('server_status_image', image_binary.getvalue(), IMAGE_EXPIRATION_TIME)
     print("Updated server status image")
 
 async def update_discord_header_image():
@@ -27,9 +33,10 @@ async def update_discord_header_image():
     images_storage.set('discord_header_image', image.tobytes(), IMAGE_EXPIRATION_TIME)
     print("Updated discord header image")
 
-async def repeat_every_minute(func, shift:int = 0, *args, **kwargs):
+async def repeat_every_minute(func: Callable, shift:int = 0, *args, **kwargs):
     seconds_until_minute = lambda: shift + 60 - int(time()) % 60
-    await asyncio.sleep(seconds_until_minute())
+    #print(func.__name__, 'is sleeping for', seconds_until_minute())
+    #await asyncio.sleep(seconds_until_minute())
     while True:
         await asyncio.gather(
             func(*args, **kwargs),
