@@ -1,12 +1,8 @@
-from json import loads
-
 from PIL import Image
-from requests import get
 
-from image_generator.config import settings
+from core.clients.server_data_api import get_servers_data
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
-from core.clients.server_data_api import get_servers_data
 
 SERVER_LASTUPDATE_TRESHOLD = 45
 CARD_IMAGE_PATH = 'image_generator/assets/images/card.png'

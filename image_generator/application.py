@@ -1,6 +1,5 @@
 import asyncio
 from io import BytesIO
-import logging
 from time import time
 from typing import Callable
 
