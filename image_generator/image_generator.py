@@ -6,6 +6,7 @@ from requests import get
 from image_generator.config import settings
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
+from core.clients.server_data_api import get_servers_data
 
 SERVER_LASTUPDATE_TRESHOLD = 45
 CARD_IMAGE_PATH = 'image_generator/assets/images/card.png'
@@ -23,20 +24,6 @@ def players_to_progress(max_players: int, players: int, joining: int, queue: int
     map_coef = max_players / players_sum
     map_coef = map_coef if map_coef < 1.0 else 1.0
     return [progress * map_coef for progress in [players / max_players, joining / max_players, queue / max_players]]
-
-
-def get_servers_data() -> list[dict]:
-    data = get(settings.SERVER_API_URL)
-    data.raise_for_status()
-    data_dict: dict = loads(data.content)
-    server_count = 0
-    actual_servers = []
-    for server_data in data_dict.values():
-        if server_data['lastupdate'] > SERVER_LASTUPDATE_TRESHOLD:
-            continue
-        server_count += 1
-        actual_servers.append(server_data)
-    return actual_servers
 
 
 def get_discord_data() -> tuple[int, int]:
@@ -66,14 +53,14 @@ def get_server_status_image() -> Image.Image:
             print(i, j, i * count[1] + j)
             server_data = servers_data[i * count[1] + j]
             progress = players_to_progress(
-                server_data['maxplayers'], server_data['players'], server_data['joining'], server_data['queue']
+                server_data.maxplayers, server_data.players, server_data.joining, server_data.queue
             )
             image = card.build(
-                f'MAGIC RUST #{server_data["num"]}',
-                server_data['map'],
+                f'MAGIC RUST #{server_data.server}',
+                server_data.map,
                 progress,
-                server_data['players'],
-                server_data['maxplayers'],
+                server_data.players,
+                server_data.maxplayers,
             )
             result.paste(image, (image.size[0] * j, image.size[1] * i))
     return result

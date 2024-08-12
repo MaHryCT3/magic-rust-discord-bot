@@ -1,5 +1,6 @@
 import asyncio
 from io import BytesIO
+import logging
 from time import time
 from typing import Callable
 
@@ -24,7 +25,7 @@ async def update_server_status_image():
         print('API connection failed')
         return
     with BytesIO() as image_binary:
-        image.save(image_binary, 'PNG')
+        image.save(image_binary, 'PNG', compress_level=0)
         image_binary.seek(0)
         images_storage.set('server_status_image', image_binary.getvalue(), IMAGE_EXPIRATION_TIME)
     print('Updated server status image')
@@ -59,6 +60,7 @@ async def main():
 
 
 def start_generation():
+    get_server_status_image()
     print('Started generation')
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())

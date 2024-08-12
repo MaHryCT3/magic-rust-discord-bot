@@ -15,6 +15,7 @@ redis = "^5.0.6"
 python-dateutil = "^2.9.0.post0"
 pillow = "^10.4.0"
 validators = "^0.33.0"
+cachetools = "^5.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +29,7 @@ redis = "^5.0.6"
 requests = "^2.32.3"
 pydantic = "^2.7.4"
 pydantic-settings = "^2.3.3"
+cachetools = "^5.4.0"
 
 [build-system]
 requires = ["poetry-core"]
