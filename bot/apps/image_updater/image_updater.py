@@ -2,13 +2,14 @@ from io import BytesIO
 from time import time
 from typing import TYPE_CHECKING
 
-from discord import File, NotFound
+from discord import File, Message, NotFound
 from discord.ext import commands, tasks
 
-from bot.config import settings
+from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
 from core.localization import LocaleEnum
+from global_constants import SERVER_STATUS_IMAGE_KEY
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -29,22 +30,22 @@ class ImageUpdater(commands.Cog):
 
     @tasks.loop(seconds=SERVER_STATUS_UPDATE_SECONDS)
     async def update_server_status(self):
-        print(-self.last_time + time())
-        self.last_time = time()
-        # FIXME called more frequently than expected
-        await self.bot.wait_until_ready()
-        channel_id = dynamic_settings.server_status_channels.get(LocaleEnum('en-US'))
+        channel_id = dynamic_settings.server_status_channels.get(LocaleEnum.en)
         if not channel_id:
             return
         channel = await self.bot.fetch_channel(channel_id)
+        last_message: Message | None
         try:
             last_message = await channel.fetch_message(channel.last_message_id)
         except NotFound:
             last_message = None
-        image_bytes: bytes = self.image_storage.get('server_status_image', as_bytes=True)
+        if last_message and not last_message.author.bot:
+            logger.error('Last message in server status channel is not sent by bot')
+            return
+        image_bytes: bytes = self.image_storage.get(SERVER_STATUS_IMAGE_KEY, as_bytes=True)
 
         if not image_bytes:
-            print('image not loaded')
+            logger.warn('image not loaded')
         else:
             image_binary = BytesIO(image_bytes)
             if not last_message:

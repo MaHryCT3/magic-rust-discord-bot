@@ -1,6 +1,8 @@
 up:
-	poetry export --without-hashes --only image-generator > ./image_generator/requirements.txt
-	poetry export --without-hashes --without image-generator > ./bot/requirements.txt
 	docker compose -f docker-compose.dev.yml up -d
+compile:
+	poetry export --without-hashes --with image-generator > ./image_generator/requirements.txt
+	poetry export --without-hashes --with bot > ./bot/requirements.txt
 down:
 	docker compose -f docker-compose.dev.yml down
+all: compile up

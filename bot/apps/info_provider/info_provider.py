@@ -4,6 +4,7 @@ from discord.ext import commands, tasks
 
 from bot.config import settings
 from core.clients.redis import RedisNameSpace
+from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -28,5 +29,5 @@ class InfoProvider(commands.Cog):
         fetched_guild = await self.bot.fetch_main_guild()
         online_presence = fetched_guild.approximate_presence_count
         voice_presence = sum([len(voice_channel.members) for voice_channel in guild.voice_channels])
-        self.info_storage.set('online_presence', online_presence, INFO_EXPIRATION_TIME)
-        self.info_storage.set('voice_presence', voice_presence, INFO_EXPIRATION_TIME)
+        self.info_storage.set(DISCORD_ONLINE_PRESENCE_KEY, online_presence, INFO_EXPIRATION_TIME)
+        self.info_storage.set(DISCORD_VOICE_PRESENCE_KEY, voice_presence, INFO_EXPIRATION_TIME)

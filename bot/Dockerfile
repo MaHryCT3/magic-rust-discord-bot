@@ -8,4 +8,5 @@ COPY bot/requirements.txt ./
 RUN pip install -r requirements.txt
 
 COPY core/ ./core
+COPY global_constants.py ./
 COPY bot/ ./bot

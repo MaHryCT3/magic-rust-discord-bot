@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from json import loads
 
+from aiohttp import ClientSession
 from cachetools.func import ttl_cache
 from requests import get
 
@@ -29,46 +29,46 @@ class ServerData:
 
     @staticmethod
     def from_dict(obj: dict) -> 'ServerData':
-        _ip = str(obj.get('ip'))
-        _map = str(obj.get('map'))
-        _players = int(obj.get('players'))
-        _sleepers = int(obj.get('sleepers'))
-        _maxplayers = int(obj.get('maxplayers'))
-        _queue = int(obj.get('queue'))
-        _joining = int(obj.get('joining'))
-        _time = float(obj.get('time'))
-        _server = int(obj.get('server'))
-        _wipeday = int(obj.get('wipeday'))
-        _gm = str(obj.get('gm')) if 'gm' in obj.keys() else None
-        _limit = int(obj.get('limit'))
-        _lastupdate = int(obj.get('lastupdate'))
-        _num = int(obj.get('num'))
         return ServerData(
-            _ip,
-            _map,
-            _players,
-            _sleepers,
-            _maxplayers,
-            _queue,
-            _joining,
-            _time,
-            _server,
-            _wipeday,
-            _gm,
-            _limit,
-            _lastupdate,
-            _num,
+            obj.get('ip'),
+            obj.get('map'),
+            obj.get('players'),
+            obj.get('sleepers'),
+            obj.get('maxplayers'),
+            obj.get('queue'),
+            obj.get('joining'),
+            obj.get('time'),
+            obj.get('server'),
+            obj.get('wipeday'),
+            obj.get('gm'),
+            obj.get('limit'),
+            obj.get('lastupdate'),
+            obj.get('num'),
         )
 
 
 @ttl_cache(ttl=API_GET_REQUEST_CACHE_TIME)
 def get_servers_data() -> list[ServerData]:
-    data = get(settings.SERVER_API_URL)
-    data.raise_for_status()
-    data_dict: dict = loads(data.content)
+    response = get(settings.SERVER_API_URL)
+    response.raise_for_status()
+    servers_data: dict = response.json()
     servers = [
         ServerData.from_dict(server_data)
-        for server_data in data_dict.values()
+        for server_data in servers_data.values()
+        if server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and server_data.get('gm', None) != 'test'
+    ]
+    return servers
+
+
+@ttl_cache(ttl=API_GET_REQUEST_CACHE_TIME)
+async def get_servers_data_async() -> list[ServerData]:
+    servers_data: dict
+    async with ClientSession() as session:
+        async with session.get(settings.SERVER_API_URL) as response:
+            servers_data = await response.json(content_type='text/html')
+    servers = [
+        ServerData.from_dict(server_data)
+        for server_data in servers_data.values()
         if server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and server_data.get('gm', None) != 'test'
     ]
     return servers
