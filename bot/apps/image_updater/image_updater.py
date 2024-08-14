@@ -2,7 +2,7 @@ from io import BytesIO
 from time import time
 from typing import TYPE_CHECKING
 
-from discord import File, Message, NotFound
+from discord import File, NotFound
 from discord.ext import commands, tasks
 
 from bot.config import logger, settings
@@ -34,7 +34,6 @@ class ImageUpdater(commands.Cog):
         if not channel_id:
             return
         channel = await self.bot.fetch_channel(channel_id)
-        last_message: Message | None
         try:
             last_message = await channel.fetch_message(channel.last_message_id)
         except NotFound:

@@ -1,10 +1,8 @@
-import asyncio
 from io import BytesIO
-from time import time
-from typing import Callable
+from time import sleep
 
-from PIL import Image
 from requests.exceptions import HTTPError
+from schedule import every, run_pending
 
 from global_constants import DISCOR_HEADER_IMAGE_KEY, SERVER_STATUS_IMAGE_KEY
 from image_generator.config import logger
@@ -17,8 +15,7 @@ from image_generator.redis_namespaces import images_storage
 IMAGE_EXPIRATION_TIME = 600
 
 
-async def update_server_status_image():
-    image: Image.Image
+def update_server_status_image():
     try:
         image = get_server_status_image()
     except HTTPError:
@@ -34,8 +31,7 @@ async def update_server_status_image():
     logger.info('Updated server status image')
 
 
-async def update_discord_header_image():
-    image: Image.Image
+def update_discord_header_image():
     try:
         image = get_discord_header_image()
     except HTTPError:
@@ -48,20 +44,10 @@ async def update_discord_header_image():
     logger.info('Updated discord header image')
 
 
-async def repeat_every_minute(func: Callable, shift: int = 0, *args, **kwargs):
-    seconds_until_minute = lambda: shift + 60 - int(time()) % 60
+def start_generation():
+    every().minute.at(':00').do(update_server_status_image)
+    every().minute.at(':55').do(update_discord_header_image)
+    logger.info('Starting generation')
     while True:
-        await asyncio.gather(
-            func(*args, **kwargs),
-            asyncio.sleep(seconds_until_minute()),
-        )
-
-
-def start_status_image_generation():
-    logger.info('Started status image generation')
-    asyncio.run(repeat_every_minute(update_server_status_image))
-
-
-def start_discrod_header_generation():
-    logger.info('Started discord header generation')
-    asyncio.run(repeat_every_minute(update_discord_header_image))
+        run_pending()
+        sleep(1)

@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+import asyncio
 
 from aiohttp import ClientSession
 from cachetools.func import ttl_cache
-from requests import get
+from pydantic import BaseModel
 
 from core.config import settings
 
@@ -10,8 +10,7 @@ SERVER_LASTUPDATE_TRESHOLD = 45
 API_GET_REQUEST_CACHE_TIME = 15
 
 
-@dataclass
-class ServerData:
+class ServerData(BaseModel):
     ip: str
     map: str
     players: int
@@ -28,36 +27,15 @@ class ServerData:
     num: int
 
     @staticmethod
-    def from_dict(obj: dict) -> 'ServerData':
-        return ServerData(
-            obj.get('ip'),
-            obj.get('map'),
-            obj.get('players'),
-            obj.get('sleepers'),
-            obj.get('maxplayers'),
-            obj.get('queue'),
-            obj.get('joining'),
-            obj.get('time'),
-            obj.get('server'),
-            obj.get('wipeday'),
-            obj.get('gm'),
-            obj.get('limit'),
-            obj.get('lastupdate'),
-            obj.get('num'),
-        )
+    def from_dict(data_dict: dict) -> 'ServerData':
+        return ServerData(**data_dict)
 
 
-@ttl_cache(ttl=API_GET_REQUEST_CACHE_TIME)
 def get_servers_data() -> list[ServerData]:
-    response = get(settings.SERVER_API_URL)
-    response.raise_for_status()
-    servers_data: dict = response.json()
-    servers = [
-        ServerData.from_dict(server_data)
-        for server_data in servers_data.values()
-        if server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and server_data.get('gm', None) != 'test'
-    ]
-    return servers
+    loop = asyncio.get_event_loop()
+    result = loop.run_until_complete(get_servers_data_async())
+    loop.close()
+    return result
 
 
 @ttl_cache(ttl=API_GET_REQUEST_CACHE_TIME)

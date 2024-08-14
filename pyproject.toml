@@ -29,6 +29,7 @@ python-dateutil = "^2.9.0.post0"
 
 [tool.poetry.group.image-generator.dependencies]
 pillow = "^10.4.0"
+schedule = "^1.2.2"
 
 
 [build-system]

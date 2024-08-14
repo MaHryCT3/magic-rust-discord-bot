@@ -1,3 +1,3 @@
-from image_generator.application import start_status_image_generation
+from image_generator.application import start_generation
 
-start_status_image_generation()
+start_generation()
