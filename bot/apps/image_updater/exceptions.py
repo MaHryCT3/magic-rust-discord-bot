@@ -1,0 +1,2 @@
+class LastMessageAuthorIsNotSelfError(Exception):
+    pass

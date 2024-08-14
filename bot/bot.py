@@ -33,6 +33,7 @@ class MagicRustBot(Bot):
 
     async def on_ready(self):
         self._load_cogs()
+        await self.sync_commands()
         logger.info('Bot is running')
 
     async def on_connect(self):

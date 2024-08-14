@@ -2,13 +2,13 @@ from io import BytesIO
 from time import time
 from typing import TYPE_CHECKING
 
-from discord import File, NotFound
+from discord import File, NoMoreItems, TextChannel
 from discord.ext import commands, tasks
 
+from bot.apps.image_updater.exceptions import LastMessageAuthorIsNotSelfError
 from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
-from core.localization import LocaleEnum
 from global_constants import SERVER_STATUS_IMAGE_KEY
 
 if TYPE_CHECKING:
@@ -30,17 +30,16 @@ class ImageUpdater(commands.Cog):
 
     @tasks.loop(seconds=SERVER_STATUS_UPDATE_SECONDS)
     async def update_server_status(self):
-        channel_id = dynamic_settings.server_status_channels.get(LocaleEnum.en)
+        channel_id = dynamic_settings.server_status_channel
         if not channel_id:
             return
-        channel = await self.bot.fetch_channel(channel_id)
+        channel: TextChannel = await self.bot.fetch_channel(channel_id)
         try:
-            last_message = await channel.fetch_message(channel.last_message_id)
-        except NotFound:
+            last_message = await channel.history().next()
+        except NoMoreItems:
             last_message = None
         if last_message and not last_message.author.bot:
-            logger.error('Last message in server status channel is not sent by bot')
-            return
+            raise LastMessageAuthorIsNotSelfError('Last message should have been sent by bot, not user.')
         image_bytes: bytes = self.image_storage.get(SERVER_STATUS_IMAGE_KEY, as_bytes=True)
 
         if not image_bytes:

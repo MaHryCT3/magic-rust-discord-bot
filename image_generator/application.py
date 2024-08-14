@@ -21,9 +21,6 @@ def update_server_status_image():
     except HTTPError:
         logger.warn('API connection failed')
         return
-    except Exception as e:
-        logger.warn(e)
-        return
     with BytesIO() as image_binary:
         image.save(image_binary, 'PNG', compress_level=0)
         image_binary.seek(0)
@@ -36,9 +33,6 @@ def update_discord_header_image():
         image = get_discord_header_image()
     except HTTPError:
         logger.warn('API connection failed')
-        return
-    except Exception as e:
-        logger.warn(e)
         return
     images_storage.set(DISCOR_HEADER_IMAGE_KEY, image.tobytes(), IMAGE_EXPIRATION_TIME)
     logger.info('Updated discord header image')
