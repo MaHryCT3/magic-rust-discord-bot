@@ -3,8 +3,8 @@ import datetime
 import discord
 
 from bot.config import settings
-from bot.core.utils.colors import get_random_blue_color
-from bot.core.utils.format_strings import bold_message
+from core.utils.colors import get_random_blue_color
+from core.utils.format_strings import bold_message
 
 
 class SendMessageByBotEmbed(discord.Embed):

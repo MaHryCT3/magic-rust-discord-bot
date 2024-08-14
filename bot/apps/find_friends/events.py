@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 
 from bot.apps.users.utils import get_member_locale
-from bot.core.localization import LocaleEnum, LocalizationDict
 from bot.dynamic_settings import dynamic_settings
+from core.localization import LocaleEnum, LocalizationDict
 
 
 class FindFriendEvents(commands.Cog):
@@ -18,8 +18,8 @@ class FindFriendEvents(commands.Cog):
     async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
-        locale = get_member_locale(message.author)
         if not message.channel.id in list(dynamic_settings.find_friend_channels.values()):
             return
         await message.delete()
+        locale = get_member_locale(message.author)
         await message.author.send(self.respond_localization[locale])

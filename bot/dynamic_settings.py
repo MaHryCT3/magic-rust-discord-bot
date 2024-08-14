@@ -1,8 +1,8 @@
 from typing import Any, Callable, TypeAlias
 
 from bot.config import logger, settings
-from bot.core.clients.redis import RedisNameSpace
-from bot.core.localization import LocaleEnum
+from core.clients.redis import RedisNameSpace
+from core.localization import LocaleEnum
 
 ChannelId: TypeAlias = int
 RoleId: TypeAlias = int
@@ -11,9 +11,13 @@ RoleId: TypeAlias = int
 class SettingValue:
     def __init__(
         self,
+        default: Any = None,
         default_factory: Callable | None = None,
         cast_on_load: Callable | None = None,
     ):
+        if default and default_factory:
+            raise AttributeError('Either default or default_factory can be provided.')
+        self.default = default
         self.default_factory = default_factory
         self.cast_on_load = cast_on_load
 
@@ -28,8 +32,8 @@ class SettingValue:
         if not instance._load_state:
             instance._storage.set(self.public_name, value)
         else:
-            value = value or self.default_factory()
-            if self.cast_on_load:
+            value = value or self.default or self.default_factory() if self.default_factory else None
+            if value and self.cast_on_load:
                 value = self.cast_on_load(value)
         setattr(instance, self._private_name, value)
 
@@ -50,6 +54,9 @@ class DynamicSettings:
     locale_roles: dict[RoleId, LocaleEnum] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(RoleId, LocaleEnum),
+    )
+    server_status_channel: ChannelId = SettingValue(
+        cast_on_load=ChannelId,
     )
 
     # Происходит загрузка настроек, значит не нужно сохранять их в редис в __set__
