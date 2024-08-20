@@ -36,8 +36,5 @@ class MagicRustBot(Bot):
         await self.sync_commands()
         logger.info('Bot is running')
 
-    async def on_connect(self):
-        await self.sync_commands()
-
     def run(self, *args: Any, **kwargs: Any) -> NoReturn:
-        super().run(settings.DISCORD_BOT_TOKEN, *args, **kwargs)
+        super().run(settings.DISCORD_MAIN_BOT_TOKEN, *args, **kwargs)

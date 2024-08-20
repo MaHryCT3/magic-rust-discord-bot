@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     model_config = ConfigDict(extra='ignore')
+
     SERVER_API_URL: str
 
 
