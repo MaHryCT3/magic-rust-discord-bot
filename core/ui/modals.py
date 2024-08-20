@@ -36,19 +36,25 @@ class BaseModal(discord.ui.Modal):
 
 
 class BaseLocalizationModal(BaseModal):
-    localization_map: dict[InputText, dict[LocaleEnum, dict]]
+    inputs_localization_map: dict[InputText, dict[LocaleEnum, dict]]
+    title_localization_map: dict[LocaleEnum, str]
 
     def __init__(self, *args, locale: LocaleEnum, **kwargs):
-        assert hasattr(self, 'localization_map'), 'Used "BaseLocalizationModal", bust localization_map param skipped'
+        assert hasattr(
+            self, 'inputs_localization_map'
+        ), 'Used "BaseLocalizationModal", bust inputs_localization_map param skipped'
         self.locale = locale
 
         for input in self.inputs:
-            input_translations = self.localization_map.get(input, {})
+            input_translations = self.inputs_localization_map.get(input, {})
             locale_translations = input_translations.get(locale)
             if not locale_translations:
                 continue
 
             for key, value in locale_translations.items():
                 setattr(input, key, value)
+
+        if hasattr(self, 'title_localization_map'):
+            kwargs.setdefault('title', self.title_localization_map.get(self.locale))
 
         super().__init__(*args, **kwargs)

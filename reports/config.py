@@ -12,8 +12,10 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     TIMEZONE: timezone = timezone(offset=timedelta(hours=3), name='Europe/Moscow')
 
-    DISCORD_MAIN_BOT_TOKEN: str
+    DISCORD_REPORT_BOT_TOKEN: str
+    DISCORD_OWNER_IDS: list[int]
     MAGIC_RUST_GUILD_ID: str
+    DISCORD_REPORT_VK_BOT_TOKEN: str
     SENTRY_DSN: str = ''
 
     REDIS_URL: str = 'redis://localhost:6379'
@@ -22,6 +24,7 @@ class Settings(BaseSettings):
 settings = Settings(_env_file='.env')
 
 
-logger = logging.getLogger('discord-bot')
+logger = logging.getLogger('discord-report-bot')
 logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
+logging.getLogger('vkbottle').setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)

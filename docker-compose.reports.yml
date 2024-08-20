@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./storage/redis:/data
+  
+  reports:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./reports/Dockerfile
+    tty: true
+    command: python -m reports
+    volumes:
+      - ./reports:/app/reports
+      - ./core:/app/core

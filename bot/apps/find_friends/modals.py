@@ -23,7 +23,7 @@ class FindFriendModal(BaseLocalizationModal):
     )
     server_input = InputText()
 
-    localization_map = {
+    inputs_localization_map = {
         article_input: {
             LocaleEnum.ru: dict(
                 label='Заголовок',
@@ -47,7 +47,7 @@ class FindFriendModal(BaseLocalizationModal):
         server_input: {
             LocaleEnum.ru: dict(
                 label='Номера серверов',
-                placeholder='Обязательно укажиите номер(а) сервера(-ов) MR',
+                placeholder='Обязательно укажите номер(а) сервера(-ов) MR',
             ),
             LocaleEnum.en: dict(
                 label='Servers',
