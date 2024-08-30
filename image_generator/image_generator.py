@@ -1,6 +1,6 @@
 from PIL import Image
 
-from core.clients.server_data_api import get_servers_data
+from core.clients.server_data_api import MagicRustServerDataAPI
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
@@ -38,7 +38,7 @@ def load_image(path: str) -> Image.Image:
 
 def get_server_status_image() -> Image.Image:
     count = (6, 4)
-    servers_data = get_servers_data()
+    servers_data = MagicRustServerDataAPI().get_full_servers_data_sync()
     card_image: Image.Image = load_image(CARD_IMAGE_PATH)
     text_image: Image.Image = load_image(CARD_TEXT_IMAGE_PATH)
     progress_image: Image.Image = load_image(CARD_PROGRESS_IMAGE_PATH)
