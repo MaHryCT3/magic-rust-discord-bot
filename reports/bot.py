@@ -7,7 +7,7 @@ from reports.config import logger, settings
 from reports.exceptions import ReportsError
 
 COGS = [
-    'setup',
+    'cogs.setup',
 ]
 
 

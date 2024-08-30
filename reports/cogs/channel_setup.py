@@ -8,7 +8,7 @@ from core.utils.format_strings import framing_message
 from reports.bot import MagicRustReportBot
 from reports.config import settings
 from reports.constants import MAIN_COLOR
-from reports.view import ReportView
+from reports.ui.view import ReportView
 
 
 class ChannelConfigCog(commands.Cog):
