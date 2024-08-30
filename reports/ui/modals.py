@@ -4,9 +4,9 @@ from discord import Interaction
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
 from reports.constants import REPORT_COOLDOWN, VK_REPORT_MESSAGE_TEMPLATE
-from reports.cooldowns import report_cooldown
 from reports.exceptions import UserReportCooldownError
 from reports.services import ChatTypes, ReportVKSender
+from reports.services.cooldowns import report_cooldown
 
 
 class BaseReportModal(BaseLocalizationModal):

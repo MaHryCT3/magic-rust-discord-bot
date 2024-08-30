@@ -6,9 +6,9 @@ from discord.ui import Item
 
 from core.localization import LocaleEnum
 from reports.constants import REPORT_COOLDOWN
-from reports.cooldowns import report_cooldown
 from reports.exceptions import ReportsError, UserReportCooldownError
-from reports.modals import BaseReportModal, CheaterReportModal, LimitReportModal
+from reports.services.cooldowns import report_cooldown
+from reports.ui.modals import BaseReportModal, CheaterReportModal, LimitReportModal
 
 
 class BaseReportButton(discord.ui.Button):
