@@ -32,7 +32,7 @@ class SettingValue:
         if not instance._load_state:
             instance._storage.set(self.public_name, value)
         else:
-            value = value or self.default or self.default_factory() if self.default_factory else None
+            value = value or self.default or (self.default_factory() if self.default_factory else None)
             if value and self.cast_on_load:
                 value = self.cast_on_load(value)
         setattr(instance, self._private_name, value)
@@ -48,6 +48,10 @@ def cast_dict(key_cast: Callable, value_cast: Callable) -> Callable[[dict], dict
 class DynamicSettings:
     find_friend_cooldown: int = SettingValue(default_factory=int)
     find_friend_channels: dict[LocaleEnum, ChannelId] = SettingValue(
+        default_factory=dict,
+        cast_on_load=cast_dict(LocaleEnum, ChannelId),
+    )
+    server_filter_channels: dict[LocaleEnum, ChannelId] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, ChannelId),
     )

@@ -1,5 +1,4 @@
 from io import BytesIO
-from time import time
 from typing import TYPE_CHECKING
 
 from discord import File, NoMoreItems, TextChannel
@@ -23,7 +22,6 @@ class ImageUpdater(commands.Cog):
         self.bot = bot
         self.image_storage = RedisNameSpace(settings.REDIS_URL, 'images')
         self.update_server_status.start()
-        self.last_time = time()
 
     def cog_unload(self):
         self.update_server_status.cancel()
@@ -46,7 +44,7 @@ class ImageUpdater(commands.Cog):
             logger.warn('image not loaded')
         else:
             image_binary = BytesIO(image_bytes)
-            if not last_message:
+            if not last_message or not last_message.attachments:
                 await channel.send(file=File(image_binary, filename='server_status.png'))
             else:
                 await last_message.edit(file=File(image_binary, filename='server_status.png'), attachments=[])
