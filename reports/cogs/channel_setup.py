@@ -8,10 +8,10 @@ from core.utils.format_strings import framing_message
 from reports.bot import MagicRustReportBot
 from reports.config import settings
 from reports.constants import MAIN_COLOR
-from reports.ui.view import ReportView
+from reports.ui.report_view import ReportView
 
 
-class ChannelConfigCog(commands.Cog):
+class ChannelSetupCog(commands.Cog):
     reports_group = SlashCommandGroup(
         name='reports',
         description='Управление репортами',

@@ -4,7 +4,7 @@ import discord
 from discord.bot import Bot
 
 from reports.config import logger, settings
-from reports.exceptions import ReportsError
+from reports.errors import ReportsError
 
 COGS = [
     'cogs.setup',
