@@ -5,7 +5,7 @@ from aiohttp.log import client_logger as logger
 
 
 class HTTPClient:
-    def __init__(self, base_url: str, headers: dict | None = None) -> None:
+    def __init__(self, base_url: str = '', headers: dict | None = None) -> None:
         self.client = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=60 * 30), headers=headers)
         self.base_url = base_url
 
@@ -28,11 +28,17 @@ class HTTPClient:
         response.raise_for_status()
         return response
 
-    async def get(self, url: str, query: dict | None = None):
+    async def get(
+        self,
+        url: str,
+        query: dict | None = None,
+        headers: dict | None = None,
+    ):
         return await self.request(
             url,
             http_method='GET',
             query=query,
+            headers=headers,
         )
 
     async def post(
@@ -41,6 +47,7 @@ class HTTPClient:
         query: dict | None = None,
         payload: dict | None = None,
         body: str | None = None,
+        headers: dict | None = None,
     ):
         return await self.request(
             url,
@@ -48,6 +55,7 @@ class HTTPClient:
             query=query,
             payload=payload,
             body=body,
+            headers=headers,
         )
 
     def __del__(self):
