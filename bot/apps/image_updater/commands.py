@@ -22,6 +22,5 @@ class ImageUpdaterCommands(commands.Cog):
         channel_id = dynamic_settings.server_status_channel
         if not channel_id:
             raise ChannelNotConfiguredError('Server status channel is not set')
-        print(type(channel_id))
         channel: discord.TextChannel = await self.bot.fetch_channel(channel_id)
         await ctx.respond(f"Сообщеия отправлены в канал {channel.name}", ephemeral=True)

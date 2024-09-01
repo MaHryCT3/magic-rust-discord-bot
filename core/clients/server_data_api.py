@@ -8,7 +8,12 @@ from core.config import settings
 
 SERVER_LASTUPDATE_TRESHOLD = 45
 API_GET_REQUEST_CACHE_TIME = 15
-
+LIMIT_LABELS = {
+    0: 'NO LIMIT',
+    1: 'SOLO',
+    2: 'MAX 2',
+    3: 'MAX 3',
+}
 
 class ServerData(BaseModel):
     ip: str
