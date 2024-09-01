@@ -1,5 +1,5 @@
-from .channel_config import ChannelConfigCog
+from .channel_setup import ChannelSetupCog
 
 
 def setup(bot):
-    bot.add_cog(ChannelConfigCog(bot))
+    bot.add_cog(ChannelSetupCog(bot))

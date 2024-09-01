@@ -1,24 +1,25 @@
+from typing import Final
+
 import discord
 from discord import Interaction
 
+from core.clients.server_data_api import MonitoringServerData, ServerTypes
+from core.clients.server_data_api.utils import get_only_server_name_from_title
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
 from reports.constants import REPORT_COOLDOWN, VK_REPORT_MESSAGE_TEMPLATE
-from reports.exceptions import UserReportCooldownError
-from reports.services import ChatTypes, ReportVKSender
+from reports.errors import UserReportCooldownError
 from reports.services.cooldowns import report_cooldown
+from reports.services.report_sender import ChatTypes, ReportVKSender
 
 
 class BaseReportModal(BaseLocalizationModal):
+    MAX_SERVER_NAME_LENGTH_IN_TITLE: Final[int] = 25
+
     player_info_input = InputText(
         max_length=250,
         placeholder='https://steamcommunity.com/profiles/76561198365812808, https://steamcommu',
-        required=True,
-    )
-
-    server = InputText(
-        max_length=10,
-        placeholder='15',
+        style=discord.InputTextStyle.multiline,
         required=True,
     )
 
@@ -28,16 +29,12 @@ class BaseReportModal(BaseLocalizationModal):
     )
 
     inputs_localization_map = {
-        server: {
-            LocaleEnum.en: dict(label='Server number or name (main, long)'),
-            LocaleEnum.ru: dict(label='Номер сервера или название (main, long)'),
-        },
         player_info_input: {
             LocaleEnum.ru: dict(
-                label='На кого жалуетесь (ссылка на профиль)',
+                label='На кого жалуетесь (ссылки на профиля)',
             ),
             LocaleEnum.en: dict(
-                label='Who are you report about (link to profile)',
+                label='Who are you report about (link to profiles)',
             ),
         },
         message_input: {
@@ -55,6 +52,14 @@ class BaseReportModal(BaseLocalizationModal):
         LocaleEnum.ru: 'Жалоба отправлена',
     }
 
+    def __init__(self, *args, server: MonitoringServerData, **kwargs):
+        self.server = server
+        super().__init__(*args, **kwargs)
+        self.server_short_name = get_only_server_name_from_title(server.title)
+
+        title = self.title_localization_map[self.locale].format(server_name=self.server_short_name)
+        self.title = title[: self.MAX_SERVER_NAME_LENGTH_IN_TITLE]
+
     async def callback(self, interaction: Interaction):
         await self._check_on_cooldown(interaction.user.id)
         await self._send_report_to_vk(interaction)
@@ -70,11 +75,11 @@ class BaseReportModal(BaseLocalizationModal):
             raise UserReportCooldownError(cooldown_end_timestamp=cooldown_end_at, locale=self.locale)
 
     async def _send_report_to_vk(self, interaction: Interaction):
-        pass
+        raise NotImplementedError
 
     def _get_report_message(self, interaction: Interaction):
         return VK_REPORT_MESSAGE_TEMPLATE.format(
-            server_name=self.server,
+            server_name=self.server_short_name,
             discord_name=interaction.user.name,
             discord_id=interaction.user.id,
             players=self.player_info_input,
@@ -91,8 +96,8 @@ class BaseReportModal(BaseLocalizationModal):
 
 class CheaterReportModal(BaseReportModal):
     title_localization_map = {
-        LocaleEnum.en: 'Report cheat',
-        LocaleEnum.ru: 'Жалоба на читера',
+        LocaleEnum.en: 'Cheater. {server_name}',
+        LocaleEnum.ru: 'Читер. {server_name}',
     }
 
     async def _send_report_to_vk(self, interaction: Interaction):
@@ -101,38 +106,15 @@ class CheaterReportModal(BaseReportModal):
         await ReportVKSender().send_message(chat_type, message=message)
 
     def _get_vk_chat_type_for_server(self) -> ChatTypes:
-        # TODO: костыль, потом выбор свервера будет по другому
-        official_names = [
-            'mein',
-            'меин',
-            'ein',
-            'main',
-            'мейн',
-            'мэйн',
-            'майн',
-            'айн',
-            'ейн',
-            'меин',
-            'lng',
-            'ong',
-            'long',
-            'лонг',
-            'лонк',
-            'онк',
-            'онг',
-            'main',
-            'mein',
-        ]
-        for name in official_names:
-            if name in self.server.lower():
-                return ChatTypes.OFFICIAL
+        if self.server.server_type == ServerTypes.OFFICIAL:
+            return ChatTypes.OFFICIAL
         return ChatTypes.MODDED
 
 
 class LimitReportModal(BaseReportModal):
     title_localization_map = {
-        LocaleEnum.en: 'Report players limit',
-        LocaleEnum.ru: 'Жалоба на нарушение лимита',
+        LocaleEnum.en: 'Players limit. {server_name}',
+        LocaleEnum.ru: 'Лимит игроков. {server_name}',
     }
 
     async def _send_report_to_vk(self, interaction: Interaction):

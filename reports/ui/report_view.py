@@ -4,18 +4,32 @@ import discord
 from discord import Interaction
 from discord.ui import Item
 
-from core.localization import LocaleEnum
+from core.clients.server_data_api import MagicRustServerDataAPI
+from core.clients.server_data_api.utils import (
+    sort_monitoring_server_data_by_server_number,
+)
+from core.localization import LocaleEnum, LocalizationDict
 from reports.constants import REPORT_COOLDOWN
-from reports.exceptions import ReportsError, UserReportCooldownError
+from reports.errors import ReportsError, UserReportCooldownError
 from reports.services.cooldowns import report_cooldown
-from reports.ui.modals import BaseReportModal, CheaterReportModal, LimitReportModal
+from reports.ui.select_server_view import (
+    SelectCheaterReportServerView,
+    SelectLimitReportServerView,
+)
 
 
 class BaseReportButton(discord.ui.Button):
-    modal_class: type[BaseReportModal]
+    select_view_class: type[discord.ui.View]
     button_name: str
     localization_text_map: dict[LocaleEnum, str]
     style: discord.ButtonStyle
+
+    select_server_localization_text_map: dict[LocaleEnum, str] = LocalizationDict(
+        {
+            LocaleEnum.en: 'Select server',
+            LocaleEnum.ru: 'Выберите сервер',
+        }
+    )
 
     def __init__(self, locale: LocaleEnum):
         self.locale = locale
@@ -33,12 +47,20 @@ class BaseReportButton(discord.ui.Button):
         ):
             raise UserReportCooldownError(cooldown_end_timestamp=cooldown_end_at, locale=self.locale)
 
-        modal = self.modal_class(locale=self.locale)
-        await interaction.response.send_modal(modal)
+        servers_data = await MagicRustServerDataAPI().get_monitoring_servers_data()
+        sort_monitoring_server_data_by_server_number(servers_data)
+
+        select_server_view = self.select_view_class(servers_data, self.locale)
+        await interaction.respond(
+            self.select_server_localization_text_map[self.locale],
+            view=select_server_view,
+            ephemeral=True,
+            delete_after=60,
+        )
 
 
 class CheaterReportButton(BaseReportButton):
-    modal_class = CheaterReportModal
+    select_view_class = SelectCheaterReportServerView
     button_name = 'cheater'
     localization_text_map: dict[LocaleEnum, str] = {
         LocaleEnum.en: 'Report cheater',
@@ -48,7 +70,7 @@ class CheaterReportButton(BaseReportButton):
 
 
 class LimitReportButton(BaseReportButton):
-    modal_class = LimitReportModal
+    select_view_class = SelectLimitReportServerView
     button_name = 'limit'
     localization_text_map: dict[LocaleEnum, str] = {
         LocaleEnum.en: 'Report players limit violations',
