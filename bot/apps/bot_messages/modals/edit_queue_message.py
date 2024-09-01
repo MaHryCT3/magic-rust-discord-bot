@@ -1,5 +1,4 @@
 import datetime
-from typing import TYPE_CHECKING
 
 from discord import Interaction
 
@@ -9,9 +8,6 @@ from bot.apps.bot_messages.services import DelayedMessage
 from bot.config import settings
 from bot.constants import DATETIME_FORMAT
 from core.ui.modals import InputText
-
-if TYPE_CHECKING:
-    pass
 
 
 class EditQueueMessageModal(BaseSendMessageByBotModal):

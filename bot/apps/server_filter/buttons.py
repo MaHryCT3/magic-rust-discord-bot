@@ -1,7 +1,7 @@
 from typing import Any, Callable, Coroutine, TYPE_CHECKING
 import discord
 
-from core.clients.server_data_api import LIMIT_LABELS
+from core.clients.server_data_api.models import LIMIT_LABELS
 
 if TYPE_CHECKING:
     from bot.apps.server_filter.views import ServerFilterView

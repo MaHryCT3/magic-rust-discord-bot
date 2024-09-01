@@ -1,6 +1,6 @@
 import discord
 
-from core.clients.server_data_api import LIMIT_LABELS, ServerData
+from core.clients.server_data_api.models import LIMIT_LABELS, FullServerData
 from core.localization import LocaleEnum, LocalizationDict
 from core.utils.colors import get_random_blue_color
 from core.utils.date_time import day_num_to_name
@@ -26,7 +26,7 @@ class ServerFilterGreetingEmbed(discord.Embed):
         return embed
 
 class ServerInfoEmbed(discord.Embed):
-    def add_server(self, server_data: ServerData):
+    def add_server(self, server_data: FullServerData):
         self.add_field(name=f'MAGIC RUST #{server_data.num}', value=f'>>> -# {server_data.ip}\n\
             {server_data.gm}\n\
             {server_data.map}\n\

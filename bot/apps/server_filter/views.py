@@ -3,7 +3,8 @@ import discord
 
 from bot.apps.server_filter.buttons import GameModeSelect, LimitSelect, MapSelect, WipeDaySelect
 from bot.apps.server_filter.embeds import ServerInfoEmbed
-from core.clients.server_data_api import ServerData, get_servers_data_async
+from core.clients.server_data_api.api import MagicRustServerDataAPI
+from core.clients.server_data_api.models import FullServerData
 from core.localization import LocaleEnum, LocalizationDict
 
 
@@ -50,7 +51,7 @@ class ServerFilterView(discord.ui.View):
         super().__init__(gm_select, limit_select, wipeday_select, map_select, timeout=None)
     
     async def update(self, interaction: discord.Interaction):
-        servers_data: list[ServerData] = await get_servers_data_async()
+        servers_data: list[FullServerData] = await MagicRustServerDataAPI().get_full_servers_data()
         server_info_embed = ServerInfoEmbed()
         for server_data in servers_data:
             if (not self.gm or server_data.gm == self.gm) and \

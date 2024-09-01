@@ -1,6 +1,8 @@
+import asyncio
 from PIL import Image
 
-from core.clients.server_data_api import get_servers_data
+from core.clients.server_data_api import MagicRustServerDataAPI
+from core.clients.server_data_api.models import FullServerData
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
@@ -12,7 +14,6 @@ CARD_PROGRESS_IMAGE_PATH = 'image_generator/assets/images/card_progress.png'
 DISCORD_HEADER_IMAGE_PATH = 'image_generator/assets/images/Main Banner.png'
 DISCORD_HEADER_EXTENSION_IMAGE_PATH = 'image_generator/assets/images/Main Banner (extended).png'
 DISCORD_HEADER_TEXT_IMAGE_PATH = 'image_generator/assets/images/Main Banner_text.png'
-
 
 def players_to_progress(max_players: int, players: int, joining: int, queue: int) -> list[float]:
     players_sum = players + joining / 2.0 + queue
@@ -36,9 +37,13 @@ def load_image(path: str) -> Image.Image:
     return image
 
 
+async def get_full_servers_data() -> list[FullServerData]:
+    return await MagicRustServerDataAPI().get_full_servers_data()
+
+
 def get_server_status_image() -> Image.Image:
     count = (6, 4)
-    servers_data = get_servers_data()
+    servers_data = asyncio.run(get_full_servers_data())
     card_image: Image.Image = load_image(CARD_IMAGE_PATH)
     text_image: Image.Image = load_image(CARD_TEXT_IMAGE_PATH)
     progress_image: Image.Image = load_image(CARD_PROGRESS_IMAGE_PATH)
