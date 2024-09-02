@@ -77,24 +77,6 @@ class SettingsCog(commands.Cog):
         )
 
     @settings_group.command(
-        description='Изменить каналы для фильтра серверов',
-    )
-    async def filter_channels(
-        self,
-        ctx: discord.ApplicationContext,
-        locale: discord.Option(LocaleEnum),
-        channel: discord.TextChannel,
-    ):
-        current_channels = dynamic_settings.server_filter_channels
-        current_channels[locale] = channel.id
-        dynamic_settings.server_filter_channels = current_channels
-        logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы для фильтра серверов на {current_channels}')
-        await ctx.respond(
-            f'Канал для фильтра серверов для региона {locale} был установлен {channel}',
-            ephemeral=True,
-        )
-
-    @settings_group.command(
         description='Изменить каналы статуса серверов',
     )
     async def server_status_channels(

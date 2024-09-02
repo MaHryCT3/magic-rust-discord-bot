@@ -23,6 +23,7 @@ class ServerFilterGreetingEmbed(discord.Embed):
         embed.title = cls.title_localization[locale]
         return embed
 
+
 class ServerInfoEmbed(discord.Embed):
     wipe_label_localization = LocalizationDict(
         {
@@ -32,9 +33,12 @@ class ServerInfoEmbed(discord.Embed):
     )
 
     def add_server(self, server_data: CombinedServerData, locale: LocaleEnum = LocaleEnum.ru):
-        self.add_field(name=f'{server_data.title}', value=f'>>> -# {server_data.ip}\n\
+        self.add_field(
+            name=f'{server_data.title}',
+            value=f'>>> -# {server_data.ip}\n\
             {server_data.gm}\n\
             {server_data.map}\n\
             {LIMIT_LABELS[server_data.limit]}\n\
             {server_data.players}/{server_data.maxplayers}\n\
-            {self.wipe_label_localization[locale]}{day_num_to_name(server_data.wipeday, locale)}')
+            {self.wipe_label_localization[locale]}{day_num_to_name(server_data.wipeday, locale)}',
+        )
