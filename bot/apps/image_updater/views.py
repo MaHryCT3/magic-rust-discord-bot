@@ -1,9 +1,9 @@
 from typing import Self
 import discord
 
-from bot.apps.server_filter.buttons import GameModeSelect, LimitSelect, MapSelect, WipeDaySelect
-from bot.apps.server_filter.embeds import ServerInfoEmbed
-from core.clients.server_data_api.api import MagicRustServerDataAPI
+from bot.apps.image_updater.select_buttons import GameModeSelect, LimitSelect, MapSelect, WipeDaySelect
+from bot.apps.image_updater.embeds import ServerInfoEmbed
+from core.clients.server_data_api import MagicRustServerDataAPI
 from core.clients.server_data_api.models import FullServerData
 from core.localization import LocaleEnum, LocalizationDict
 
@@ -31,9 +31,8 @@ class ServerFilterGreetingView(discord.ui.View):
             localization_views[locale] = cls(locale)
         return localization_views
 
-    @classmethod
-    async def _button_callback(cls, interaction: discord.Interaction):
-        await interaction.response.send_message(view=ServerFilterView(locale=LocaleEnum.en), ephemeral=True) #TODO: send view
+    async def _button_callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(view=ServerFilterView(locale=self.locale), ephemeral=True)
 
 
 class ServerFilterView(discord.ui.View):
@@ -51,14 +50,15 @@ class ServerFilterView(discord.ui.View):
         super().__init__(gm_select, limit_select, wipeday_select, map_select, timeout=None)
     
     async def update(self, interaction: discord.Interaction):
-        servers_data: list[FullServerData] = await MagicRustServerDataAPI().get_full_servers_data()
+        servers_data: list[FullServerData] = await MagicRustServerDataAPI().get_combined_servers_data()
+        servers_data.sort(key=lambda item: item.num)
         server_info_embed = ServerInfoEmbed()
         for server_data in servers_data:
             if (not self.gm or server_data.gm == self.gm) and \
             (not self.limit or server_data.limit == self.limit) and \
             (not self.wipeday or server_data.wipeday == self.wipeday) and \
             (not self.map or server_data.map == self.map):
-                server_info_embed.add_server(server_data)
+                server_info_embed.add_server(server_data, self.locale)
         if not server_info_embed.fields:
             await interaction.response.edit_message(embeds=[], files=[], attachments=[], view=self)
             return

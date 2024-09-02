@@ -1,10 +1,9 @@
 import discord
 
-from core.clients.server_data_api.models import LIMIT_LABELS, FullServerData
+from core.clients.server_data_api.models import LIMIT_LABELS, CombinedServerData
 from core.localization import LocaleEnum, LocalizationDict
 from core.utils.colors import get_random_blue_color
 from core.utils.date_time import day_num_to_name
-from core.utils.format_strings import bold_message
 
 
 class ServerFilterGreetingEmbed(discord.Embed):
@@ -14,7 +13,6 @@ class ServerFilterGreetingEmbed(discord.Embed):
             LocaleEnum.ru: 'Здесь можно найти подходящий сервер!',
         }
     )
-
 
     @classmethod
     def build(
@@ -26,10 +24,17 @@ class ServerFilterGreetingEmbed(discord.Embed):
         return embed
 
 class ServerInfoEmbed(discord.Embed):
-    def add_server(self, server_data: FullServerData):
-        self.add_field(name=f'MAGIC RUST #{server_data.num}', value=f'>>> -# {server_data.ip}\n\
+    wipe_label_localization = LocalizationDict(
+        {
+            LocaleEnum.en: 'Wipe day: ',
+            LocaleEnum.ru: 'День вайпа: ',
+        }
+    )
+
+    def add_server(self, server_data: CombinedServerData, locale: LocaleEnum = LocaleEnum.ru):
+        self.add_field(name=f'{server_data.title}', value=f'>>> -# {server_data.ip}\n\
             {server_data.gm}\n\
             {server_data.map}\n\
             {LIMIT_LABELS[server_data.limit]}\n\
             {server_data.players}/{server_data.maxplayers}\n\
-            {day_num_to_name(server_data.wipeday)}')
+            {self.wipe_label_localization[locale]}{day_num_to_name(server_data.wipeday, locale)}')

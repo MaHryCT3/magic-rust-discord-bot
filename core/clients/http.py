@@ -6,7 +6,6 @@ from aiohttp.log import client_logger as logger
 
 class HTTPClient:
     def __init__(self, base_url: str = '', headers: dict | None = None) -> None:
-        # NOTE: Constructor can't be called from sync code
         self.client = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=60 * 30), headers=headers)
         self.base_url = base_url
 

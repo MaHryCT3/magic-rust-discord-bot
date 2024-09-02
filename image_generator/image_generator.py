@@ -1,8 +1,10 @@
 import asyncio
+from math import ceil
+
 from PIL import Image
 
 from core.clients.server_data_api import MagicRustServerDataAPI
-from core.clients.server_data_api.models import FullServerData
+from core.clients.server_data_api.models import CombinedServerData
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
@@ -11,9 +13,12 @@ SERVER_LASTUPDATE_TRESHOLD = 45
 CARD_IMAGE_PATH = 'image_generator/assets/images/card.png'
 CARD_TEXT_IMAGE_PATH = 'image_generator/assets/images/card_text.png'
 CARD_PROGRESS_IMAGE_PATH = 'image_generator/assets/images/card_progress.png'
+CARD_EMPTY_IMAGE_PATH = 'image_generator/assets/images/card_empty.png'
 DISCORD_HEADER_IMAGE_PATH = 'image_generator/assets/images/Main Banner.png'
 DISCORD_HEADER_EXTENSION_IMAGE_PATH = 'image_generator/assets/images/Main Banner (extended).png'
 DISCORD_HEADER_TEXT_IMAGE_PATH = 'image_generator/assets/images/Main Banner_text.png'
+SERVERS_STATUS_CARD_COUNT_HORIZONTAL = 4
+
 
 def players_to_progress(max_players: int, players: int, joining: int, queue: int) -> list[float]:
     players_sum = players + joining / 2.0 + queue
@@ -37,26 +42,32 @@ def load_image(path: str) -> Image.Image:
     return image
 
 
-async def get_full_servers_data() -> list[FullServerData]:
-    return await MagicRustServerDataAPI().get_full_servers_data()
+async def get_combined_servers_data() -> list[CombinedServerData]:
+    return await MagicRustServerDataAPI().get_combined_servers_data()
 
 
 def get_server_status_image() -> Image.Image:
-    count = (6, 4)
-    servers_data = asyncio.run(get_full_servers_data())
+    servers_data = asyncio.run(get_combined_servers_data())
+    servers_data.sort(key=lambda item: item.num)
+    count = (ceil(len(servers_data) / SERVERS_STATUS_CARD_COUNT_HORIZONTAL), SERVERS_STATUS_CARD_COUNT_HORIZONTAL)
     card_image: Image.Image = load_image(CARD_IMAGE_PATH)
     text_image: Image.Image = load_image(CARD_TEXT_IMAGE_PATH)
     progress_image: Image.Image = load_image(CARD_PROGRESS_IMAGE_PATH)
+    card_empty_image: Image.Image = load_image(CARD_EMPTY_IMAGE_PATH)
     card = ServerCard(card_image, text_image, progress_image)
-    result = Image.new('RGBA', (progress_image.size[0] * count[1], progress_image.size[1] * count[0]))
+    result = Image.new('RGBA', (progress_image.size[0] * count[1], progress_image.size[1] * count[0]), (255, 255, 255))
     for i in range(count[0]):
         for j in range(count[1]):
-            server_data = servers_data[i * count[1] + j]
+            server_num = i * count[1] + j
+            if server_num >= len(servers_data):
+                result.paste(card_empty_image, (card_empty_image.size[0] * j, card_empty_image.size[1] * i))
+                continue
+            server_data = servers_data[server_num]
             progress = players_to_progress(
                 server_data.maxplayers, server_data.players, server_data.joining, server_data.queue
             )
             image = card.build(
-                f'MAGIC RUST #{server_data.server}',
+                server_data.title,
                 server_data.map,
                 progress,
                 server_data.players,

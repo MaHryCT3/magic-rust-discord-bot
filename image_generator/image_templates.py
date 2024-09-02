@@ -57,7 +57,10 @@ class ServerCard(ImageTemplate):
     text_field_settings: dict[int, TextField.TextSettings] = {
         text_field_names['players_count']: TextField.TextSettings(
             font='image_generator/assets/fonts/ms-reference-sans-serif-bold.ttf', font_color=(255, 255, 255, 255)
-        )
+        ),
+        text_field_names['title']: TextField.TextSettings(
+            font='image_generator/assets/fonts/ms-reference-sans-serif-bold.ttf'
+        ),
     }
     progress_field_settings: dict[int, ProgressBar.ProgressSettings] = {
         0: ProgressBar.ProgressSettings(progress_colors=[(46, 204, 113, 255), (52, 152, 219, 255), (231, 76, 60)])
