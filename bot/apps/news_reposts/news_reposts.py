@@ -2,17 +2,21 @@ import discord
 from discord.ext import commands, tasks
 
 from bot import MagicRustBot
-from bot.apps.news_reposts.constants import COLOR_BY_CAPTURE_SOURCE_MAP
 from bot.apps.news_reposts.services.captures import (
     AbstractNewsCapture,
     CapturedNews,
     VKNewsCapture,
 )
+from bot.apps.news_reposts.services.captures.structs import CapturedNewsSources
 from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.api_clients.vk import BotPolling, VKAPIClient
 from core.utils.decorators import suppress_exceptions
 from global_constants import MAGIC_RUST_IMAGE
+
+COLOR_BY_CAPTURE_SOURCE_MAP: dict[CapturedNewsSources, discord.Color] = {
+    CapturedNewsSources.VK: discord.Color.blue(),
+}
 
 
 class NewsRepostsCog(commands.Cog):
@@ -45,12 +49,10 @@ class NewsRepostsCog(commands.Cog):
         embeds = self._build_news_embeds(news)
         channel: discord.TextChannel = await self.bot.fetch_channel(dynamic_settings.repost_channel)
 
-        await channel.send(
-            embeds=embeds,
-            files=news.files,
-        )
-        if news.poll:
-            await channel.send(poll=news.poll)
+        view = discord.ui.View(discord.ui.Button(label='Перейти к посту', url=news.original_link))
+        await channel.send(embeds=embeds, view=view)
+        if news.poll or news.files:
+            await channel.send(poll=news.poll, files=news.files)
 
     @staticmethod
     def _build_news_embeds(news: CapturedNews) -> list[discord.Embed]:
