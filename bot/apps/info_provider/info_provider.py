@@ -1,13 +1,13 @@
-from typing import TYPE_CHECKING
-
 from discord.ext import commands, tasks
 
+from bot import MagicRustBot
 from bot.config import settings
 from core.clients.redis import RedisNameSpace
-from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
-
-if TYPE_CHECKING:
-    from bot import MagicRustBot
+from global_constants import (
+    DISCORD_INFO_NAMESPACE,
+    DISCORD_ONLINE_PRESENCE_KEY,
+    DISCORD_VOICE_PRESENCE_KEY,
+)
 
 INFO_EXPIRATION_TIME = 600
 REPEAT_SECONDS = 10.0
@@ -16,7 +16,7 @@ REPEAT_SECONDS = 10.0
 class InfoProvider(commands.Cog):
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
-        self.info_storage = RedisNameSpace(settings.REDIS_URL, 'discord_info')
+        self.info_storage = RedisNameSpace(settings.REDIS_URL, namespace=DISCORD_INFO_NAMESPACE)
         self.provide_info.start()
 
     def cog_unload(self):

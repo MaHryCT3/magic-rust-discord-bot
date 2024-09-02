@@ -39,6 +39,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Кулдаун для поиска друга изменена на {cooldown} секунд',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -58,6 +59,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Канал для поиска друга для региона {locale} был установлен {channel}',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -74,6 +76,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Канал статуса серверов был установлен {channel}',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -90,4 +93,17 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Для языка {locale} выбрана роль {role}',
             ephemeral=True,
+            delete_after=10,
+        )
+
+    @settings_group.command(
+        description='Изменить канал для репостов',
+    )
+    async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
+        dynamic_settings.repost_channel = channel.id
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил канал для репостов: {channel.name}:{channel.id}')
+        await ctx.respond(
+            f'Канал для репостов установлен {channel.mention}',
+            ephemeral=True,
+            delete_after=10,
         )

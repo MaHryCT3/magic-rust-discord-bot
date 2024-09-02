@@ -15,7 +15,7 @@ class MagicRustServerDataAPI:
 
     async def get_monitoring_servers_data(self) -> list[MonitoringServerData]:
         servers_data = await self.http_client.get('api/getShopOnline.php')
-        response_json = await servers_data.json()
+        response_json = servers_data.json()
         return [
             MonitoringServerData(**server_data)
             for server_data in response_json
@@ -25,11 +25,11 @@ class MagicRustServerDataAPI:
     @cached(ttl=API_GET_REQUEST_CACHE_TIME)
     async def get_full_servers_data(self) -> list[FullServerData]:
         servers_data = await self.http_client.get('api/getOnline', headers={'Content-Type': 'text/html'})
-        response_json = await servers_data.json()
+        response_json = servers_data.json()
         return [
             FullServerData(**server_data)
             for server_data in response_json
-            if self._is_full_server_data_valid(servers_data)
+            if self._is_full_server_data_valid(server_data)
         ]
 
     def get_full_servers_data_sync(self) -> list[FullServerData]:

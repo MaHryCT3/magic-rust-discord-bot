@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     MAGIC_RUST_GUILD_ID: str
     SENTRY_DSN: str = ''
 
+    VK_MAIN_GROUP_TOKEN: str
+    VK_MAIN_GROUP_ID: int
+
     REDIS_URL: str = 'redis://localhost:6379'
 
 

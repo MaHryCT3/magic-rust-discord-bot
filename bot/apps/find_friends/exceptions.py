@@ -18,6 +18,7 @@ class UserOnCooldownError(BaseFindFriendsError):
         self.cooldown = cooldown
         self.retry_after = retry_after
 
+        # TODO: Изменить на дискордовское время
         human_cooldown = human_time(int(self.cooldown), locale)
         human_retry_after = human_time(int(self.retry_after), locale)
 
