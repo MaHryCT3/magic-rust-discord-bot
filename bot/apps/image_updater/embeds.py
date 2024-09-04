@@ -36,7 +36,7 @@ class ServerInfoEmbed(discord.Embed):
         self.add_field(
             name=f'{server_data.title}',
             value=f'>>> -# {server_data.ip}\n\
-            {server_data.gm}\n\
+            {server_data.gm.value}\n\
             {server_data.map}\n\
             {LIMIT_LABELS[server_data.limit]}\n\
             {server_data.players}/{server_data.maxplayers}\n\

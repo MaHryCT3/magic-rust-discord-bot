@@ -5,7 +5,7 @@ from discord import File, NoMoreItems, TextChannel
 from discord.ext import commands, tasks
 
 from bot.apps.image_updater.exceptions import LastMessageAuthorIsNotSelfError
-from bot.apps.image_updater.views import ServerFilterGreetingView
+from bot.apps.image_updater.views import FindServerView
 from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
@@ -30,9 +30,7 @@ class ImageUpdater(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.filter_view_localization: dict[LocaleEnum, ServerFilterGreetingView] = (
-            await ServerFilterGreetingView.get_localization_views()
-        )
+        self.filter_view_localization: dict[LocaleEnum, FindServerView] = FindServerView.get_localized_views()
         for send_filter_view in self.filter_view_localization.values():
             self.bot.add_view(send_filter_view)
         self.update_server_status.start()

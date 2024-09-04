@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 import discord
 
-from core.clients.server_data_api.models import LIMIT_LABELS
+from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes
 from core.localization import LocaleEnum
 from core.utils.date_time import day_num_to_name
 
@@ -15,11 +15,11 @@ class BaseFilterSelect(discord.ui.Select):
         super().__init__(*args, **kwargs)
         self.filter_view = filter_view
 
-    def value_changed(self, value: str | None):
+    def on_value_changed(self, value: str | None):
         pass
 
     async def callback(self, interaction: discord.Interaction):
-        self.value_changed(self.values[0] if not self.values[0] == 'None' else None)
+        self.on_value_changed(self.values[0] if not self.values[0] == 'None' else None)
         for option in self.options:
             option.default = False
             if option.value == self.values[0] and not self.values[0] == 'None':
@@ -33,19 +33,16 @@ class GameModeSelect(BaseFilterSelect):
 
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
+        options = [discord.SelectOption(label=gm_type.value) for gm_type in GameModeTypes]
+        options.insert(0, discord.SelectOption(label='-', value='None'))
         return cls(
             filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:gm',
-            options=[
-                discord.SelectOption(label='-', value='None'),
-                discord.SelectOption(label='vanilla'),
-                discord.SelectOption(label='vanillax2'),
-                discord.SelectOption(label='modded'),
-            ],
+            options=options,
         )
 
-    def value_changed(self, value: str | None):
+    def on_value_changed(self, value: str | None):
         self.filter_view.gm = value
 
 
@@ -54,20 +51,16 @@ class LimitSelect(BaseFilterSelect):
 
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
+        options = [discord.SelectOption(label=label, value=str(num)) for num, label in LIMIT_LABELS.items()]
+        options.insert(0, discord.SelectOption(label='-', value='None'))
         return cls(
             filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:limit',
-            options=[
-                discord.SelectOption(label='-', value='None'),
-                discord.SelectOption(label=LIMIT_LABELS[1], value='1'),
-                discord.SelectOption(label=LIMIT_LABELS[2], value='2'),
-                discord.SelectOption(label=LIMIT_LABELS[3], value='3'),
-                discord.SelectOption(label=LIMIT_LABELS[0], value='0'),
-            ],
+            options=options,
         )
 
-    def value_changed(self, value: str | None):
+    def on_value_changed(self, value: str | None):
         self.filter_view.limit = int(value) if value else None
 
 
@@ -88,7 +81,7 @@ class WipeDaySelect(BaseFilterSelect):
             ],
         )
 
-    def value_changed(self, value: str | None):
+    def on_value_changed(self, value: str | None):
         self.filter_view.wipeday = int(value) if value else None
 
 
@@ -108,5 +101,5 @@ class MapSelect(BaseFilterSelect):
             ],
         )
 
-    def value_changed(self, value: str | None):
+    def on_value_changed(self, value: str | None):
         self.filter_view.map = value

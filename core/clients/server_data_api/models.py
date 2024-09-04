@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Self
 
 from pydantic import BaseModel, Field
 
@@ -10,35 +11,16 @@ LIMIT_LABELS = {
 }
 
 
-class ServerTypes(Enum):
+class GameModeTypes(Enum):
     MODDED = 'modded'
-    OFFICIAL = 'official'
+    VANILLA = 'vanilla'
     VANILLA_X2 = 'vanillax2'
 
 
-class CombinedServerData(BaseModel):
-    ip: str
-    server_type: ServerTypes
-    title: str
-    players: int
-    sleepers: int
-    joining: int
-    queue: int
-    maxplayers: int
-    map: str
-    time: float
-    server: int
-    wipeday: int
-    gm: str | None
-    limit: int
-    lastupdate: int
-    num: int
-
-    @staticmethod
-    def combine(
-        monitoring_server_data: 'MonitoringServerData', full_server_data: 'FullServerData'
-    ) -> 'CombinedServerData':
-        return CombinedServerData(**(full_server_data.model_dump() | monitoring_server_data.model_dump()))
+class ServerTypes(Enum):
+    MODDED = 'modded'
+    OFFICIAL = 'official'
+    VANILLA = 'vanillax2'
 
 
 class FullServerData(BaseModel):
@@ -52,7 +34,7 @@ class FullServerData(BaseModel):
     time: float
     server: int
     wipeday: int
-    gm: str | None
+    gm: GameModeTypes = Field()
     limit: int
     lastupdate: int
     num: int
@@ -60,9 +42,15 @@ class FullServerData(BaseModel):
 
 class MonitoringServerData(BaseModel):
     ip: str
-    server_type: ServerTypes = Field(validation_alias='class')
+    server_type: ServerTypes = Field(alias='class')
     title: str
     players: int
     joining: int
     queue: int
     maxplayers: int
+
+
+class CombinedServerData(FullServerData, MonitoringServerData):
+    @classmethod
+    def combine(cls, monitoring_server_data: MonitoringServerData, full_server_data: FullServerData) -> Self:
+        return cls(**(full_server_data.model_dump(by_alias=True) | monitoring_server_data.model_dump(by_alias=True)))

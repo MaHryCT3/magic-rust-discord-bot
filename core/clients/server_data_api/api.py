@@ -14,10 +14,6 @@ class MagicRustServerDataAPI:
     def __init__(self, http_client: HTTPClient | None = None):
         self.http_client = http_client or HTTPClient(base_url='https://vk.magicrust.ru/')
 
-    @classmethod
-    async def create(cls):
-        return cls()
-
     async def get_monitoring_servers_data(self) -> list[MonitoringServerData]:
         servers_data = await self.http_client.get('api/getShopOnline.php')
         response_json = await servers_data.json()
@@ -57,7 +53,8 @@ class MagicRustServerDataAPI:
 
     @staticmethod
     def _is_full_server_data_valid(server_data: dict) -> bool:
-        return server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and server_data.get('gm', None) != 'test'
+        gm = server_data.get('gm')
+        return server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and gm and gm != 'test'
 
     @staticmethod
     def _is_monitoring_server_data_valid(server_data: dict) -> bool:

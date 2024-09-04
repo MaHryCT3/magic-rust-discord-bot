@@ -1,2 +1,0 @@
-class ChannelNotConfiguredError(Exception):
-    pass
