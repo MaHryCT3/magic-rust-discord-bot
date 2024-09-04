@@ -9,7 +9,6 @@ from bot.apps.image_updater.views import FindServerView
 from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
-from core.clients.server_data_api.api import MagicRustServerDataAPI
 from core.localization import LocaleEnum
 from global_constants import SERVER_STATUS_IMAGE_KEY
 
@@ -37,7 +36,6 @@ class ImageUpdater(commands.Cog):
 
     @tasks.loop(seconds=SERVER_STATUS_UPDATE_SECONDS)
     async def update_server_status(self):
-        await MagicRustServerDataAPI().get_combined_servers_data()
         for locale, channel_id in dynamic_settings.server_status_channels.items():
             if not channel_id:
                 return
