@@ -42,19 +42,20 @@ class MagicRustServerDataAPI:
         monitoring_servers_data = monitoring_servers_data_task.result()
         full_servers_data = full_servers_data_task.result()
 
+        monitoring_servers_data_dict = {server_data.ip: server_data for server_data in monitoring_servers_data}
         combined_servers_data: list[CombinedServerData] = []
-        for monitoring_server_data in monitoring_servers_data:
-            for full_server_data in full_servers_data:
-                if monitoring_server_data.ip == full_server_data.ip:
-                    combined_servers_data.append(CombinedServerData.combine(monitoring_server_data, full_server_data))
-                    break
+        for full_server_data in full_servers_data:
+            if full_server_data.ip in monitoring_servers_data_dict:
+                combined_servers_data.append(
+                    CombinedServerData.combine(monitoring_servers_data_dict[full_server_data.ip], full_server_data)
+                )
 
         return combined_servers_data
 
     @staticmethod
     def _is_full_server_data_valid(server_data: dict) -> bool:
         gm = server_data.get('gm')
-        return server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD and gm and gm != 'test'
+        return (server_data['lastupdate'] <= SERVER_LASTUPDATE_TRESHOLD) and gm and gm != 'test'
 
     @staticmethod
     def _is_monitoring_server_data_valid(server_data: dict) -> bool:

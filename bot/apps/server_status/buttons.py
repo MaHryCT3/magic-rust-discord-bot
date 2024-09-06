@@ -20,6 +20,6 @@ class FindServerButton(discord.ui.Button):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        from bot.apps.image_updater.views import ServerFilterView
+        from bot.apps.server_status.views import ServerFilterView
 
         await interaction.response.send_message(view=ServerFilterView(locale=self.locale), ephemeral=True)

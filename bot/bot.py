@@ -10,7 +10,7 @@ COGS = [
     'apps.settings.setup',
     'apps.bot_messages.setup',
     'apps.info_provider.setup',
-    'apps.image_updater.setup',
+    'apps.server_status.setup',
 ]
 
 

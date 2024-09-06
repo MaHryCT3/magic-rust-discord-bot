@@ -3,15 +3,14 @@ from typing import TYPE_CHECKING
 import discord
 
 from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes
-from core.localization import LocaleEnum
-from core.utils.date_time import day_num_to_name
+from core.localization import LocaleEnum, day_name
 
 if TYPE_CHECKING:
-    from bot.apps.image_updater.views import ServerFilterView
+    from bot.apps.server_status.views import ServerFilterView
 
 
 class BaseFilterSelect(discord.ui.Select):
-    def __init__(self, filter_view: 'ServerFilterView', *args, **kwargs):
+    def __init__(self, *args, filter_view: 'ServerFilterView', **kwargs):
         super().__init__(*args, **kwargs)
         self.filter_view = filter_view
 
@@ -36,7 +35,7 @@ class GameModeSelect(BaseFilterSelect):
         options = [discord.SelectOption(label=gm_type.value) for gm_type in GameModeTypes]
         options.insert(0, discord.SelectOption(label='-', value='None'))
         return cls(
-            filter_view,
+            filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:gm',
             options=options,
@@ -54,7 +53,7 @@ class LimitSelect(BaseFilterSelect):
         options = [discord.SelectOption(label=label, value=str(num)) for num, label in LIMIT_LABELS.items()]
         options.insert(0, discord.SelectOption(label='-', value='None'))
         return cls(
-            filter_view,
+            filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:limit',
             options=options,
@@ -70,14 +69,14 @@ class WipeDaySelect(BaseFilterSelect):
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
         return cls(
-            filter_view,
+            filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:wipeday',
             options=[
                 discord.SelectOption(label='-', value='None'),
-                discord.SelectOption(label=day_num_to_name(1, filter_view.locale), value='1'),
-                discord.SelectOption(label=day_num_to_name(4, filter_view.locale), value='4'),
-                discord.SelectOption(label=day_num_to_name(5, filter_view.locale), value='5'),
+                discord.SelectOption(label=day_name(1, filter_view.locale), value='1'),
+                discord.SelectOption(label=day_name(4, filter_view.locale), value='4'),
+                discord.SelectOption(label=day_name(5, filter_view.locale), value='5'),
             ],
         )
 
@@ -91,7 +90,7 @@ class MapSelect(BaseFilterSelect):
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
         return cls(
-            filter_view,
+            filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:map',
             options=[

@@ -1,7 +1,9 @@
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import Self
 
 from pydantic import BaseModel, Field
+
+from core.utils.date_time import WeekDay
 
 LIMIT_LABELS = {
     0: 'NO LIMIT',
@@ -9,6 +11,21 @@ LIMIT_LABELS = {
     2: 'MAX 2',
     3: 'MAX 3',
 }
+
+
+class LimitEnum(IntEnum):
+    NO_LIMIT = 0
+    SOLO = 1
+    MAX_2 = 2
+    MAX_3 = 3
+
+    def get_label(self) -> str:
+        return LIMIT_LABELS[self.value]
+
+
+class Maps(Enum):
+    PRECEDURAL_PLUS = 'Procedural Plus'
+    BARREN_PLUS = 'Barren Plus'
 
 
 class GameModeTypes(Enum):
@@ -25,7 +42,7 @@ class ServerTypes(Enum):
 
 class FullServerData(BaseModel):
     ip: str
-    map: str
+    map: Maps
     players: int
     sleepers: int
     maxplayers: int
@@ -33,9 +50,9 @@ class FullServerData(BaseModel):
     joining: int
     time: float
     server: int
-    wipeday: int
-    gm: GameModeTypes = Field()
-    limit: int
+    wipeday: WeekDay
+    gm: GameModeTypes
+    limit: LimitEnum
     lastupdate: int
     num: int
 

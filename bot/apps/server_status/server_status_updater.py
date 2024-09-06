@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 from discord import File, NoMoreItems, TextChannel
 from discord.ext import commands, tasks
 
-from bot.apps.image_updater.exceptions import LastMessageAuthorIsNotSelfError
-from bot.apps.image_updater.views import FindServerView
+from bot.apps.server_status.exceptions import LastMessageAuthorIsNotSelfError
+from bot.apps.server_status.views import FindServerView
 from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
@@ -19,7 +19,7 @@ HEADER_UPDATE_SECONDS = 30.0
 SERVER_STATUS_UPDATE_SECONDS = 15.0
 
 
-class ImageUpdater(commands.Cog):
+class ServerStatusUpdater(commands.Cog):
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
         self.image_storage = RedisNameSpace(settings.REDIS_URL, 'images')
@@ -37,8 +37,6 @@ class ImageUpdater(commands.Cog):
     @tasks.loop(seconds=SERVER_STATUS_UPDATE_SECONDS)
     async def update_server_status(self):
         for locale, channel_id in dynamic_settings.server_status_channels.items():
-            if not channel_id:
-                return
             channel: TextChannel = await self.bot.fetch_channel(channel_id)
             try:
                 last_message = await channel.history().next()

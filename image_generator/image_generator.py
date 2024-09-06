@@ -68,7 +68,7 @@ def get_server_status_image() -> Image.Image:
             )
             image = card.build(
                 server_data.title,
-                server_data.map,
+                server_data.map.value,
                 progress,
                 server_data.players,
                 server_data.maxplayers,

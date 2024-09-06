@@ -1,9 +1,8 @@
 import discord
 
-from core.clients.server_data_api.models import LIMIT_LABELS, CombinedServerData
-from core.localization import LocaleEnum, LocalizationDict
+from core.clients.server_data_api.models import CombinedServerData
+from core.localization import LocaleEnum, LocalizationDict, day_name
 from core.utils.colors import get_random_blue_color
-from core.utils.date_time import day_num_to_name
 
 
 class ServerFilterGreetingEmbed(discord.Embed):
@@ -37,8 +36,8 @@ class ServerInfoEmbed(discord.Embed):
             name=f'{server_data.title}',
             value=f'>>> -# {server_data.ip}\n\
             {server_data.gm.value}\n\
-            {server_data.map}\n\
-            {LIMIT_LABELS[server_data.limit]}\n\
+            {server_data.map.value}\n\
+            {server_data.limit.get_label()}\n\
             {server_data.players}/{server_data.maxplayers}\n\
-            {self.wipe_label_localization[locale]}{day_num_to_name(server_data.wipeday, locale)}',
+            {self.wipe_label_localization[locale]}{day_name(server_data.wipeday, locale)}',
         )

@@ -2,9 +2,9 @@ from typing import Self
 
 import discord
 
-from bot.apps.image_updater import buttons
-from bot.apps.image_updater.embeds import ServerInfoEmbed
-from bot.apps.image_updater.select_buttons import (
+from bot.apps.server_status import buttons
+from bot.apps.server_status.embeds import ServerInfoEmbed
+from bot.apps.server_status.select_buttons import (
     GameModeSelect,
     LimitSelect,
     MapSelect,
@@ -56,8 +56,8 @@ class ServerFilterView(discord.ui.View):
 
     def _is_server_satisfying_filter(self, server_data: FullServerData) -> bool:
         return (
-            (not self.gm or server_data.gm == self.gm)
+            (not self.gm or server_data.gm.value == self.gm)
             and (not self.limit or server_data.limit == self.limit)
             and (not self.wipeday or server_data.wipeday == self.wipeday)
-            and (not self.map or server_data.map == self.map)
+            and (not self.map or server_data.map.value == self.map)
         )
