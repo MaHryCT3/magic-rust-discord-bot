@@ -1,4 +1,4 @@
-from enum import Enum, IntEnum
+from enum import IntEnum, StrEnum
 from typing import Self
 
 from pydantic import BaseModel, Field
@@ -23,18 +23,18 @@ class LimitEnum(IntEnum):
         return LIMIT_LABELS[self.value]
 
 
-class Maps(Enum):
+class Maps(StrEnum):
     PRECEDURAL_PLUS = 'Procedural Plus'
     BARREN_PLUS = 'Barren Plus'
 
 
-class GameModeTypes(Enum):
+class GameModeTypes(StrEnum):
     MODDED = 'modded'
     VANILLA = 'vanilla'
     VANILLA_X2 = 'vanillax2'
 
 
-class ServerTypes(Enum):
+class ServerTypes(StrEnum):
     MODDED = 'modded'
     OFFICIAL = 'official'
     VANILLA = 'vanillax2'

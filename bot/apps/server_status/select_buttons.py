@@ -1,12 +1,17 @@
+from enum import StrEnum
 from typing import TYPE_CHECKING
 
 import discord
 
-from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes
+from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes, Maps
 from core.localization import LocaleEnum, day_name
 
 if TYPE_CHECKING:
     from bot.apps.server_status.views import ServerFilterView
+
+
+class EmptyEnum(StrEnum):
+    EMPTY = 'Empty'
 
 
 class BaseFilterSelect(discord.ui.Select):
@@ -18,10 +23,10 @@ class BaseFilterSelect(discord.ui.Select):
         pass
 
     async def callback(self, interaction: discord.Interaction):
-        self.on_value_changed(self.values[0] if not self.values[0] == 'None' else None)
+        self.on_value_changed(self.values[0] if not self.values[0] == EmptyEnum.EMPTY else None)
         for option in self.options:
             option.default = False
-            if option.value == self.values[0] and not self.values[0] == 'None':
+            if option.value == self.values[0] and not self.values[0] == EmptyEnum.EMPTY:
                 option.default = True
         await self.filter_view.update(interaction)
         return await super().callback(interaction)
@@ -32,8 +37,8 @@ class GameModeSelect(BaseFilterSelect):
 
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
-        options = [discord.SelectOption(label=gm_type.value) for gm_type in GameModeTypes]
-        options.insert(0, discord.SelectOption(label='-', value='None'))
+        options = [discord.SelectOption(label=gm_type) for gm_type in GameModeTypes]
+        options.insert(0, discord.SelectOption(label='-', value=EmptyEnum.EMPTY))
         return cls(
             filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
@@ -51,7 +56,7 @@ class LimitSelect(BaseFilterSelect):
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
         options = [discord.SelectOption(label=label, value=str(num)) for num, label in LIMIT_LABELS.items()]
-        options.insert(0, discord.SelectOption(label='-', value='None'))
+        options.insert(0, discord.SelectOption(label='-', value=EmptyEnum.EMPTY))
         return cls(
             filter_view=filter_view,
             placeholder=cls.placeholder_localization[filter_view.locale],
@@ -73,7 +78,7 @@ class WipeDaySelect(BaseFilterSelect):
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:wipeday',
             options=[
-                discord.SelectOption(label='-', value='None'),
+                discord.SelectOption(label='-', value=EmptyEnum.EMPTY),
                 discord.SelectOption(label=day_name(1, filter_view.locale), value='1'),
                 discord.SelectOption(label=day_name(4, filter_view.locale), value='4'),
                 discord.SelectOption(label=day_name(5, filter_view.locale), value='5'),
@@ -94,9 +99,9 @@ class MapSelect(BaseFilterSelect):
             placeholder=cls.placeholder_localization[filter_view.locale],
             custom_id='server_filter:select:map',
             options=[
-                discord.SelectOption(label='-', value='None'),
-                discord.SelectOption(label='Procedural Plus'),
-                discord.SelectOption(label='Barren Plus'),
+                discord.SelectOption(label='-', value=EmptyEnum.EMPTY),
+                discord.SelectOption(label=Maps.PRECEDURAL_PLUS),
+                discord.SelectOption(label=Maps.BARREN_PLUS),
             ],
         )
 
