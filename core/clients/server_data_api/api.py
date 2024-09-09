@@ -1,5 +1,3 @@
-import asyncio
-
 from core.clients.http import HTTPClient
 from core.clients.server_data_api.models import (
     CombinedServerData,
@@ -33,14 +31,8 @@ class MagicRustServerDataAPI:
         ]
 
     async def get_combined_servers_data(self) -> list[CombinedServerData]:
-        monitoring_servers_data_task = asyncio.create_task(self.get_monitoring_servers_data())
-        full_servers_data_task = asyncio.create_task(self.get_full_servers_data())
-
-        await monitoring_servers_data_task
-        await full_servers_data_task
-
-        monitoring_servers_data = monitoring_servers_data_task.result()
-        full_servers_data = full_servers_data_task.result()
+        monitoring_servers_data = await self.get_monitoring_servers_data()
+        full_servers_data = await self.get_full_servers_data()
 
         monitoring_servers_data_dict = {server_data.ip: server_data for server_data in monitoring_servers_data}
         combined_servers_data: list[CombinedServerData] = []
