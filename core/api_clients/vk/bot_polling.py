@@ -59,7 +59,7 @@ class BotPolling:
         )
         events = events_response.json()
 
-        # скорее всего нужно обновить лонгпулл сервер, взято с
+        # если нет 'ts', то скорее всего нужно обновить лонгпулл сервер, взято с
         # https://github.com/vkbottle/vkbottle/blob/master/vkbottle/polling/bot_polling.py
         if 'ts' not in events:
             logger.info('Long poll server reset')
