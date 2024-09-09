@@ -30,7 +30,7 @@ class SettingValue:
         if not instance._load_state:
             instance._storage.set(self.public_name, value)
         else:
-            value = value or self.default or self.default_factory() if self.default_factory else None
+            value = value or self.default or (self.default_factory() if self.default_factory else None)
             if value and self.cast_on_load:
                 value = self.cast_on_load(value)
         setattr(instance, self._private_name, value)
