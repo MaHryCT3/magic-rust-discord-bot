@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     model_config = ConfigDict(extra='ignore')
     DEBUG: bool = False
 
-    SERVER_API_URL: str
     REDIS_URL: str
 
 
