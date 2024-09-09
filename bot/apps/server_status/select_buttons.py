@@ -5,6 +5,7 @@ import discord
 
 from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes, Maps
 from core.localization import LocaleEnum, day_name
+from core.utils.date_time import WeekDay
 
 if TYPE_CHECKING:
     from bot.apps.server_status.views import ServerFilterView
@@ -79,9 +80,9 @@ class WipeDaySelect(BaseFilterSelect):
             custom_id='server_filter:select:wipeday',
             options=[
                 discord.SelectOption(label='-', value=EmptyEnum.EMPTY),
-                discord.SelectOption(label=day_name(1, filter_view.locale), value='1'),
-                discord.SelectOption(label=day_name(4, filter_view.locale), value='4'),
-                discord.SelectOption(label=day_name(5, filter_view.locale), value='5'),
+                discord.SelectOption(label=day_name(WeekDay.MONDAY, filter_view.locale), value=str(WeekDay.MONDAY)),
+                discord.SelectOption(label=day_name(WeekDay.THURSDAY, filter_view.locale), value=str(WeekDay.THURSDAY)),
+                discord.SelectOption(label=day_name(WeekDay.FRIDAY, filter_view.locale), value=str(WeekDay.FRIDAY)),
             ],
         )
 

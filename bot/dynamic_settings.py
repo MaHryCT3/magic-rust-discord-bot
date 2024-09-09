@@ -14,10 +14,6 @@ class DynamicSettings(BaseRedisSettings):
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, ChannelId),
     )
-    server_filter_channels: dict[LocaleEnum, ChannelId] = SettingValue(
-        default_factory=dict,
-        cast_on_load=cast_dict(LocaleEnum, ChannelId),
-    )
     server_status_channels: dict[LocaleEnum, ChannelId] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, ChannelId),
