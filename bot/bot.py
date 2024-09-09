@@ -11,6 +11,7 @@ COGS = [
     'apps.bot_messages.setup',
     'apps.info_provider.setup',
     'apps.server_status.setup',
+    'apps.news_reposts.setup',
 ]
 
 

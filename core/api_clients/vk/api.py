@@ -1,5 +1,6 @@
 from logging import getLogger
 
+from core.api_clients.vk.models import LongPollServer
 from core.clients.http import HTTPClient
 
 logger = getLogger('vk-api')
@@ -27,10 +28,20 @@ class VKAPIClient:
         payload = {
             'message': message,
             'random_id': random_id,
-        } | self.default_payload
+        }
         if user_id:
             payload['user_id'] = user_id
         if peer_id:
             payload['peer_id'] = peer_id
 
-        await self.http_client.post(url='messages.send', payload=payload)
+        await self.call_method('messages.send', payload=payload)
+
+    async def get_long_poll_server(self, group_id: int) -> LongPollServer:
+        payload = {'group_id': group_id}
+        data = await self.call_method('groups.getLongPollServer', payload=payload)
+        return LongPollServer(**data['response'])
+
+    async def call_method(self, method_name: str, payload: dict) -> dict:
+        payload = payload | self.default_payload
+        response = await self.http_client.post(url=method_name, payload=payload)
+        return response.json()
