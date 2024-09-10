@@ -10,7 +10,7 @@ from bot.config import logger, settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
 from core.localization import LocaleEnum
-from global_constants import SERVER_STATUS_IMAGE_KEY
+from global_constants import IMAGES_NAMESPACE, SERVER_STATUS_IMAGE_KEY
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -22,7 +22,7 @@ SERVER_STATUS_UPDATE_SECONDS = 15.0
 class ServerStatusUpdater(commands.Cog):
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
-        self.image_storage = RedisNameSpace(settings.REDIS_URL, 'images')
+        self.image_storage = RedisNameSpace(settings.REDIS_URL, IMAGES_NAMESPACE)
 
     def cog_unload(self):
         self.update_server_status.cancel()

@@ -39,6 +39,8 @@ def update_discord_header_image():
 
 
 def start_generation():
+    update_server_status_image()
+    update_discord_header_image()
     every().minute.at(':00').do(update_server_status_image)
     every().minute.at(':55').do(update_discord_header_image)
     logger.info('Starting generation')

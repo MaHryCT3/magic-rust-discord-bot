@@ -27,10 +27,10 @@ class MagicRustServerDataAPI:
     @cached(ttl=API_GET_REQUEST_CACHE_TIME)
     async def get_full_servers_data(self) -> list[FullServerData]:
         servers_data = await self.http_client.get('api/getOnline', headers={'Content-Type': 'text/html'})
-        response_json = servers_data.json()
+        response_json: dict = servers_data.json()
         return [
             FullServerData(**server_data)
-            for server_data in response_json
+            for server_data in response_json.values()
             if self._is_full_server_data_valid(server_data)
         ]
 

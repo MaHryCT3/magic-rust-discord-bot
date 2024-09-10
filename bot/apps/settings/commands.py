@@ -107,3 +107,21 @@ class SettingsCog(commands.Cog):
             ephemeral=True,
             delete_after=10,
         )
+
+    @settings_group.command(
+        description='Изменить комнаты создания каналов',
+    )
+    async def channel_creating_channels(
+        self,
+        ctx: discord.ApplicationContext,
+        locale: discord.Option(LocaleEnum),
+        channel: discord.VoiceChannel,
+    ):
+        current_channels = dynamic_settings.channel_creating_channels
+        current_channels[locale] = channel.id
+        dynamic_settings.channel_creating_channels = current_channels
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил комнаты создания каналов на {current_channels}')
+        await ctx.respond(
+            f'Комната создания серверов для региона {locale} была установлена на {channel}',
+            ephemeral=True,
+        )
