@@ -5,6 +5,7 @@ from core.localization import LocaleEnum
 from core.redis_settings import BaseRedisSettings, SettingValue, cast_dict
 
 ChannelId: TypeAlias = int
+CategoryId: TypeAlias = int
 RoleId: TypeAlias = int
 
 
@@ -21,6 +22,11 @@ class DynamicSettings(BaseRedisSettings):
     channel_creating_channels: dict[LocaleEnum, ChannelId] = SettingValue(
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, ChannelId),
+    )
+    user_room_create_cooldown: int = SettingValue(default=15)
+    user_rooms_categories: dict[LocaleEnum, CategoryId] = SettingValue(
+        default_factory=dict,
+        cast_on_load=cast_dict(LocaleEnum, CategoryId),
     )
     locale_roles: dict[RoleId, LocaleEnum] = SettingValue(
         default_factory=dict,

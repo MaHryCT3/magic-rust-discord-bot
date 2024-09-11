@@ -1,0 +1,34 @@
+from discord import VoiceChannel
+from discord.ext import commands, tasks
+
+from bot.bot import MagicRustBot
+from bot.dynamic_settings import dynamic_settings
+from core.utils.decorators import loop_stability_checker
+
+SERVER_DELETE_UPDATE_SECONDS = 5.0
+
+
+class RoomCleaner(commands.Cog):
+    def __init__(self, bot: MagicRustBot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.delete_empty_channels.start()
+
+    @tasks.loop(seconds=SERVER_DELETE_UPDATE_SECONDS)
+    @loop_stability_checker(seconds=SERVER_DELETE_UPDATE_SECONDS)
+    async def delete_empty_channels(self):
+        guild = self.bot.get_main_guild()
+
+        channels_to_delete = [
+            channel
+            for channel in await guild.fetch_channels()
+            if isinstance(channel, VoiceChannel) and self._is_user_room_empty(channel)
+        ]
+        for channel in channels_to_delete:
+            await channel.delete()
+
+    @staticmethod
+    def _is_user_room_empty(channel: VoiceChannel) -> bool:
+        return len(channel.members) == 0 and channel.category_id in dynamic_settings.user_rooms_categories.values()

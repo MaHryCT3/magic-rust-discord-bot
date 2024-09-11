@@ -4,6 +4,7 @@ import discord
 from discord.bot import Bot
 
 from bot.config import logger, settings
+from bot.dynamic_settings import CategoryId
 
 COGS = [
     'apps.find_friends.setup',
@@ -11,7 +12,7 @@ COGS = [
     'apps.bot_messages.setup',
     'apps.info_provider.setup',
     'apps.server_status.setup',
-    #    'apps.news_reposts.setup',
+    'apps.news_reposts.setup',
     'apps.channel_cleaner.setup',
 ]
 
@@ -30,6 +31,12 @@ class MagicRustBot(Bot):
 
     def get_main_guild(self) -> discord.Guild | None:
         return self.get_guild(int(settings.MAGIC_RUST_GUILD_ID))
+
+    def get_category(self, category_id: CategoryId) -> discord.CategoryChannel | None:
+        for category in self.get_main_guild().categories:
+            if category.id == category_id:
+                return category
+        return None
 
     async def fetch_main_guild(self) -> discord.Guild:
         return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)
