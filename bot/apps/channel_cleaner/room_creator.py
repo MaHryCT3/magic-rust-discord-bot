@@ -3,6 +3,7 @@ from logging import ERROR
 from discord import VoiceChannel
 from discord.ext import commands, tasks
 
+from bot.apps.channel_cleaner.embeds import RoomCreationCooldownEmbed
 from bot.apps.channel_cleaner.exceptions import (
     CategoryNotConfiguredError,
     RoomCreateCooldownError,
@@ -50,7 +51,7 @@ class RoomCreator(commands.Cog):
                     await member.move_to(new_channel)
                 except RoomCreateCooldownError as err:
                     await member.move_to(None)
-                    await member.send(embed=err.get_embed())
+                    await member.send(embed=RoomCreationCooldownEmbed.from_exception(err))
                 except CategoryNotConfiguredError:
                     await member.move_to(None)
                     logger.log(ERROR, f'Category for user voice rooms for locale {locale} not set!')

@@ -8,4 +8,6 @@ build:
 	docker compose -f docker-compose.dev.yml build
 down:
 	docker compose -f docker-compose.dev.yml down
+precommit:
+	pre-commit run --all-files
 all: compile up

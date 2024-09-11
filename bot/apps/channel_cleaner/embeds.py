@@ -3,13 +3,17 @@ from typing import Self
 
 import discord
 
+from bot.apps.channel_cleaner.exceptions import RoomCreateCooldownError
 from core.localization import LocaleEnum, LocalizationDict
 from core.utils.colors import WARNING_YELLOW
 
 
 class RoomCreationCooldownEmbed(discord.Embed):
     title_localization = LocalizationDict(
-        {LocaleEnum.en: ':hourglass_flowing_sand: Chill!', LocaleEnum.ru: ':hourglass_flowing_sand: Остыньте!'}
+        {
+            LocaleEnum.en: ':hourglass_flowing_sand: Chill!',
+            LocaleEnum.ru: ':hourglass_flowing_sand: Остыньте!',
+        }
     )
     message_localization = LocalizationDict(
         {
@@ -27,3 +31,7 @@ class RoomCreationCooldownEmbed(discord.Embed):
             cooldown=cooldown, retry_after_stamp=retry_after_stamp
         )
         return embed
+
+    @classmethod
+    def from_exception(cls, exception: RoomCreateCooldownError):
+        return cls.build(int(exception.cooldown), int(exception.retry_after), exception.locale)
