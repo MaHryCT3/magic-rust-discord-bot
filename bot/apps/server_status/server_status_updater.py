@@ -47,7 +47,7 @@ class ServerStatusUpdater(commands.Cog):
             image_bytes: bytes = self.image_storage.get(SERVER_STATUS_IMAGE_KEY, as_bytes=True)
 
             if not image_bytes:
-                logger.warn('image not loaded')
+                logger.warning('image not loaded')
             else:
                 image_binary = BytesIO(image_bytes)
                 if not last_message or not last_message.attachments:

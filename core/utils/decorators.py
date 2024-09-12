@@ -1,5 +1,5 @@
 import asyncio
-from logging import WARN, getLogger
+from logging import getLogger
 from time import time
 
 from core.utils.exceptions import LoopUnstableException
@@ -43,8 +43,8 @@ def loop_stability_checker(seconds: float, max_relative_deviation=0.1, is_fatal=
             if deviation / seconds > max_relative_deviation:
                 if is_fatal:
                     raise LoopUnstableException(seconds, time_passed)
-                logger.log(
-                    WARN, f'{func} should have been called after {seconds} seconds, but was called after {time_passed}'
+                logger.warning(
+                    f'{func} should have been called after {seconds} seconds, but was called after {time_passed}'
                 )
             return await func(*args, **kwargs)
 

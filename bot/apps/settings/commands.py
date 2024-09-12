@@ -56,6 +56,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Для языка {locale} выбрана роль {role}',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -94,6 +95,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Канал статуса серверов для региона {locale} был установлен {channel}',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -140,6 +142,7 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Комната создания серверов для региона {locale} была установлена на {channel}',
             ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(
@@ -158,4 +161,5 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Канал создания голосовых комнат для региона {locale} была установлен на {category}',
             ephemeral=True,
+            delete_after=10,
         )

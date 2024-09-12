@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
 from bot.config import settings
+from bot.constants import FIND_FRIEND_COOLDOWN_NAMESPACE
 from core.redis_cooldown import RedisLocaleCooldown
-from global_constants import FIND_FRIEND_COOLDOWN_NAMESPACE
 
 from .commands import FindFriendsCommands
 from .events import FindFriendEvents
