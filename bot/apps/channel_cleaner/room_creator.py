@@ -29,7 +29,7 @@ class RoomCreator(commands.Cog):
         self.create_room_cooldown = RedisCooldown(settings.REDIS_URL, CREATE_VOICE_COOLDOWN_NAMESPACE)
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
+    async def on_voice_state_update(self, member: Member, _before: VoiceState, after: VoiceState):
         if not after.channel:
             return
         for locale, channel_id in dynamic_settings.channel_creating_channels.items():

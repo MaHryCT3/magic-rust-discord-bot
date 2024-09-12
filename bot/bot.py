@@ -7,12 +7,12 @@ from bot.config import logger, settings
 from bot.dynamic_settings import CategoryId
 
 COGS = [
-    # 'apps.find_friends.setup',
-    # 'apps.settings.setup',
-    # 'apps.bot_messages.setup',
-    # 'apps.info_provider.setup',
-    # 'apps.server_status.setup',
-    # 'apps.news_reposts.setup',
+    'apps.find_friends.setup',
+    'apps.settings.setup',
+    'apps.bot_messages.setup',
+    'apps.info_provider.setup',
+    'apps.server_status.setup',
+    'apps.news_reposts.setup',
     'apps.channel_cleaner.setup',
 ]
 

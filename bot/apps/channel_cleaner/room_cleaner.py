@@ -17,7 +17,7 @@ class RoomCleaner(commands.Cog):
         self.delete_empty_channels.start()
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
+    async def on_voice_state_update(self, _member: Member, before: VoiceState, _after: VoiceState):
         if not before.channel:
             return
         if self._is_user_room_empty(before.channel):
