@@ -1,15 +1,26 @@
 import discord
 from discord import Interaction
 
+from bot.apps.reports.ui.modals import (
+    BaseReportModal,
+    CheaterReportModal,
+    LimitReportModal,
+)
 from core.api_clients.magic_rust import (
     MonitoringServerData,
     filter_monitoring_server_data_by_servers_with_limit,
 )
-from core.localization import LocaleEnum
-from reports.ui.modals import BaseReportModal, CheaterReportModal, LimitReportModal
+from core.localization import LocaleEnum, LocalizationDict
 
 
 class ServersSelect(discord.ui.Select):
+    placeholder_localization = LocalizationDict(
+        {
+            LocaleEnum.ru: 'Выберите сервер',
+            LocaleEnum.en: 'Select server',
+        },
+    )
+
     def __init__(self, servers: list[MonitoringServerData], locale: LocaleEnum, modal_class: type[BaseReportModal]):
         self.servers = servers
         self.locale = locale
@@ -17,6 +28,7 @@ class ServersSelect(discord.ui.Select):
         super().__init__(
             select_type=discord.ComponentType.string_select,
             options=self._get_report_servers(),
+            placeholder=self.placeholder_localization[locale],
         )
 
     def _get_report_servers(self) -> list[discord.SelectOption]:
