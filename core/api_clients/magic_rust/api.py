@@ -1,11 +1,11 @@
 from aiocache import cached
 
-from core.clients.http import HTTPClient
-from core.clients.server_data_api.models import (
+from core.api_clients.magic_rust.models import (
     CombinedServerData,
     FullServerData,
     MonitoringServerData,
 )
+from core.clients.http import HTTPClient
 
 SERVER_LASTUPDATE_TRESHOLD = 45
 API_GET_REQUEST_CACHE_TIME = 15

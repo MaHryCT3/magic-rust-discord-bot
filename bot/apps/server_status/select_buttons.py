@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 import discord
 
-from core.clients.server_data_api.models import LIMIT_LABELS, GameModeTypes, Maps
+from core.api_clients.magic_rust import LIMIT_LABELS, GameModeTypes, Maps
 from core.localization import LocaleEnum, day_name
 from core.utils.date_time import WeekDay
 

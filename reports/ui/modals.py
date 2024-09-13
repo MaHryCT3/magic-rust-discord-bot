@@ -3,8 +3,11 @@ from typing import Final
 import discord
 from discord import Interaction
 
-from core.clients.server_data_api import MonitoringServerData, ServerTypes
-from core.clients.server_data_api.utils import get_only_server_name_from_title
+from core.api_clients.magic_rust import (
+    MonitoringServerData,
+    ServerTypes,
+    get_only_server_name_from_title,
+)
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
 from reports.constants import REPORT_COOLDOWN, VK_REPORT_MESSAGE_TEMPLATE

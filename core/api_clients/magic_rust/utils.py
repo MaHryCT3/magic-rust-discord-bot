@@ -1,6 +1,6 @@
 import sys
 
-from core.clients.server_data_api.models import MonitoringServerData
+from core.api_clients.magic_rust.models import MonitoringServerData
 
 
 def sort_monitoring_server_data_by_server_number(servers_data: list[MonitoringServerData]):
