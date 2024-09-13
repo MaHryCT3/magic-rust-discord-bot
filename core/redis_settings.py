@@ -1,8 +1,7 @@
-import asyncio
 from logging import getLogger
 from typing import Any, Callable
 
-from core.clients.async_redis import AsyncRedisNameSpace
+from core.clients.redis import RedisNameSpace
 
 # TODO: FIX logger in core
 logger = getLogger('discord-bot')
@@ -26,10 +25,7 @@ class SettingValue:
         self._private_name = '_' + name
 
     def __get__(self, instance: 'BaseRedisSettings', owner):
-        raw_value = asyncio.run_coroutine_threadsafe(
-            instance._storage.get(self.public_name),
-            loop=asyncio.get_event_loop(),
-        ).result(timeout=5)
+        raw_value = instance._storage.get(self.public_name)
         return self._cast_value(raw_value)
 
     def __set__(self, instance: 'BaseRedisSettings', value: Any):
@@ -52,7 +48,7 @@ def cast_dict(key_cast: Callable, value_cast: Callable) -> Callable[[dict], dict
 class BaseRedisSettings:
 
     def __init__(self, redis_url: str, namespace: str):
-        self._storage = AsyncRedisNameSpace(url=redis_url, namespace=namespace)
+        self._storage = RedisNameSpace(url=redis_url, namespace=namespace)
 
     @classmethod
     def get_settings_attributes(cls):
