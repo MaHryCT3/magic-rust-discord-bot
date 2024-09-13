@@ -3,8 +3,9 @@ from dataclasses import asdict, dataclass, field
 from typing import Self
 from uuid import UUID, uuid4
 
-from bot.config import logger, settings
+from bot.config import settings
 from core.clients.async_redis import AsyncRedisNameSpace
+from core.logger import logger
 
 
 @dataclass

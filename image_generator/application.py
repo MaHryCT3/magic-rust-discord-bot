@@ -4,8 +4,8 @@ from time import sleep
 from requests.exceptions import HTTPError
 from schedule import every, run_pending
 
+from core.logger import logger
 from global_constants import DISCOR_HEADER_IMAGE_KEY, SERVER_STATUS_IMAGE_KEY
-from image_generator.config import logger
 from image_generator.image_generator import (
     get_discord_header_image,
     get_server_status_image,

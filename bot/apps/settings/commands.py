@@ -4,9 +4,9 @@ import discord
 from discord import SlashCommandGroup
 from discord.ext import commands
 
-from bot.config import logger
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum
+from core.logger import logger
 
 if TYPE_CHECKING:
     from bot import MagicRustBot

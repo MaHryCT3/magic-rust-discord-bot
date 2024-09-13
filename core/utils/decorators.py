@@ -1,7 +1,7 @@
 import asyncio
 from logging import getLogger
 
-logger = getLogger('discord-bot')
+logger = getLogger()
 
 
 def suppress_exceptions(func):

@@ -3,7 +3,7 @@ from discord import Interaction
 
 from bot.apps.bot_messages.embeds import SendMessageByBotEmbed
 from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
-from bot.config import logger
+from core.logger import logger
 
 
 class SendMessageByBotModal(BaseSendMessageByBotModal):

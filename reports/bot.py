@@ -3,7 +3,8 @@ from typing import Any, NoReturn
 import discord
 from discord.bot import Bot
 
-from reports.config import logger, settings
+from core.logger import logger
+from reports.config import settings
 from reports.errors import ReportsError
 
 COGS = [
