@@ -1,6 +1,6 @@
 import discord
 
-from core.clients.server_data_api.models import CombinedServerData
+from core.api_clients.magic_rust import CombinedServerData
 from core.localization import LocaleEnum, LocalizationDict, day_name
 from core.utils.colors import get_random_blue_color
 

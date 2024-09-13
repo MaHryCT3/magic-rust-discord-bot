@@ -1,7 +1,8 @@
+import asyncio
 from logging import getLogger
 from typing import Any, Callable
 
-from core.clients.redis import RedisNameSpace
+from core.clients.async_redis import AsyncRedisNameSpace
 
 # TODO: FIX logger in core
 logger = getLogger('discord-bot')
@@ -25,16 +26,20 @@ class SettingValue:
         self._private_name = '_' + name
 
     def __get__(self, instance: 'BaseRedisSettings', owner):
-        return getattr(instance, self._private_name, None)
+        raw_value = asyncio.run_coroutine_threadsafe(
+            instance._storage.get(self.public_name),
+            loop=asyncio.get_event_loop(),
+        ).result(timeout=5)
+        return self._cast_value(raw_value)
 
     def __set__(self, instance: 'BaseRedisSettings', value: Any):
-        if not instance._load_state:
-            instance._storage.set(self.public_name, value)
-        else:
-            value = value or self.default or (self.default_factory() if self.default_factory else None)
-            if value and self.cast_on_load:
-                value = self.cast_on_load(value)
-        setattr(instance, self._private_name, value)
+        instance._storage.set(self.public_name, value)
+
+    def _cast_value(self, value: Any):
+        value = value or self.default or (self.default_factory() if self.default_factory else None)
+        if value and self.cast_on_load:
+            value = self.cast_on_load(value)
+        return value
 
 
 def cast_dict(key_cast: Callable, value_cast: Callable) -> Callable[[dict], dict]:
@@ -46,22 +51,8 @@ def cast_dict(key_cast: Callable, value_cast: Callable) -> Callable[[dict], dict
 
 class BaseRedisSettings:
 
-    # Происходит загрузка настроек, значит не нужно сохранять их в редис в __set__
-    _load_state: bool = False
-
     def __init__(self, redis_url: str, namespace: str):
-        self._storage = RedisNameSpace(url=redis_url, namespace=namespace)
-
-        self._load_state = True
-
-        logger.info('Load settings from redis')
-        for key in self.get_settings_attributes():
-            value = self._storage.get(key)
-            setattr(self, key, value)
-            logger.info(f'{key}={getattr(self, key)}')
-
-        self._load_state = False
-        logger.info('Redis settings loaded')
+        self._storage = AsyncRedisNameSpace(url=redis_url, namespace=namespace)
 
     @classmethod
     def get_settings_attributes(cls):
