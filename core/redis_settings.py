@@ -1,10 +1,6 @@
-from logging import getLogger
 from typing import Any, Callable
 
 from core.clients.redis import RedisNameSpace
-
-# TODO: FIX logger in core
-logger = getLogger('discord-bot')
 
 
 class SettingValue:

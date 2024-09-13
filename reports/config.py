@@ -1,9 +1,10 @@
 import logging
-import sys
 from datetime import timedelta, timezone
 
 from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
+
+from core.logger import logger
 
 
 class Settings(BaseSettings):
@@ -24,6 +25,4 @@ class Settings(BaseSettings):
 settings = Settings(_env_file='.env')
 
 
-logger = logging.getLogger('discord-report-bot')
-logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)

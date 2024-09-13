@@ -3,7 +3,8 @@ from typing import Any, NoReturn
 import discord
 from discord.bot import Bot
 
-from bot.config import logger, settings
+from bot.config import settings
+from core.logger import logger
 
 COGS = [
     'apps.find_friends.setup',

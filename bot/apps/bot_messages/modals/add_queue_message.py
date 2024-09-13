@@ -2,8 +2,8 @@ import discord
 from discord import Interaction
 
 from bot.apps.bot_messages.modals.base import BaseSendMessageByBotModal
-from bot.config import logger
 from bot.constants import DATETIME_FORMAT
+from core.logger import logger
 
 
 class AddQueueMessageModal(BaseSendMessageByBotModal):
