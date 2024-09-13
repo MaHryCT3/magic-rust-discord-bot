@@ -1,8 +1,8 @@
 import discord
 from discord import Interaction
 
-from core.clients.server_data_api import MonitoringServerData
-from core.clients.server_data_api.utils import (
+from core.api_clients.magic_rust import (
+    MonitoringServerData,
     filter_monitoring_server_data_by_servers_with_limit,
 )
 from core.localization import LocaleEnum

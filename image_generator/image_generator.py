@@ -3,8 +3,7 @@ from math import ceil
 
 from PIL import Image
 
-from core.clients.server_data_api import MagicRustServerDataAPI
-from core.clients.server_data_api.models import CombinedServerData
+from core.api_clients.magic_rust import CombinedServerData, MagicRustServerDataAPI
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage

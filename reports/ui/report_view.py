@@ -4,8 +4,8 @@ import discord
 from discord import Interaction
 from discord.ui import Item
 
-from core.clients.server_data_api import MagicRustServerDataAPI
-from core.clients.server_data_api.utils import (
+from core.api_clients.magic_rust import (
+    MagicRustServerDataAPI,
     sort_monitoring_server_data_by_server_number,
 )
 from core.localization import LocaleEnum, LocalizationDict

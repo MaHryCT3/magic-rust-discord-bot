@@ -10,8 +10,7 @@ from bot.apps.server_status.select_buttons import (
     MapSelect,
     WipeDaySelect,
 )
-from core.clients.server_data_api import MagicRustServerDataAPI
-from core.clients.server_data_api.models import FullServerData
+from core.api_clients.magic_rust import FullServerData, MagicRustServerDataAPI
 from core.localization import LocaleEnum
 
 
