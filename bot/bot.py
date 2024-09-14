@@ -3,20 +3,8 @@ from typing import Any, NoReturn
 import discord
 from discord.bot import Bot
 
-<<<<<<< HEAD
-from bot.config import logger, settings
-from bot.dynamic_settings import CategoryId
-
-COGS = [
-    'apps.find_friends.setup',
-    'apps.settings.setup',
-    'apps.bot_messages.setup',
-    'apps.info_provider.setup',
-    'apps.server_status.setup',
-    'apps.news_reposts.setup',
-    'apps.channel_cleaner.setup',
-=======
 from bot.config import settings
+from bot.dynamic_settings import CategoryId
 from core.logger import logger
 
 all_apps = [
@@ -25,9 +13,10 @@ all_apps = [
     'bot_messages',
     'info_provider',
     'server_status',
+    'banner_updater',
+    'voice_channels',
     'news_reposts',
     'reports',
->>>>>>> 8c90917107f4830192e4bfcdea1ad61e51d849e3
 ]
 
 

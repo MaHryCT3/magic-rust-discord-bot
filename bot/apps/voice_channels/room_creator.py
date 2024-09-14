@@ -1,8 +1,8 @@
 from discord import Member, PermissionOverwrite, VoiceChannel, VoiceState
 from discord.ext import commands
 
-from bot.apps.channel_cleaner.embeds import RoomCreationCooldownEmbed
-from bot.apps.channel_cleaner.exceptions import (
+from bot.apps.voice_channels.embeds import RoomCreationCooldownEmbed
+from bot.apps.voice_channels.exceptions import (
     CategoryNotConfiguredError,
     RoomCreateCooldownError,
 )

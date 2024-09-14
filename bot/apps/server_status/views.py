@@ -56,7 +56,7 @@ class ServerFilterView(discord.ui.View):
     def _is_server_satisfying_filter(self, server_data: FullServerData) -> bool:
         return (
             (not self.gm or server_data.gm.value == self.gm)
-            and (not self.limit or server_data.limit == self.limit)
+            and (self.limit == None or server_data.limit == self.limit)
             and (not self.wipeday or server_data.wipeday == self.wipeday)
             and (not self.map or server_data.map.value == self.map)
         )

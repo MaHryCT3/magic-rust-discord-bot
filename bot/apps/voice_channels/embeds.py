@@ -3,7 +3,7 @@ from typing import Self
 
 import discord
 
-from bot.apps.channel_cleaner.exceptions import RoomCreateCooldownError
+from bot.apps.voice_channels.exceptions import RoomCreateCooldownError
 from core.localization import LocaleEnum, LocalizationDict
 from core.utils.colors import WARNING_YELLOW
 

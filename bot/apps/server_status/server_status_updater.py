@@ -16,7 +16,6 @@ from global_constants import IMAGES_NAMESPACE, SERVER_STATUS_IMAGE_KEY
 if TYPE_CHECKING:
     from bot import MagicRustBot
 
-HEADER_UPDATE_SECONDS = 30.0
 SERVER_STATUS_UPDATE_SECONDS = 15.0
 
 
@@ -48,7 +47,7 @@ class ServerStatusUpdater(commands.Cog):
             image_bytes: bytes = self.image_storage.get(SERVER_STATUS_IMAGE_KEY, as_bytes=True)
 
             if not image_bytes:
-                logger.warning('image not loaded')
+                logger.warning('Server status image not loaded')
             else:
                 image_binary = BytesIO(image_bytes)
                 if not last_message or not last_message.attachments:
