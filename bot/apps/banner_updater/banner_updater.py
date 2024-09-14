@@ -1,22 +1,18 @@
 from io import BytesIO
 from typing import TYPE_CHECKING
 
-from discord import File, NoMoreItems, TextChannel
 from discord.ext import commands, tasks
 
-from bot.apps.server_status.exceptions import LastMessageAuthorIsNotSelfError
-from bot.apps.server_status.views import FindServerView
 from bot.config import settings
-from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
-from core.localization import LocaleEnum
 from core.logger import logger
-from global_constants import IMAGES_NAMESPACE, DISCOR_BANNER_IMAGE_KEY
+from global_constants import DISCOR_BANNER_IMAGE_KEY, IMAGES_NAMESPACE
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
 
 BANNER_UPDATE_SECONDS = 30.0
+
 
 class BannerUpdater(commands.Cog):
     def __init__(self, bot: 'MagicRustBot'):

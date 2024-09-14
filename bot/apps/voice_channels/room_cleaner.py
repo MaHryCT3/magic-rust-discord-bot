@@ -11,7 +11,7 @@ SERVER_DELETE_UPDATE_SECONDS = 60.0
 class RoomCleaner(commands.Cog):
     def __init__(self, bot: MagicRustBot):
         self.bot = bot
-    
+
     def cog_unload(self):
         self.delete_empty_channels.cancel()
 
