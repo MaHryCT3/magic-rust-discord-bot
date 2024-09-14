@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     build:
-      dockerfile: ./reports/Dockerfile
+      dockerfile: bot/apps/reports/Dockerfile
     tty: true
     command: python -m reports
     volumes:

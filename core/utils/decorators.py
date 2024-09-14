@@ -4,7 +4,7 @@ from time import time
 
 from core.utils.exceptions import LoopUnstableException
 
-logger = getLogger('discord-bot')
+logger = getLogger()
 
 
 def suppress_exceptions(func):

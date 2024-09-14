@@ -3,6 +3,10 @@ from typing import Final
 import discord
 from discord import Interaction
 
+from bot.apps.reports.constants import REPORT_COOLDOWN, VK_REPORT_MESSAGE_TEMPLATE
+from bot.apps.reports.errors import UserReportCooldownError
+from bot.apps.reports.services.cooldowns import report_cooldown
+from bot.apps.reports.services.report_sender import ChatTypes, ReportVKSender
 from core.api_clients.magic_rust import (
     MonitoringServerData,
     ServerTypes,
@@ -10,10 +14,6 @@ from core.api_clients.magic_rust import (
 )
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
-from reports.constants import REPORT_COOLDOWN, VK_REPORT_MESSAGE_TEMPLATE
-from reports.errors import UserReportCooldownError
-from reports.services.cooldowns import report_cooldown
-from reports.services.report_sender import ChatTypes, ReportVKSender
 
 
 class BaseReportModal(BaseLocalizationModal):

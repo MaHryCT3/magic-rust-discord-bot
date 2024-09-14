@@ -7,7 +7,7 @@ from bot.apps.bot_messages.exceptions import BotMessageError
 from bot.apps.bot_messages.paginator import QueueMessagePaginator
 from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
 from bot.apps.bot_messages.utils import send_delayed_message
-from bot.config import logger
+from core.logger import logger
 
 
 class MessageQueueCog(commands.Cog):

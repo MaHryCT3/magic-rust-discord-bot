@@ -3,7 +3,7 @@ from logging import getLogger
 from core.api_clients.vk.models import LongPollServer
 from core.clients.http import HTTPClient
 
-logger = getLogger('vk-api')
+logger = getLogger()
 
 
 class VKAPIClient:

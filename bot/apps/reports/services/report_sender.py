@@ -1,7 +1,7 @@
 from enum import StrEnum
 
+from bot.config import settings
 from core.api_clients.vk import VKAPIClient
-from reports.config import settings
 
 
 class ChatTypes(StrEnum):
@@ -18,7 +18,7 @@ class ReportVKSender:
     }
 
     def __init__(self):
-        self.vk_api = VKAPIClient(settings.DISCORD_REPORT_VK_BOT_TOKEN)
+        self.vk_api = VKAPIClient(settings.REPORT_VK_BOT_TOKEN)
 
     async def send_message(self, chat_type: ChatTypes, message: str):
         chat_peer_id = self.peer_id_by_chat_type[chat_type]

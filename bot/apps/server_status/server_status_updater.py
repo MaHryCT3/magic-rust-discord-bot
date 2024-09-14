@@ -6,10 +6,11 @@ from discord.ext import commands, tasks
 
 from bot.apps.server_status.exceptions import LastMessageAuthorIsNotSelfError
 from bot.apps.server_status.views import FindServerView
-from bot.config import logger, settings
+from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.clients.redis import RedisNameSpace
 from core.localization import LocaleEnum
+from core.logger import logger
 from global_constants import IMAGES_NAMESPACE, SERVER_STATUS_IMAGE_KEY
 
 if TYPE_CHECKING:

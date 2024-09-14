@@ -8,9 +8,10 @@ from bot.apps.news_reposts.services.captures import (
     VKNewsCapture,
 )
 from bot.apps.news_reposts.services.captures.structs import CapturedNewsSources
-from bot.config import logger, settings
+from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.api_clients.vk import BotPolling, VKAPIClient
+from core.logger import logger
 from core.utils.decorators import suppress_exceptions
 from global_constants import MAGIC_RUST_IMAGE
 

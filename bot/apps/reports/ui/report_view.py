@@ -4,18 +4,18 @@ import discord
 from discord import Interaction
 from discord.ui import Item
 
+from bot.apps.reports.constants import REPORT_COOLDOWN
+from bot.apps.reports.errors import ReportsError, UserReportCooldownError
+from bot.apps.reports.services.cooldowns import report_cooldown
+from bot.apps.reports.ui.select_server_view import (
+    SelectCheaterReportServerView,
+    SelectLimitReportServerView,
+)
 from core.api_clients.magic_rust import (
     MagicRustServerDataAPI,
     sort_monitoring_server_data_by_server_number,
 )
 from core.localization import LocaleEnum, LocalizationDict
-from reports.constants import REPORT_COOLDOWN
-from reports.errors import ReportsError, UserReportCooldownError
-from reports.services.cooldowns import report_cooldown
-from reports.ui.select_server_view import (
-    SelectCheaterReportServerView,
-    SelectLimitReportServerView,
-)
 
 
 class BaseReportButton(discord.ui.Button):
