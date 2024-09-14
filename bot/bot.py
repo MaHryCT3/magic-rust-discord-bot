@@ -6,27 +6,34 @@ from discord.bot import Bot
 from bot.config import settings
 from core.logger import logger
 
-COGS = [
-    'apps.find_friends.setup',
-    'apps.settings.setup',
-    'apps.bot_messages.setup',
-    'apps.info_provider.setup',
-    'apps.server_status.setup',
-    'apps.news_reposts.setup',
+all_apps = [
+    'find_friends',
+    'settings',
+    'bot_messages',
+    'info_provider',
+    'server_status',
+    'news_reposts',
+    'reports',
 ]
 
 
 class MagicRustBot(Bot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, setup_apps: list[str] | None = None, **kwargs):
+        self.setup_apps = setup_apps or all_apps
         intents = discord.Intents.default() + discord.Intents.message_content
-        super().__init__(*args, intents=intents, **kwargs)
-        self._load_cogs()
+        super().__init__(
+            *args,
+            intents=intents,
+            owner_ids=settings.DISCORD_OWNER_IDS,
+            **kwargs,
+        )
+        self._load_apps()
 
-    def _load_cogs(self):
-        for cog in COGS:
-            cog_with_path = 'bot.' + cog
-            self.load_extension(cog_with_path)
-            logger.info(f'Cog {cog_with_path} is loaded')
+    def _load_apps(self):
+        for app_name in self.setup_apps:
+            app_full_path = 'bot.apps.' + app_name + '.setup'
+            self.load_extension(app_full_path)
+            logger.info(f'app {app_full_path} is loaded')
 
     def get_main_guild(self) -> discord.Guild | None:
         return self.get_guild(int(settings.MAGIC_RUST_GUILD_ID))

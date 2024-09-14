@@ -2,13 +2,14 @@ import discord
 from discord import SlashCommandGroup
 from discord.ext import commands
 
+from bot import MagicRustBot
+from bot.apps.reports.constants import MAIN_COLOR
+from bot.apps.reports.errors import ReportsError
+from bot.apps.reports.ui.report_view import ReportView
+from bot.config import settings
 from core.checks import is_owner
 from core.localization import LocaleEnum
 from core.utils.format_strings import framing_message
-from reports.bot import MagicRustReportBot
-from reports.config import settings
-from reports.constants import MAIN_COLOR
-from reports.ui.report_view import ReportView
 
 
 class ChannelSetupCog(commands.Cog):
@@ -62,7 +63,7 @@ class ChannelSetupCog(commands.Cog):
         ),
     }
 
-    def __init__(self, bot: MagicRustReportBot):
+    def __init__(self, bot: MagicRustBot):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -71,7 +72,7 @@ class ChannelSetupCog(commands.Cog):
             self.bot.add_view(view)
 
     @reports_group.command(description='Установить канал для жалоб')
-    async def set_channel(
+    async def create_report_view(
         self,
         ctx: discord.ApplicationContext,
         locale: discord.Option(LocaleEnum),
@@ -85,3 +86,7 @@ class ChannelSetupCog(commands.Cog):
             view=view,
         )
         await ctx.respond('Создано', ephemeral=True, delete_after=10)
+
+    async def cog_command_error(self, ctx: discord.ApplicationContext, error: ReportsError):
+        if isinstance(error, ReportsError):
+            return await ctx.respond(error.message, ephemeral=True, delete_after=20)
