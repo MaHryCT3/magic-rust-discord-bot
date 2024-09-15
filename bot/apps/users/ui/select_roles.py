@@ -18,7 +18,10 @@ class SelectRoleButton(discord.ui.Button):
     )
 
     already_granted_localization = LocalizationDict(
-        {LocaleEnum.ru: 'Роль уже выдана', LocaleEnum.en: 'Role already given'}
+        {
+            LocaleEnum.ru: 'Роль уже выдана',
+            LocaleEnum.en: 'Role already given',
+        }
     )
 
     def __init__(self, label: str, emoji: str, locale: LocaleEnum):
