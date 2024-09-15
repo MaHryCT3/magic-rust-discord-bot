@@ -39,6 +39,4 @@ class RedisNameSpace:
 
     @staticmethod
     def _encode_redis_request(data: list[dict] | dict | None) -> list[str] | str:
-        if isinstance(data, list):
-            return [json.dumps(data_unit) for data_unit in data]
         return json.dumps(data, default=str)

@@ -4,6 +4,7 @@ import discord
 from discord.bot import Bot
 
 from bot.config import settings
+from bot.dynamic_settings import CategoryId
 from core.logger import logger
 
 all_apps = [
@@ -12,6 +13,8 @@ all_apps = [
     'bot_messages',
     'info_provider',
     'server_status',
+    'banner_updater',
+    'voice_channels',
     'news_reposts',
     'reports',
     'servicing_posts',
@@ -38,6 +41,12 @@ class MagicRustBot(Bot):
 
     def get_main_guild(self) -> discord.Guild | None:
         return self.get_guild(int(settings.MAGIC_RUST_GUILD_ID))
+
+    def get_category(self, category_id: CategoryId) -> discord.CategoryChannel | None:
+        for category in self.get_main_guild().categories:
+            if category.id == category_id:
+                return category
+        return None
 
     async def fetch_main_guild(self) -> discord.Guild:
         return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)

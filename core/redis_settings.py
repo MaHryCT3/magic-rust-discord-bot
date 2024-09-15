@@ -12,7 +12,7 @@ class SettingValue:
         description: str = '',
     ):
         if default and default_factory:
-            raise AttributeError('Either default or default_factory can be provided.')
+            raise AttributeError('Either default or default_factory should be provided.')
         self.default = default
         self.default_factory = default_factory
         self.cast_on_load = cast_on_load

@@ -2,6 +2,8 @@ from random import choice
 
 from discord import Color
 
+WARNING_YELLOW = Color.yellow()
+
 BLUE_COLORS = (
     Color.blue(),
     Color.blurple(),

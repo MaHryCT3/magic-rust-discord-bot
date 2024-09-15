@@ -8,6 +8,7 @@ from bot.apps.bot_messages.paginator import QueueMessagePaginator
 from bot.apps.bot_messages.services import DelayedMessage, DelayedMessageService
 from bot.apps.bot_messages.utils import send_delayed_message
 from core.logger import logger
+from core.utils.decorators import suppress_exceptions
 
 
 class MessageQueueCog(commands.Cog):
@@ -40,6 +41,7 @@ class MessageQueueCog(commands.Cog):
         await ctx.respond('Очередь на отложенные сообщения очищена', ephemeral=True)
 
     @tasks.loop(seconds=5)
+    @suppress_exceptions
     async def check_delayed_messages(self):
         logger.debug('checking delayed messages')
         messages_to_send = await self.delayed_message_service.get_messages_to_send()

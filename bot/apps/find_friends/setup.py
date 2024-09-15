@@ -4,6 +4,7 @@ from bot.config import settings
 from core.redis_cooldown import RedisLocaleCooldown
 
 from .commands import FindFriendsCommands
+from .constants import FIND_FRIEND_COOLDOWN_NAMESPACE
 from .events import FindFriendEvents
 
 if TYPE_CHECKING:
@@ -11,6 +12,6 @@ if TYPE_CHECKING:
 
 
 def setup(bot: 'MagicRustBot'):
-    redis_cooldown = RedisLocaleCooldown(redis_url=settings.REDIS_URL, cooldown_name='find_friend')
+    redis_cooldown = RedisLocaleCooldown(redis_url=settings.REDIS_URL, cooldown_name=FIND_FRIEND_COOLDOWN_NAMESPACE)
     bot.add_cog(FindFriendsCommands(bot, redis_cooldown))
     bot.add_cog(FindFriendEvents(bot))

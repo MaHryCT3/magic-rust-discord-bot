@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 from bot import MagicRustBot
 from bot.config import settings
 from core.clients.redis import RedisNameSpace
+from core.utils.decorators import suppress_exceptions
 from global_constants import (
     DISCORD_INFO_NAMESPACE,
     DISCORD_ONLINE_PRESENCE_KEY,
@@ -23,6 +24,7 @@ class InfoProvider(commands.Cog):
         self.provide_info.cancel()
 
     @tasks.loop(seconds=REPEAT_SECONDS)
+    @suppress_exceptions
     async def provide_info(self):
         await self.bot.wait_until_ready()
         guild = self.bot.get_main_guild()
