@@ -1,0 +1,1 @@
+FIND_FRIEND_COOLDOWN_NAMESPACE = 'find_friend'

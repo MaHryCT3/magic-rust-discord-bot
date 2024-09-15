@@ -1,0 +1,1 @@
+CREATE_VOICE_COOLDOWN_NAMESPACE = 'create_user_voice'

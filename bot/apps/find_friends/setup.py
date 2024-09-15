@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
 from bot.config import settings
-from bot.constants import FIND_FRIEND_COOLDOWN_NAMESPACE
 from core.redis_cooldown import RedisLocaleCooldown
 
 from .commands import FindFriendsCommands
+from .constants import FIND_FRIEND_COOLDOWN_NAMESPACE
 from .events import FindFriendEvents
 
 if TYPE_CHECKING:

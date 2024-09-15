@@ -1,6 +1,7 @@
 from discord import Member, PermissionOverwrite, VoiceChannel, VoiceState
 from discord.ext import commands
 
+from bot.apps.voice_channels.constants import CREATE_VOICE_COOLDOWN_NAMESPACE
 from bot.apps.voice_channels.embeds import RoomCreationCooldownEmbed
 from bot.apps.voice_channels.exceptions import (
     CategoryNotConfiguredError,
@@ -8,7 +9,6 @@ from bot.apps.voice_channels.exceptions import (
 )
 from bot.bot import MagicRustBot
 from bot.config import logger, settings
-from bot.constants import CREATE_VOICE_COOLDOWN_NAMESPACE
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum, LocalizationDict
 from core.redis_cooldown import RedisCooldown
@@ -53,7 +53,7 @@ class RoomCreator(commands.Cog):
             cooldown_in_seconds=cooldown,
         )
         await new_channel.set_permissions(
-            member, manage_channels=True, move_members=True, mute_members=True, set_voice_channel_status=True
+            member, manage_channels=True, move_members=True, set_voice_channel_status=True
         )
         await member.move_to(new_channel)
 
@@ -69,7 +69,7 @@ class RoomCreator(commands.Cog):
             category=category,
             overwrites={
                 self._get_locale_role(locale): PermissionOverwrite(view_channel=True),
-                guild.default_role: PermissionOverwrite(view_channel=False),
+                guild.default_role: PermissionOverwrite(view_channel=False, stream=True),
             },
         )
         return new_channel

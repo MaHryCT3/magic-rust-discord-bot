@@ -10,8 +10,10 @@ class AsyncRedisNameSpace:
         self._redis = StrictRedis(connection_pool=connection_pool, decode_responses=True)
         self.namespace = namespace
 
-    async def get(self, key: str) -> Any:
+    async def get(self, key: str, as_bytes: bool = False) -> Any:
         response = await self._redis.get(self.make_key(key))
+        if as_bytes:
+            return response
         return self._decode_response(response)
 
     async def set(self, key: str, value: Any, expire: int = None):
