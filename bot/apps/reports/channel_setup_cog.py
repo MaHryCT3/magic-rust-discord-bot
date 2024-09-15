@@ -90,3 +90,4 @@ class ChannelSetupCog(commands.Cog):
     async def cog_command_error(self, ctx: discord.ApplicationContext, error: ReportsError):
         if isinstance(error, ReportsError):
             return await ctx.respond(error.message, ephemeral=True, delete_after=20)
+        raise error

@@ -14,6 +14,7 @@ all_apps = [
     'server_status',
     'news_reposts',
     'reports',
+    'servicing_posts',
 ]
 
 
