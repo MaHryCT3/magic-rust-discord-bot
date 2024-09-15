@@ -43,6 +43,7 @@ class RoomCreator(commands.Cog):
             except CategoryNotConfiguredError:
                 await member.move_to(None)
                 logger.error(f'Category for user voice rooms for locale {locale} not set!')
+            break
 
     async def create_room_for_user(self, member: Member, cooldown: float, locale: LocaleEnum):
         if cooldown_residue := await self.create_room_cooldown.get_user_cooldown_residue(member.id, cooldown):
