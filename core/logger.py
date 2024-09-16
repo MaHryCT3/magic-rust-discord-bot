@@ -68,7 +68,9 @@ class LogMessage:
         self.kwargs = kwargs
 
     def __str__(self):
-        return self.fmt.format(*self.args)
+        if self.args:
+            return self.fmt.format(*self.args)
+        return self.fmt
 
 
 class StyleAdapter(logging.LoggerAdapter):
