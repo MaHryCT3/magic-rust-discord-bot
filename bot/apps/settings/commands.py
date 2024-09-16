@@ -84,7 +84,7 @@ class SettingsCog(commands.Cog):
         )
 
     @find_friends_subgroup.command(
-        name='channels'
+        name='channels',
         description='Изменить каналы для поиска друга',
     )
     async def friend_channels(
