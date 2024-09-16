@@ -67,6 +67,7 @@ class SettingsCog(commands.Cog):
         )
 
     @find_friends_subgroup.command(
+        name='cooldown',
         description='Изменить кулдаун на поиск друга, указывать в секундах',
     )
     async def find_friend_cooldown(
@@ -83,6 +84,7 @@ class SettingsCog(commands.Cog):
         )
 
     @find_friends_subgroup.command(
+        name='channels'
         description='Изменить каналы для поиска друга',
     )
     async def friend_channels(
@@ -138,6 +140,7 @@ class SettingsCog(commands.Cog):
         )
 
     @voide_channels_subgroup.command(
+        name='cooldown',
         description='Изменить кулдаун создания голосовых каналов, указывать в секундах',
     )
     async def user_room_create_cooldown(
