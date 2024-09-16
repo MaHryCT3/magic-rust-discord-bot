@@ -20,7 +20,7 @@ jobs:
           script: |
             cd magic-rust-discord-bot/
             git pull
-            echo $PROD_ENV_FILE | base64 --decode > .env
+            echo $PROD_ENV_FILE > .env
             docker compose build
             docker compose down
             docker compose up -d
