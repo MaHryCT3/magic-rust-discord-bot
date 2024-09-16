@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  main_bot:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./bot/Dockerfile
+    tty: true
+    command: python -m bot settings users servicing_posts bot_messages news_reposts find_friends
+
+
+  report_bot:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./bot/Dockerfile
+    tty: true
+    command: python -m bot reports
+
+  voice_bot:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./bot/Dockerfile
+    tty: true
+    command: python -m bot voice_channels
+
+  monitoring_bot:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./bot/Dockerfile
+    tty: true
+    command: python -m bot info_provider server_status banner_updater
+
+
+  image-generator:
+    env_file:
+      - .env
+    build:
+      dockerfile: ./image_generator/Dockerfile
+    tty: true
+    command: python -m image_generator
+  
+
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./storage/redis:/data
