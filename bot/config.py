@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     SENTRY_DSN: str = ''
     TIMEZONE: timezone = timezone(offset=timedelta(hours=3), name='Europe/Moscow')
 
-    DISCORD_MAIN_BOT_TOKEN: str
+    DISCORD_BOT_TOKEN: str
     DISCORD_OWNER_IDS: list[int]
     MAGIC_RUST_GUILD_ID: str
 

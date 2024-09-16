@@ -3,6 +3,8 @@ services:
   main_bot:
     env_file:
       - .env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_MAIN_BOT_TOKEN}
     build:
       dockerfile: ./bot/Dockerfile
     tty: true
@@ -12,6 +14,8 @@ services:
   report_bot:
     env_file:
       - .env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_REPORT_BOT_TOKEN}
     build:
       dockerfile: ./bot/Dockerfile
     tty: true
@@ -20,6 +24,8 @@ services:
   voice_bot:
     env_file:
       - .env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_VOICE_BOT_TOKEN}
     build:
       dockerfile: ./bot/Dockerfile
     tty: true
@@ -28,6 +34,8 @@ services:
   monitoring_bot:
     env_file:
       - .env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_MONITORING_BOT_TOKEN}
     build:
       dockerfile: ./bot/Dockerfile
     tty: true

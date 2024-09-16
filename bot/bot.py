@@ -62,4 +62,4 @@ class MagicRustBot(Bot):
         logger.info('Bot is running')
 
     def run(self, *args: Any, **kwargs: Any) -> NoReturn:
-        super().run(settings.DISCORD_MAIN_BOT_TOKEN, *args, **kwargs)
+        super().run(settings.DISCORD_BOT_TOKEN, *args, **kwargs)
