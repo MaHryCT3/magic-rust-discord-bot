@@ -9,12 +9,14 @@ class SettingValue:
         default: Any = None,
         default_factory: Callable | None = None,
         cast_on_load: Callable | None = None,
+        description: str = '',
     ):
         if default and default_factory:
             raise AttributeError('Either default or default_factory should be provided.')
         self.default = default
         self.default_factory = default_factory
         self.cast_on_load = cast_on_load
+        self.description = description
 
     def __set_name__(self, owner: type['BaseRedisSettings'], name: str):
         self.public_name = name

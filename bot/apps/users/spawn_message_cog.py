@@ -10,7 +10,7 @@ from core.utils.format_strings import bold_message
 from global_constants import MAGIC_RUST_IMAGE
 
 
-class SpawMessageCog(commands.Cog):
+class SpawnMessageCog(commands.Cog):
     users = SlashCommandGroup(
         name='users',
         default_member_permissions=discord.Permissions(

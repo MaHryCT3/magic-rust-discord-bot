@@ -18,6 +18,7 @@ all_apps = [
     'news_reposts',
     'reports',
     'users',
+    'servicing_posts',
 ]
 
 
