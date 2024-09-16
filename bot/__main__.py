@@ -1,7 +1,18 @@
 import argparse
+import traceback
+
+import sentry_sdk
 
 from bot.bot import MagicRustBot, all_apps
 from bot.config import settings
+from core.utils.decorators import patch_traceback
+
+# Патч трейсбек функций, чтобы забирать из них эксепшены и отправлять в  сентри
+traceback.print_exception = patch_traceback(traceback.print_exception)
+traceback.print_exc = patch_traceback(traceback.print_exc)
+
+
+sentry_sdk.init(settings.SENTRY_DSN)
 
 
 def parse_setup_apps() -> list[str] | None:

@@ -2,6 +2,8 @@ import asyncio
 from logging import getLogger
 from time import time
 
+import sentry_sdk
+
 from core.utils.exceptions import LoopUnstableException
 
 logger = getLogger()
@@ -15,6 +17,7 @@ def suppress_exceptions(func):
             try:
                 return await func(*args, **kwargs)
             except Exception as e:
+                sentry_sdk.capture_exception(e)
                 logger.error(f'Suppressed exception in {func.__name__}', exc_info=e)
 
     else:
@@ -23,6 +26,7 @@ def suppress_exceptions(func):
             try:
                 return func(*args, **kwargs)
             except Exception as e:
+                sentry_sdk.capture_exception(e)
                 logger.error(f'Suppressed exception in {func.__name__}', exc_info=e)
 
     return decorator
@@ -49,5 +53,14 @@ def loop_stability_checker(seconds: float, max_relative_deviation=0.1, is_fatal=
             return await func(*args, **kwargs)
 
         return wrapper
+
+    return decorator
+
+
+def patch_traceback(func):
+
+    def decorator(*args, **kwargs):
+        sentry_sdk.capture_exception(args[0] if args else None)
+        return func(*args, *kwargs)
 
     return decorator
