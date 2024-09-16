@@ -1,10 +1,13 @@
 name: Deploy prod
+
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
     name: "Build and Run"
+    env:
+      PROD_ENV_FILE: ${{ secrets.PROD_ENV }}
     runs-on: ubuntu-20.04
     steps:
       - name: Connect and Build
@@ -16,7 +19,7 @@ jobs:
           script: |
             cd magic-rust-discord-bot/
             git pull
-            echo ${{ secrets.PROD_ENV }} > .env
+            echo $PROD_ENV_FILE | base64 --decode > .env
             docker compose build
             docker compose down
             docker compose up -d
