@@ -59,7 +59,8 @@ class MagicRustBot(Bot):
         return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)
 
     async def on_ready(self):
-        logger.info('Bot is running')
+        info = await self.application_info()
+        logger.info(f'Bot {info.name} is running')
 
     def run(self, *args: Any, **kwargs: Any) -> NoReturn:
         super().run(settings.DISCORD_BOT_TOKEN, *args, **kwargs)
