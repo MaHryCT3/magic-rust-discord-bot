@@ -17,7 +17,7 @@ class RoomCreationCooldownEmbed(discord.Embed):
     )
     message_localization = LocalizationDict(
         {
-            LocaleEnum.en: "You can create voice channels once in `{cooldown}` seconds. You'll be able to create <t:{retry_after_stamp}:R`.",
+            LocaleEnum.en: "You can create voice channels once in `{cooldown}` seconds. You'll be able to create <t:{retry_after_stamp}:R>.",
             LocaleEnum.ru: 'Голосовой канал можно создавать каждые `{cooldown}` секунд. Вы сможете создать <t:{retry_after_stamp}:R>.',
         }
     )
