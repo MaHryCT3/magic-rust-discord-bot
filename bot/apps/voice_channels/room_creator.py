@@ -53,8 +53,12 @@ class RoomCreator(commands.Cog):
             user_id=member.id,
             cooldown_in_seconds=cooldown,
         )
+        permissions = PermissionOverwrite()
+        permissions.manage_channels = True
+        permissions.move_members = True
+        permissions.set_voice_channel_status = True
         await new_channel.set_permissions(
-            member, manage_channels=True, move_members=True, set_voice_channel_status=True
+            member, overwrite=permissions
         )
         await member.move_to(new_channel)
 
@@ -69,13 +73,8 @@ class RoomCreator(commands.Cog):
             name=self.room_name_localization[locale].format(room_name=room_name),
             category=category,
             overwrites={
-                self._get_locale_role(locale): PermissionOverwrite(view_channel=True),
+                self.bot.get_locale_role(locale): PermissionOverwrite(view_channel=True),
                 guild.default_role: PermissionOverwrite(view_channel=False, stream=True),
             },
         )
         return new_channel
-
-    def _get_locale_role(self, locale: LocaleEnum):
-        for role_id, role_locale in dynamic_settings.locale_roles.items():
-            if locale == role_locale:
-                return self.bot.get_main_guild().get_role(role_id)
