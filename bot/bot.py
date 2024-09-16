@@ -4,7 +4,7 @@ import discord
 from discord.bot import Bot
 
 from bot.config import settings
-from bot.dynamic_settings import CategoryId, dynamic_settings 
+from bot.dynamic_settings import CategoryId, dynamic_settings
 from core.localization import LocaleEnum
 from core.logger import logger
 
@@ -47,7 +47,7 @@ class MagicRustBot(Bot):
             if category.id == category_id:
                 return category
         return None
-    
+
     def get_locale_role(self, locale: LocaleEnum):
         for role_id, role_locale in dynamic_settings.locale_roles.items():
             if locale == role_locale:

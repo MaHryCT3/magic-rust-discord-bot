@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 import discord
-from discord import PermissionOverwrite, SlashCommandGroup, VoiceChannel
+from discord import PermissionOverwrite, SlashCommandGroup
 from discord.ext import commands
 
 from bot.dynamic_settings import dynamic_settings
@@ -22,8 +22,14 @@ class SettingsCog(commands.Cog):
         ),
         contexts={discord.InteractionContextType.guild},
     )
-    find_friends_subgroup = settings_group.create_subgroup('find_friends', description='Настройка команды поиска друга',)
-    voide_channels_subgroup = settings_group.create_subgroup('voice_channels', description='Настройка голосовых комнат',)
+    find_friends_subgroup = settings_group.create_subgroup(
+        'find_friends',
+        description='Настройка команды поиска друга',
+    )
+    voide_channels_subgroup = settings_group.create_subgroup(
+        'voice_channels',
+        description='Настройка голосовых комнат',
+    )
 
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot

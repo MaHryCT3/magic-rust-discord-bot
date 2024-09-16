@@ -57,9 +57,7 @@ class RoomCreator(commands.Cog):
         permissions.manage_channels = True
         permissions.move_members = True
         permissions.set_voice_channel_status = True
-        await new_channel.set_permissions(
-            member, overwrite=permissions
-        )
+        await new_channel.set_permissions(member, overwrite=permissions)
         await member.move_to(new_channel)
 
     async def create_room(self, room_name: str, locale: LocaleEnum) -> VoiceChannel:
