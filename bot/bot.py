@@ -48,7 +48,7 @@ class MagicRustBot(Bot):
                 return category
         return None
 
-    def get_locale_role(self, locale: LocaleEnum):
+    def get_locale_role(self, locale: LocaleEnum) -> discord.Role:
         for role_id, role_locale in dynamic_settings.locale_roles.items():
             if locale == role_locale:
                 return self.get_main_guild().get_role(role_id)
