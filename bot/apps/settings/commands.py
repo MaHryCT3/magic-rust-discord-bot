@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 import discord
-from discord import SlashCommandGroup
+from discord import PermissionOverwrite, SlashCommandGroup
 from discord.ext import commands
 
 from bot.dynamic_settings import dynamic_settings
@@ -22,25 +22,32 @@ class SettingsCog(commands.Cog):
         ),
         contexts={discord.InteractionContextType.guild},
     )
+    find_friends_subgroup = settings_group.create_subgroup(
+        'find_friends',
+        description='Настройка команды поиска друга',
+    )
+    voide_channels_subgroup = settings_group.create_subgroup(
+        'voice_channels',
+        description='Настройка голосовых комнат',
+    )
 
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
 
-    @settings_group.command(
-        description='Изменить кулдаун на поиск друга, указывать в секундах',
-    )
-    async def find_friend_cooldown(
-        self,
-        ctx: discord.ApplicationContext,
-        cooldown: discord.Option(int, description='В секундах'),
-    ):
-        dynamic_settings.find_friend_cooldown = cooldown
-        logger.info(f'{ctx.author}:{ctx.author.id} изменил кулдаун поиска друга на {cooldown}')
-        await ctx.respond(
-            f'Кулдаун для поиска друга изменен на {cooldown} секунд',
-            ephemeral=True,
-            delete_after=10,
-        )
+    async def _make_channel_non_textable(self, channel: discord.abc.Messageable):
+        guild = self.bot.get_main_guild()
+        everyone_permissions = PermissionOverwrite()
+        everyone_permissions.send_messages = False
+        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
+
+    async def _make_channel_locale_specific(self, channel: discord.abc.GuildChannel, locale: LocaleEnum):
+        guild = self.bot.get_main_guild()
+        everyone_permissions = PermissionOverwrite()
+        everyone_permissions.view_channel = False
+        locale_permissions = PermissionOverwrite()
+        locale_permissions.view_channel = True
+        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
+        await channel.set_permissions(self.bot.get_locale_role(locale), overwrite=locale_permissions)
 
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
@@ -59,7 +66,25 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @settings_group.command(
+    @find_friends_subgroup.command(
+        name='cooldown',
+        description='Изменить кулдаун на поиск друга, указывать в секундах',
+    )
+    async def find_friend_cooldown(
+        self,
+        ctx: discord.ApplicationContext,
+        cooldown: discord.Option(int, description='В секундах'),
+    ):
+        dynamic_settings.find_friend_cooldown = cooldown
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил кулдаун поиска друга на {cooldown}')
+        await ctx.respond(
+            f'Кулдаун для поиска друга изменен на {cooldown} секунд',
+            ephemeral=True,
+            delete_after=10,
+        )
+
+    @find_friends_subgroup.command(
+        name='channels',
         description='Изменить каналы для поиска друга',
     )
     async def friend_channels(
@@ -70,8 +95,9 @@ class SettingsCog(commands.Cog):
     ):
         current_channels = dynamic_settings.find_friend_channels
         current_channels[locale] = channel.id
-
         dynamic_settings.find_friend_channels = current_channels
+        await self._make_channel_locale_specific(channel, locale)
+        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы для поиска друга на {current_channels}')
         await ctx.respond(
             f'Канал для поиска друга для региона {locale} был установлен {channel}',
@@ -91,6 +117,8 @@ class SettingsCog(commands.Cog):
         current_channels = dynamic_settings.server_status_channels
         current_channels[locale] = channel.id
         dynamic_settings.server_status_channels = current_channels
+        await self._make_channel_locale_specific(channel, locale)
+        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы статуса серверов на {current_channels}')
         await ctx.respond(
             f'Канал статуса серверов для региона {locale} был установлен {channel}',
@@ -103,6 +131,7 @@ class SettingsCog(commands.Cog):
     )
     async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
         dynamic_settings.repost_channel = channel.id
+        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил канал для репостов: {channel.name}:{channel.id}')
         await ctx.respond(
             f'Канал для репостов установлен {channel.mention}',
@@ -110,7 +139,8 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @settings_group.command(
+    @voide_channels_subgroup.command(
+        name='cooldown',
         description='Изменить кулдаун создания голосовых каналов, указывать в секундах',
     )
     async def user_room_create_cooldown(
@@ -126,8 +156,8 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @settings_group.command(
-        description='Изменить комнаты создания каналов',
+    @voide_channels_subgroup.command(
+        description='Изменить комнаты создания голосовых каналов',
     )
     async def user_room_creating_channels(
         self,
@@ -138,6 +168,8 @@ class SettingsCog(commands.Cog):
         current_channels = dynamic_settings.channel_creating_channels
         current_channels[locale] = channel.id
         dynamic_settings.channel_creating_channels = current_channels
+        await self._make_channel_locale_specific(channel, locale)
+        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил комнаты создания каналов на {current_channels}')
         await ctx.respond(
             f'Комната создания серверов для региона {locale} была установлена на {channel}',
@@ -145,7 +177,7 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @settings_group.command(
+    @voide_channels_subgroup.command(
         description='Изменить разделы для голосовых комнат',
     )
     async def user_rooms_categories(
@@ -157,6 +189,7 @@ class SettingsCog(commands.Cog):
         current_channels = dynamic_settings.user_rooms_categories
         current_channels[locale] = category.id
         dynamic_settings.user_rooms_categories = current_channels
+        await self._make_channel_locale_specific(category, locale)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы создания голосовых комнат на {current_channels}')
         await ctx.respond(
             f'Канал создания голосовых комнат для региона {locale} была установлен на {category}',
