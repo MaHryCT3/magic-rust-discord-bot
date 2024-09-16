@@ -17,6 +17,7 @@ all_apps = [
     'voice_channels',
     'news_reposts',
     'reports',
+    'servicing_posts',
 ]
 
 
