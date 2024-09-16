@@ -157,9 +157,10 @@ class SettingsCog(commands.Cog):
         )
 
     @voide_channels_subgroup.command(
+        name='master_channels',
         description='Изменить комнаты создания голосовых каналов',
     )
-    async def user_room_creating_channels(
+    async def voice_channels_master_channels(
         self,
         ctx: discord.ApplicationContext,
         locale: discord.Option(LocaleEnum),
@@ -178,6 +179,7 @@ class SettingsCog(commands.Cog):
         )
 
     @voide_channels_subgroup.command(
+        name='categories',
         description='Изменить разделы для голосовых комнат',
     )
     async def user_rooms_categories(
