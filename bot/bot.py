@@ -1,6 +1,8 @@
 from typing import Any, NoReturn
 
 import discord
+import sentry_sdk
+from discord import ApplicationContext, DiscordException
 from discord.bot import Bot
 
 from bot.config import settings
@@ -58,8 +60,18 @@ class MagicRustBot(Bot):
     async def fetch_main_guild(self) -> discord.Guild:
         return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)
 
+    async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
+        print('fasdfasdfsadfdsafasdf', exception)
+        sentry_sdk.capture_exception(exception)
+        return await super().on_application_command_error(context, exception)
+
+    async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
+        sentry_sdk.capture_exception()
+        return await super().on_error(event_method, *args, **kwargs)
+
     async def on_ready(self):
-        logger.info('Bot is running')
+        info = await self.application_info()
+        logger.info(f'Bot {info.name} is running')
 
     def run(self, *args: Any, **kwargs: Any) -> NoReturn:
-        super().run(settings.DISCORD_MAIN_BOT_TOKEN, *args, **kwargs)
+        super().run(settings.DISCORD_BOT_TOKEN, *args, **kwargs)

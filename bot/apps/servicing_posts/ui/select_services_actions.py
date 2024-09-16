@@ -37,7 +37,7 @@ class SelectServicingActionSelect(discord.ui.Select):
             options=[
                 discord.SelectOption(
                     label=action.value,
-                    default=action in selected_actions,
+                    default=action in selected_actions if selected_actions else False,
                     emoji=emoji_by_action.get(action),
                 )
                 for action in ServicingActionEnum
