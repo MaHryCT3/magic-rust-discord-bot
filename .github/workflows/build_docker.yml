@@ -29,7 +29,7 @@ jobs:
         run: |
           if docker pull $CONTAINER_MAIN_IMAGE; then
             echo "Existing image found for $CONTAINER_MAIN_IMAGE"
-            docker build --cache-from $CONTAINER_MAIN_IMAGE -f docker/Dockerfile -t $CONTAINER_RELEASE_IMAGE docker .
+            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_RELEASE_IMAGE docker .
             docker push $CONTAINER_RELEASE_IMAGE
             docker tag $CONTAINER_MAIN_IMAGE $CONTAINER_OLD_MAIN_IMAGE
             docker push $CONTAINER_OLD_MAIN_IMAGE
@@ -37,6 +37,6 @@ jobs:
             docker push $CONTAINER_MAIN_IMAGE
           else
             echo "No existing image found for $CONTAINER_MAIN_IMAGE"
-            docker build --cache-from $CONTAINER_MAIN_IMAGE -f docker/Dockerfile -t $CONTAINER_MAIN_IMAGE docker .
+            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_MAIN_IMAGE docker .
             docker push $CONTAINER_MAIN_IMAGE
           fi
