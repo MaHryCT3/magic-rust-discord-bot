@@ -1,0 +1,43 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - ci_cd
+
+env:
+  CONTAINER_RELEASE_IMAGE: ${{ secrets.GITHUB_REGISTRY }}:${{ github.sha }}
+  CONTAINER_MAIN_IMAGE: ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}
+  CONTAINER_OLD_MAIN_IMAGE: ${{ secrets.GITHUB_REGISTRY }}:main-old
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to the Container registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          if docker pull ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}; then
+            echo "Existing image found for ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}"
+            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag $CONTAINER_RELEASE_IMAGE
+            docker push $CONTAINER_RELEASE_IMAGE
+            docker tag $CONTAINER_MAIN_IMAGE $CONTAINER_OLD_MAIN_IMAGE
+            docker push $CONTAINER_OLD_MAIN_IMAGE
+            docker tag $CONTAINER_RELEASE_IMAGE $CONTAINER_MAIN_IMAGE
+            docker push $CONTAINER_MAIN_IMAGE
+          else
+            echo "No existing image found for ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}"
+            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}
+            export CONTAINER_RELEASE_IMAGE=${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}
+            docker push $CONTAINER_RELEASE_IMAGE
+          fi
