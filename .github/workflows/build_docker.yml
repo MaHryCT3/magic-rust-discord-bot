@@ -7,9 +7,9 @@ on:
       - ci_cd
 
 env:
-  CONTAINER_RELEASE_IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
-  CONTAINER_MAIN_IMAGE: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/${{ github.repository }}:main-old
+  CONTAINER_RELEASE_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:${{ github.sha }}
+  CONTAINER_MAIN_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:${{ github.ref_name }}
+  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:main-old
 
 jobs:
   build-docker:
@@ -29,7 +29,7 @@ jobs:
         run: |
           if docker pull $CONTAINER_MAIN_IMAGE; then
             echo "Existing image found for $CONTAINER_MAIN_IMAGE"
-            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_RELEASE_IMAGE docker .
+            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_RELEASE_IMAGE .
             docker push $CONTAINER_RELEASE_IMAGE
             docker tag $CONTAINER_MAIN_IMAGE $CONTAINER_OLD_MAIN_IMAGE
             docker push $CONTAINER_OLD_MAIN_IMAGE
@@ -37,6 +37,6 @@ jobs:
             docker push $CONTAINER_MAIN_IMAGE
           else
             echo "No existing image found for $CONTAINER_MAIN_IMAGE"
-            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_MAIN_IMAGE docker .
+            docker build --cache-from $CONTAINER_MAIN_IMAGE -f bot/Dockerfile -t $CONTAINER_MAIN_IMAGE .
             docker push $CONTAINER_MAIN_IMAGE
           fi
