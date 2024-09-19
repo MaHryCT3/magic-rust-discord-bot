@@ -7,9 +7,9 @@ on:
       - ci_cd
 
 env:
-  CONTAINER_RELEASE_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:${{ github.sha }}
-  CONTAINER_MAIN_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:${{ github.ref_name }}
-  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/${{ github.repository_owner }}/test-ik:main-old
+  CONTAINER_RELEASE_IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.sha }}
+  CONTAINER_MAIN_IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.ref_name }}
+  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/${{ toLower(github.repository) }}:main-old
 
 jobs:
   build-docker:
