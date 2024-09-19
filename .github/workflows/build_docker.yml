@@ -29,7 +29,7 @@ jobs:
         run: |
           if docker pull ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}; then
             echo "Existing image found for ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}"
-            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag $CONTAINER_RELEASE_IMAGE
+            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag $CONTAINER_RELEASE_IMAGE .
             docker push $CONTAINER_RELEASE_IMAGE
             docker tag $CONTAINER_MAIN_IMAGE $CONTAINER_OLD_MAIN_IMAGE
             docker push $CONTAINER_OLD_MAIN_IMAGE
@@ -37,7 +37,7 @@ jobs:
             docker push $CONTAINER_MAIN_IMAGE
           else
             echo "No existing image found for ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}"
-            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}
+            docker build --cache-from ${{ secrets.GITHUB_REGISTRY }}:main -f bot/Dockerfile --tag ${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }} .
             export CONTAINER_RELEASE_IMAGE=${{ secrets.GITHUB_REGISTRY }}:${{ github.ref_name }}
             docker push $CONTAINER_RELEASE_IMAGE
           fi
