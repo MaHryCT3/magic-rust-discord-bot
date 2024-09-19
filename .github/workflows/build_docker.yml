@@ -7,9 +7,9 @@ on:
       - ci_cd
 
 env:
-  CONTAINER_RELEASE_IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.sha }}
-  CONTAINER_MAIN_IMAGE: ghcr.io/${{ toLower(github.repository) }}:${{ github.ref_name }}
-  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/${{ toLower(github.repository) }}:main-old
+  CONTAINER_RELEASE_IMAGE: ghcr.io/mahryct3/magic-rust-discord-bot:${{ github.sha }}
+  CONTAINER_MAIN_IMAGE: ghcr.io/mahryct3/magic-rust-discord-bot:${{ github.ref_name }}
+  CONTAINER_OLD_MAIN_IMAGE: ghcr.io/mahryct3/magic-rust-discord-bot:main-old
 
 jobs:
   build-docker:
