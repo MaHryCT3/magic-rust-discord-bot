@@ -21,7 +21,7 @@ jobs:
           echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
           chmod 600 ~/.ssh/config
 
-          echo "${{ secrets.PROD_ENV }}" > /tmp/.environment
+          echo "${{ secrets.PROD_ENV }}" | base64 -d > /tmp/.environment
 
           scp -o StrictHostKeyChecking=no /tmp/.environment ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/opt/magic-rust-discord-bot/.environment
           scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/opt/magic-rust-discord-bot/docker-compose.yml
