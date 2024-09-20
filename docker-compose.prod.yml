@@ -3,7 +3,7 @@ services:
   main_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
     volumes:
-      - /opt/magic-rust-discord-bot/.environment:/app/.environment
+      - /opt/magic-rust-discord-bot/.env:/app/.env
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_MAIN_BOT_TOKEN}
     tty: true
@@ -13,7 +13,7 @@ services:
   report_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
     volumes:
-      - /opt/magic-rust-discord-bot/.environment:/app/.environment
+      - /opt/magic-rust-discord-bot/.env:/app/.env
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_REPORT_BOT_TOKEN}
     tty: true
@@ -22,7 +22,7 @@ services:
   voice_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
     volumes:
-      - /opt/magic-rust-discord-bot/.environment:/app/.environment
+      - /opt/magic-rust-discord-bot/.env:/app/.env
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_VOICE_BOT_TOKEN}
     tty: true
@@ -31,7 +31,7 @@ services:
   monitoring_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
     volumes:
-      - /opt/magic-rust-discord-bot/.environment:/app/.environment
+      - /opt/magic-rust-discord-bot/.env:/app/.env
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_MONITORING_BOT_TOKEN}
     tty: true
@@ -40,7 +40,7 @@ services:
 
   image-generator:
     volumes:
-      - /opt/magic-rust-discord-bot/.environment:/app/.environment
+      - /opt/magic-rust-discord-bot/.env:/app/.env
     build:
       dockerfile: ./image_generator/Dockerfile
     tty: true
