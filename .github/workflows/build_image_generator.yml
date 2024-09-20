@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build Image Generator
 
 on:
   push:
@@ -30,16 +30,16 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          if docker pull CONTAINER_IMAGE_GENERATOR_IMAGE; then
-            echo "Existing image found for CONTAINER_IMAGE_GENERATOR_IMAGE"
-            docker build --cache-from CONTAINER_IMAGE_GENERATOR_IMAGE -f image_generator/Dockerfile -t $CONTAINER_RELEASE_IMAGE .
+          if docker pull $CONTAINER_IMAGE_GENERATOR_IMAGE; then
+            echo "Existing image found for $CONTAINER_IMAGE_GENERATOR_IMAGE"
+            docker build --cache-from $CONTAINER_IMAGE_GENERATOR_IMAGE -f image_generator/Dockerfile -t $CONTAINER_RELEASE_IMAGE .
             docker push $CONTAINER_RELEASE_IMAGE
-            docker tag CONTAINER_IMAGE_GENERATOR_IMAGE CONTAINER_OLD_IMAGE_GENERATOR_IMAGE
-            docker push CONTAINER_OLD_IMAGE_GENERATOR_IMAGE
-            docker tag $CONTAINER_RELEASE_IMAGE CONTAINER_IMAGE_GENERATOR_IMAGE
-            docker push CONTAINER_IMAGE_GENERATOR_IMAGE
+            docker tag $CONTAINER_IMAGE_GENERATOR_IMAGE $CONTAINER_OLD_IMAGE_GENERATOR_IMAGE
+            docker push $CONTAINER_OLD_IMAGE_GENERATOR_IMAGE
+            docker tag $CONTAINER_RELEASE_IMAGE $CONTAINER_IMAGE_GENERATOR_IMAGE
+            docker push $CONTAINER_IMAGE_GENERATOR_IMAGE
           else
-            echo "No existing image found for CONTAINER_IMAGE_GENERATOR_IMAGE"
-            docker build --cache-from CONTAINER_IMAGE_GENERATOR_IMAGE -f image_generator/Dockerfile -t CONTAINER_IMAGE_GENERATOR_IMAGE .
-            docker push CONTAINER_IMAGE_GENERATOR_IMAGE
+            echo "No existing image found for $CONTAINER_IMAGE_GENERATOR_IMAGE"
+            docker build --cache-from $CONTAINER_IMAGE_GENERATOR_IMAGE -f image_generator/Dockerfile -t $CONTAINER_IMAGE_GENERATOR_IMAGE .
+            docker push $CONTAINER_IMAGE_GENERATOR_IMAGE
           fi
