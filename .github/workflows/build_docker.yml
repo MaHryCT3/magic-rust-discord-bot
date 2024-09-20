@@ -1,4 +1,4 @@
-name: Build Bot Docker
+name: Build Bot
 
 on:
   push:
