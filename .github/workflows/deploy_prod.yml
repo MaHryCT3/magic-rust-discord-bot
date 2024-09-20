@@ -16,13 +16,12 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          envs: PROD_ENV_FILE
           script: |
             echo "${{ secrets.PROD_ENV }}" > /tmp/.environment
             scp /tmp/.environment ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/opt/magic-rust-discord-bot/.environment
             scp docker-compose.prod.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/opt/magic-rust-discord-bot/docker-compose.yml
             scp deploy.sh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/opt/magic-rust-discord-bot/deploy.sh
             ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
-              CI_COMMIT_REF_NAME=${{ github.ref_name }}
+              CI_COMMIT_SHORT_SHA=${{ github.sha }}
               bash /opt/magic-rust-discord-bot/deploy.sh
             EOF
