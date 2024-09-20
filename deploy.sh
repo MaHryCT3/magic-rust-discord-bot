@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker compose pull;
+docker pull ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA;
 
 if [[ $? = 0 ]]
     then
