@@ -39,6 +39,7 @@ services:
 
 
   image-generator:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA-image-generator
     volumes:
       - /opt/magic-rust-discord-bot/.env:/app/.env
     build:
