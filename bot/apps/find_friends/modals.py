@@ -16,6 +16,12 @@ class FindFriendModal(BaseLocalizationModal):
             LocaleEnum.ru: 'Найди друга!',
         }
     )
+    response_localization = LocalizationDict(
+        {
+            LocaleEnum.en: "You've successfully sent a find freind request.",
+            LocaleEnum.ru: 'Вы успешно отправили заявку на поиск друга.',
+        }
+    )
     article_input = InputText(
         max_length=50,
     )
@@ -82,7 +88,7 @@ class FindFriendModal(BaseLocalizationModal):
             raise CommandNotConfiguredError(self.locale)
 
         await find_friends_channel.send(content=interaction.user.mention, embed=embed)
-        await interaction.response.send_message(content='Вы успешно отправили заявку на поиск друга.', ephemeral=True)
+        await interaction.response.send_message(content=self.response_localization[self.locale], ephemeral=True)
         await self.redis_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
