@@ -1,7 +1,10 @@
 name: Build and Push Docker Image
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - ci_cd
 
 env:
   CONTAINER_RELEASE_IMAGE: ghcr.io/mahryct3/magic-rust-discord-bot:${{ github.sha }}-image-generator
