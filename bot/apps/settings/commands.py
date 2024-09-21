@@ -56,12 +56,12 @@ class SettingsCog(commands.Cog):
         self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum), role: discord.Role
     ):
         current_locale_roles = dynamic_settings.locale_roles
-        current_locale_roles[role.id] = locale
+        current_locale_roles[locale] = role.id
 
         dynamic_settings.locale_roles = current_locale_roles
         logger.info(f'{ctx.author}:{ctx.author.id} изменил маппер языков на роль, значение: {current_locale_roles}')
         await ctx.respond(
-            f'Для языка {locale} выбрана роль {role}',
+            f'Для языка {locale} выбрана роль {role.mention}',
             ephemeral=True,
             delete_after=10,
         )

@@ -28,12 +28,16 @@ class DynamicSettings(BaseRedisSettings):
         default_factory=dict,
         cast_on_load=cast_dict(LocaleEnum, CategoryId),
     )
-    locale_roles: dict[RoleId, LocaleEnum] = SettingValue(
+    locale_roles: dict[LocaleEnum, RoleId] = SettingValue(
         default_factory=dict,
-        cast_on_load=cast_dict(RoleId, LocaleEnum),
+        cast_on_load=cast_dict(LocaleEnum, RoleId),
     )
     # Канал куда будут постятся новости из других соцсетей проекта
     repost_channel: int = SettingValue(default=0)
+
+    @property
+    def reverse_locale_roles(self) -> dict[RoleId, LocaleEnum]:
+        return {value: key for key, value in self.locale_roles.items()}
 
 
 dynamic_settings = DynamicSettings(settings.REDIS_URL, namespace='settings')
