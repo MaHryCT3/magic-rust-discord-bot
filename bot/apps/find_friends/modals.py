@@ -80,6 +80,7 @@ class FindFriendModal(BaseLocalizationModal):
             self.article_input,
             self.message_input,
             self.server_input,
+            locale=self.locale,
         )
         find_friends_channel: TextChannel = interaction.guild.get_channel(
             dynamic_settings.find_friend_channels[self.locale]

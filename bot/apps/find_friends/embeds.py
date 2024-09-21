@@ -21,7 +21,7 @@ class FindFriendEmbed(discord.Embed):
         article: str,
         message: str,
         servers: str,
-        locale: LocaleEnum = LocaleEnum.en,
+        locale: LocaleEnum,
     ):
         embed = cls(color=get_random_blue_color())
         embed.set_author(name=author_name, icon_url=author_icon_url)

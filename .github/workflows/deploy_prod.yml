@@ -5,6 +5,7 @@ on:
 
 jobs:
   deploy:
+    needs: [build-docker]
     name: "Deploy to prod"
     runs-on: ubuntu-20.04
 
