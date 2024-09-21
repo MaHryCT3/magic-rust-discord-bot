@@ -5,11 +5,18 @@ on:
 
 jobs:
   deploy:
-    needs: [build-docker]
     name: "Deploy to prod"
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Build Bot'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 5
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
