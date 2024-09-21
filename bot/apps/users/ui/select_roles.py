@@ -47,12 +47,12 @@ class SelectRoleButton(discord.ui.Button):
 
         # Удаление если выдана какая-то другая роль языка
         if member_locale_role:
-            role = roles_map[member_locale_role]
+            role = interaction.guild.get_role(roles_map[member_locale_role])
             await member.remove_roles(role)
             logger.info(f'Удалена роль {role.name} у {member.name}|{member.id}')
 
         # Добавление роли
-        role_to_add = roles_map[self.locale]
+        role_to_add = interaction.guild.get_role(roles_map[self.locale])
         await member.add_roles(role_to_add)
         logger.info(f'Добавлена роль {role_to_add.name} у {member.name}|{member.id}')
 
