@@ -47,7 +47,6 @@ class FindFriendsCommands(commands.Cog):
 
         await ctx.send_modal(
             FindFriendModal(
-                title='',
                 locale=locale,
                 redis_cooldown=self.redis_cooldown,
             )

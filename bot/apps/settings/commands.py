@@ -97,7 +97,6 @@ class SettingsCog(commands.Cog):
         current_channels[locale] = channel.id
         dynamic_settings.find_friend_channels = current_channels
         await self._make_channel_locale_specific(channel, locale)
-        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы для поиска друга на {current_channels}')
         await ctx.respond(
             f'Канал для поиска друга для региона {locale} был установлен {channel}',

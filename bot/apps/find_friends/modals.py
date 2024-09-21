@@ -1,10 +1,12 @@
-from discord import InputTextStyle, Interaction
+from discord import InputTextStyle, Interaction, TextChannel
 
-from bot.apps.find_friends.embeds import FindFriendEmbed
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum, LocalizationDict
 from core.redis_cooldown import RedisLocaleCooldown
 from core.ui.modals import BaseLocalizationModal, InputText
+
+from .embeds import FindFriendEmbed
+from .exceptions import CommandNotConfiguredError
 
 
 class FindFriendModal(BaseLocalizationModal):
@@ -12,6 +14,12 @@ class FindFriendModal(BaseLocalizationModal):
         {
             LocaleEnum.en: 'Find a friend!',
             LocaleEnum.ru: 'Найди друга!',
+        }
+    )
+    response_localization = LocalizationDict(
+        {
+            LocaleEnum.en: "You've successfully sent a find freind request.",
+            LocaleEnum.ru: 'Вы успешно отправили заявку на поиск друга.',
         }
     )
     article_input = InputText(
@@ -56,9 +64,10 @@ class FindFriendModal(BaseLocalizationModal):
         },
     }
 
-    def __init__(self, redis_cooldown: RedisLocaleCooldown, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.title = self.title_localization[self.locale]
+    def __init__(self, locale: LocaleEnum, redis_cooldown: RedisLocaleCooldown):
+        title = self.title_localization[locale]
+        super().__init__(title=title, locale=locale)
+        self.locale = locale
         self.redis_cooldown = redis_cooldown
 
     async def callback(self, interaction: Interaction):
@@ -72,7 +81,14 @@ class FindFriendModal(BaseLocalizationModal):
             self.message_input,
             self.server_input,
         )
-        await interaction.response.send_message(content=interaction.user.mention, embeds=[embed])
+        find_friends_channel: TextChannel = interaction.guild.get_channel(
+            dynamic_settings.find_friend_channels[self.locale]
+        )
+        if not find_friends_channel:
+            raise CommandNotConfiguredError(self.locale)
+
+        await find_friends_channel.send(content=interaction.user.mention, embed=embed)
+        await interaction.response.send_message(content=self.response_localization[self.locale], ephemeral=True)
         await self.redis_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
