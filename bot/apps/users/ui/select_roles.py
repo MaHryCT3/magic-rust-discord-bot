@@ -43,19 +43,16 @@ class SelectRoleButton(discord.ui.Button):
             await interaction.respond(self.already_granted_localization[self.locale], ephemeral=True)
             return
 
-        roles_map: dict[int, LocaleEnum] = dynamic_settings.locale_roles
-        reverse_locales_map: dict[LocaleEnum, discord.Role] = {
-            locale: interaction.guild.get_role(role_id) for role_id, locale in roles_map.items()
-        }
+        roles_map: dict[LocaleEnum, int] = dynamic_settings.locale_roles
 
         # Удаление если выдана какая-то другая роль языка
         if member_locale_role:
-            role = reverse_locales_map[member_locale_role]
+            role = roles_map[member_locale_role]
             await member.remove_roles(role)
             logger.info(f'Удалена роль {role.name} у {member.name}|{member.id}')
 
         # Добавление роли
-        role_to_add = reverse_locales_map[self.locale]
+        role_to_add = roles_map[self.locale]
         await member.add_roles(role_to_add)
         logger.info(f'Добавлена роль {role_to_add.name} у {member.name}|{member.id}')
 
