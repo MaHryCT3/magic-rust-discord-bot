@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  main_bot:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
+    volumes:
+      - /opt/magic-rust-discord-bot/.env:/app/.env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_MAIN_BOT_TOKEN}
+    tty: true
+    command: python -m bot settings users servicing_posts bot_messages news_reposts find_friends
+
+
+  report_bot:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
+    volumes:
+      - /opt/magic-rust-discord-bot/.env:/app/.env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_REPORT_BOT_TOKEN}
+    tty: true
+    command: python -m bot reports
+
+  voice_bot:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
+    volumes:
+      - /opt/magic-rust-discord-bot/.env:/app/.env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_VOICE_BOT_TOKEN}
+    tty: true
+    command: python -m bot voice_channels
+
+  monitoring_bot:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
+    volumes:
+      - /opt/magic-rust-discord-bot/.env:/app/.env
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_MONITORING_BOT_TOKEN}
+    tty: true
+    command: python -m bot info_provider server_status banner_updater
+
+
+  image-generator:
+    image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA-image-generator
+    volumes:
+      - /opt/magic-rust-discord-bot/.env:/app/.env
+    build:
+      dockerfile: ./image_generator/Dockerfile
+    tty: true
+    command: python -m image_generator
+  
+
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    volumes:
+      - ./storage/redis:/data

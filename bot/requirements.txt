@@ -26,6 +26,7 @@ python-dateutil==2.9.0.post0 ; python_version >= "3.11" and python_version < "4.
 python-dotenv==1.0.1 ; python_version >= "3.11" and python_version < "4.0"
 redis==5.0.8 ; python_version >= "3.11" and python_version < "4.0"
 requests==2.32.3 ; python_version >= "3.11" and python_version < "4.0"
+sentry_sdk
 six==1.16.0 ; python_version >= "3.11" and python_version < "4.0"
 sniffio==1.3.1 ; python_version >= "3.11" and python_version < "4.0"
 typing-extensions==4.12.2 ; python_version >= "3.11" and python_version < "4.0"
