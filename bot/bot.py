@@ -62,7 +62,7 @@ class MagicRustBot(Bot):
 
     async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
         await super().on_application_command_error(context, exception)
-        sentry_sdk.capture_exception(exception() if callable(exception) else exception)
+        sentry_sdk.capture_exception(exception)
 
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         sentry_sdk.capture_exception()

@@ -1,4 +1,6 @@
 import asyncio
+import sys
+from functools import wraps
 from logging import getLogger
 from time import time
 
@@ -58,9 +60,10 @@ def loop_stability_checker(seconds: float, max_relative_deviation=0.1, is_fatal=
 
 
 def patch_traceback(func):
-
+    @wraps(func)
     def decorator(*args, **kwargs):
-        sentry_sdk.capture_exception(args[0] if args else None)
-        return func(*args, *kwargs)
+        exception = sys.exc_info()[1]
+        sentry_sdk.capture_exception(exception)
+        return func(*args, **kwargs)
 
     return decorator
