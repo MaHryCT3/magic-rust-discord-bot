@@ -78,4 +78,7 @@ class ServicingPostsSettingsCog(commands.Cog):
 
         channel_settings.channel_id = to_channel.id
         await self.posts_settings_service.add_setting(channel_settings)
-        await ctx.respond(f'Настройки скопированы с канала {from_channel.mention} в канал {to_channel.mention}')
+        await ctx.respond(
+            f'Настройки скопированы с канала {from_channel.mention} в канал {to_channel.mention}',
+            ephemeral=True,
+        )
