@@ -68,3 +68,17 @@ class ServicingPostsSettingsCog(commands.Cog):
             ephemeral=True,
             delete_after=60,
         )
+
+    @servicing_posts_group.command(description='Копирование настроек с другого канала')
+    async def copy_settings(self, ctx: discord.ApplicationContext, from_channel: TextChannel, to_channel: TextChannel):
+        channel_settings = await self.posts_settings_service.get_setting(from_channel.id)
+        if not channel_settings:
+            await ctx.respond(f'У канала {from_channel.mention}', ephemeral=True)
+            return
+
+        channel_settings.channel_id = to_channel.id
+        await self.posts_settings_service.add_setting(channel_settings)
+        await ctx.respond(
+            f'Настройки скопированы с канала {from_channel.mention} в канал {to_channel.mention}',
+            ephemeral=True,
+        )
