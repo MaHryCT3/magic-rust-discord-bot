@@ -3,10 +3,10 @@ from discord import SlashCommandGroup
 from discord.ext import commands
 
 from bot import MagicRustBot
-from bot.apps.reports.constants import MAIN_COLOR
 from bot.apps.reports.errors import ReportsError
 from bot.apps.reports.ui.report_view import ReportView
 from bot.config import settings
+from bot.constants import MAIN_COLOR
 from core.checks import is_owner
 from core.localization import LocaleEnum
 from core.utils.format_strings import framing_message
