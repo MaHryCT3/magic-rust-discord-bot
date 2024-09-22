@@ -44,8 +44,11 @@ class SettingsCog(commands.Cog):
         guild = self.bot.get_main_guild()
         everyone_permissions = PermissionOverwrite()
         everyone_permissions.view_channel = False
+        everyone_permissions.create_private_threads = False
+        everyone_permissions.create_private_threads = False
         locale_permissions = PermissionOverwrite()
         locale_permissions.view_channel = True
+        locale_permissions.read_message_history = True
         await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
         await channel.set_permissions(self.bot.get_locale_role(locale), overwrite=locale_permissions)
 
