@@ -18,6 +18,7 @@ from core.api_clients.vk.models import (
     VideoAttachment,
     WallPost,
 )
+from core.api_clients.vk.models.wall_post import PostTypeEnum
 from core.api_clients.vk.utils import make_url_to_vk_post
 from core.converters import seconds_to_hours
 
@@ -36,6 +37,9 @@ class VKNewsCapture(AbstractNewsCapture):
 
         captured_news = []
         for post in new_posts:
+            if post.post_type != PostTypeEnum.POST:
+                continue
+
             images_urls = self._get_images_urls(post)
             files = await self._get_files(post)
             poll = self._get_poll(post)
