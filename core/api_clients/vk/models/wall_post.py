@@ -1,3 +1,5 @@
+from enum import StrEnum
+
 from pydantic import Field, field_validator
 
 from core.api_clients.vk.models.attachements import (
@@ -20,10 +22,21 @@ attachment_type_to_object_mapper: dict[AttachmentTypes, type[AttachmentsModels]]
 }
 
 
+class PostTypeEnum(StrEnum):
+    POST = 'post'
+    COPY = 'copy'
+    REPLY = 'reply'
+    POSTPONE = 'postpone'
+    SUGGEST = 'suggest'
+
+
 class WallPost(BaseUpdateEvent):
+    """https://dev.vk.com/ru/reference/objects/post"""
+
     id: int
     text: str
     attachments: list[AttachmentsModels] = Field(default_factory=list)
+    post_type: PostTypeEnum
 
     @field_validator('attachments', mode='before')
     @classmethod
