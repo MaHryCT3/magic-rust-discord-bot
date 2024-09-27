@@ -41,7 +41,7 @@ class BaseSendMessageByBotModal(BaseModal):
         channel_name: str,
         channel_mention: str,
     ):
-        if not validators.url(self.image_url):
+        if self.image_url and not validators.url(self.image_url):
             raise InvalidImageURL()
 
         delayed_message = DelayedMessage(

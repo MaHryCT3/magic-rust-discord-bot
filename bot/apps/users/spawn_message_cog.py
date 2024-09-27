@@ -18,6 +18,7 @@ class SpawnMessageCog(commands.Cog):
             ban_members=True,
         ),
         checks=[is_owner(settings.DISCORD_OWNER_IDS)],
+        contexts={discord.InteractionContextType.guild},
     )
 
     message_text = f"""Press the {bold_message('button')} to select your {bold_message('language')}.
