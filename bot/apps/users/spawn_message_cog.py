@@ -20,8 +20,8 @@ class SpawnMessageCog(commands.Cog):
         checks=[is_owner(settings.DISCORD_OWNER_IDS)],
     )
 
-    message_text = f"""Нажмите на {bold_message('кнопку')} для выбора Вашего {bold_message('языка')}.
-Press the {bold_message('button')} to select your {bold_message('language')}.
+    message_text = f"""Press the {bold_message('button')} to select your {bold_message('language')}.
+Нажмите на {bold_message('кнопку')} для выбора Вашего {bold_message('языка')}.
     """
 
     def __init__(self, bot: MagicRustBot):
