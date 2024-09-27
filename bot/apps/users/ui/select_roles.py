@@ -79,7 +79,7 @@ class SelectRoleButton(discord.ui.Button):
 class SelectRoleView(discord.ui.View):
     def __init__(self):
         buttons = [
-            SelectRoleButton(label='Русский', emoji='🇷🇺', locale=LocaleEnum.ru),
             SelectRoleButton(label='English', emoji='🇺🇸', locale=LocaleEnum.en),
+            SelectRoleButton(label='Русский', emoji='🇷🇺', locale=LocaleEnum.ru),
         ]
         super().__init__(*buttons, timeout=None)

@@ -1,10 +1,12 @@
 import sys
 
-from core.api_clients.magic_rust.models import MonitoringServerData
+from core.api_clients.magic_rust.models import MonitoringServerData, ServerTypes
 
 
 def sort_monitoring_server_data_by_server_number(servers_data: list[MonitoringServerData]):
-    def sort_key_getter(data: MonitoringServerData):
+    def sort_key_getter(data: MonitoringServerData) -> int:
+        if data.server_type == ServerTypes.OFFICIAL:
+            return 1
         try:
             title_number = data.title[3:5].strip()
         except IndexError:
