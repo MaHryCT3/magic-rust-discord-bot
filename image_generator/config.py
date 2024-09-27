@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     model_config = ConfigDict(extra='ignore')
     DEBUG: bool = False
 
+    SENTRY_DSN: str = ''
     REDIS_URL: str
 
 

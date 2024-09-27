@@ -1,0 +1,2 @@
+class NoAPIDataException(Exception):
+    pass

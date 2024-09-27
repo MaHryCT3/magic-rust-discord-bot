@@ -5,6 +5,7 @@ from PIL import Image
 
 from core.api_clients.magic_rust import CombinedServerData, MagicRustServerDataAPI
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
+from image_generator.exceptions import NoAPIDataException
 from image_generator.image_templates import Header, ServerCard
 from image_generator.redis_namespaces import discord_info_storage
 
@@ -35,7 +36,6 @@ def get_discord_data() -> tuple[int, int]:
 
 
 def load_image(path: str) -> Image.Image:
-    image: Image.Image
     with Image.open(path) as image_file:
         image = image_file.copy()
     return image
@@ -47,6 +47,8 @@ async def get_combined_servers_data() -> list[CombinedServerData]:
 
 def get_server_status_image() -> Image.Image:
     servers_data = asyncio.run(get_combined_servers_data())
+    if not servers_data:
+        raise NoAPIDataException()
     servers_data.sort(key=lambda item: item.num)
     count = (ceil(len(servers_data) / SERVERS_STATUS_CARD_COUNT_HORIZONTAL), SERVERS_STATUS_CARD_COUNT_HORIZONTAL)
     card_image: Image.Image = load_image(CARD_IMAGE_PATH)
@@ -54,7 +56,7 @@ def get_server_status_image() -> Image.Image:
     progress_image: Image.Image = load_image(CARD_PROGRESS_IMAGE_PATH)
     card_empty_image: Image.Image = load_image(CARD_EMPTY_IMAGE_PATH)
     card = ServerCard(card_image, text_image, progress_image)
-    result = Image.new('RGBA', (progress_image.size[0] * count[1], progress_image.size[1] * count[0]), (255, 255, 255))
+    result = Image.new('RGBA', (card_image.size[0] * count[1], card_image.size[1] * count[0]), (255, 255, 255))
     for i in range(count[0]):
         for j in range(count[1]):
             server_num = i * count[1] + j
