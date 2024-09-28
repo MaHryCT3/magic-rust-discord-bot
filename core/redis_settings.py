@@ -1,4 +1,5 @@
-from typing import Any, Callable
+import pickle
+from typing import Any, Callable, Self
 
 from core.clients.redis import RedisNameSpace
 
@@ -47,6 +48,16 @@ class BaseRedisSettings:
 
     def __init__(self, redis_url: str, namespace: str):
         self._storage = RedisNameSpace(url=redis_url, namespace=namespace)
+
+    def get_settings_bytes(self) -> bytes:
+        attributes = {key: getattr(self, key) for key in self.get_settings_attributes() if getattr(self, key, None)}
+        return pickle.dumps(attributes)
+
+    def load_settings_from_bytes(self, settings_bytes: bytes) -> Self:
+        attributes = pickle.loads(settings_bytes)
+        for attr, value in attributes.items():
+            setattr(self, attr, value)
+        return self
 
     @classmethod
     def get_settings_attributes(cls):

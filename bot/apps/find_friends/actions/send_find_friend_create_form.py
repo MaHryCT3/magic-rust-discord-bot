@@ -55,7 +55,6 @@ class ResendFindFriendCreateForm(AbstractAction):
         last_message_id = self._redis.get(self.last_message_redis_key)
         if not last_message_id:
             return
-        print(last_message_id)
         last_message_id = int(last_message_id)
 
         try:

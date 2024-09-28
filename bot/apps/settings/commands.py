@@ -1,3 +1,4 @@
+import io
 from typing import TYPE_CHECKING
 
 import discord
@@ -185,6 +186,29 @@ class SettingsCog(commands.Cog):
             ephemeral=True,
             delete_after=10,
         )
+
+    @settings_group.command(description='Выгрузка настроек')
+    @commands.is_owner()
+    async def dump(self, ctx: discord.ApplicationContext):
+        setting_bytes = dynamic_settings.get_settings_bytes()
+        await ctx.send(
+            file=discord.File(io.BytesIO(setting_bytes), filename='dynamic_settings'),
+        )
+
+    @settings_group.command(description='Загрузка настроек')
+    @commands.is_owner()
+    async def load(self, ctx: discord.ApplicationContext):
+        await ctx.respond('Отправь файл с настройкам', delete_after=10)
+        next_message: discord.Message = await self.bot.wait_for(
+            'message',
+            check=lambda message: message.author == ctx.author,
+            timeout=30,
+        )
+        settings_file = next_message.attachments[0]
+        settings_bytes = await settings_file.read()
+        dynamic_settings.load_settings_from_bytes(settings_bytes)
+
+        await ctx.send('Настройки обновлены', delete_after=10)
 
     async def _make_channel_non_textable(self, channel: discord.abc.Messageable):
         guild = self.bot.get_main_guild()
