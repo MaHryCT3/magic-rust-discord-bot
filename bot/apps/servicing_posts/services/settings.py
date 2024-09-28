@@ -43,4 +43,5 @@ class ServicingPostsSettingsService:
             add_threads=bool(raw_response['add_threads']),
             ignore_bot=bool(raw_response['ignore_bot']),
             remove_bot_msg=bool(raw_response['remove_bot_msg']),
+            remove_user_msg=bool(raw_response.get('remove_user_msg', False)),
         )

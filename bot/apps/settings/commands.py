@@ -1,9 +1,11 @@
+import io
 from typing import TYPE_CHECKING
 
 import discord
 from discord import PermissionOverwrite, SlashCommandGroup
 from discord.ext import commands
 
+from bot.apps.servicing_posts.services.settings import ServicingPostsSettingsService
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum
 from core.logger import logger
@@ -33,24 +35,7 @@ class SettingsCog(commands.Cog):
 
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
-
-    async def _make_channel_non_textable(self, channel: discord.abc.Messageable):
-        guild = self.bot.get_main_guild()
-        everyone_permissions = PermissionOverwrite()
-        everyone_permissions.send_messages = False
-        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
-
-    async def _make_channel_locale_specific(self, channel: discord.abc.GuildChannel, locale: LocaleEnum):
-        guild = self.bot.get_main_guild()
-        everyone_permissions = PermissionOverwrite()
-        everyone_permissions.view_channel = False
-        everyone_permissions.create_private_threads = False
-        everyone_permissions.create_private_threads = False
-        locale_permissions = PermissionOverwrite()
-        locale_permissions.view_channel = True
-        locale_permissions.read_message_history = True
-        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
-        await channel.set_permissions(self.bot.get_locale_role(locale), overwrite=locale_permissions)
+        self.servicing_posts_settings = ServicingPostsSettingsService()
 
     @settings_group.command(
         description='Изменить какая роль отвечает за какой язык',
@@ -100,6 +85,7 @@ class SettingsCog(commands.Cog):
         current_channels[locale] = channel.id
         dynamic_settings.find_friend_channels = current_channels
         await self._make_channel_locale_specific(channel, locale)
+        await self._make_channel_non_textable(channel)
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы для поиска друга на {current_channels}')
         await ctx.respond(
             f'Канал для поиска друга для региона {locale} был установлен {channel}',
@@ -200,3 +186,44 @@ class SettingsCog(commands.Cog):
             ephemeral=True,
             delete_after=10,
         )
+
+    @settings_group.command(description='Выгрузка настроек')
+    @commands.is_owner()
+    async def dump(self, ctx: discord.ApplicationContext):
+        setting_bytes = dynamic_settings.get_settings_bytes()
+        await ctx.send(
+            file=discord.File(io.BytesIO(setting_bytes), filename='dynamic_settings'),
+        )
+
+    @settings_group.command(description='Загрузка настроек')
+    @commands.is_owner()
+    async def load(self, ctx: discord.ApplicationContext):
+        await ctx.respond('Отправь файл с настройкам', delete_after=10)
+        next_message: discord.Message = await self.bot.wait_for(
+            'message',
+            check=lambda message: message.author == ctx.author,
+            timeout=30,
+        )
+        settings_file = next_message.attachments[0]
+        settings_bytes = await settings_file.read()
+        dynamic_settings.load_settings_from_bytes(settings_bytes)
+
+        await ctx.send('Настройки обновлены', delete_after=10)
+
+    async def _make_channel_non_textable(self, channel: discord.abc.Messageable):
+        guild = self.bot.get_main_guild()
+        everyone_permissions = PermissionOverwrite()
+        everyone_permissions.send_messages = False
+        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
+
+    async def _make_channel_locale_specific(self, channel: discord.abc.GuildChannel, locale: LocaleEnum):
+        guild = self.bot.get_main_guild()
+        everyone_permissions = PermissionOverwrite()
+        everyone_permissions.view_channel = False
+        everyone_permissions.create_public_threads = False
+        everyone_permissions.create_private_threads = False
+        locale_permissions = PermissionOverwrite()
+        locale_permissions.view_channel = True
+        locale_permissions.read_message_history = True
+        await channel.set_permissions(guild.default_role, overwrite=everyone_permissions)
+        await channel.set_permissions(self.bot.get_locale_role(locale), overwrite=locale_permissions)
