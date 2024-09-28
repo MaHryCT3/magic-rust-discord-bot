@@ -40,7 +40,11 @@ class SelectRoleButton(discord.ui.Button):
 
         member_locale_role = get_member_locale(member)
         if member_locale_role == self.locale:
-            await interaction.respond(self.already_granted_localization[self.locale], ephemeral=True)
+            await interaction.respond(
+                self.already_granted_localization[self.locale],
+                ephemeral=True,
+                delete_after=15,
+            )
             return
 
         roles_map: dict[LocaleEnum, int] = dynamic_settings.locale_roles
