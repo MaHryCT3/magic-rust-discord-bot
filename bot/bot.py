@@ -28,7 +28,7 @@ all_apps = [
 class MagicRustBot(Bot):
     def __init__(self, *args, setup_apps: list[str] | None = None, **kwargs):
         self.setup_apps = setup_apps or all_apps
-        intents = discord.Intents.default() + discord.Intents.message_content
+        intents = discord.Intents.default() + discord.Intents.message_content + discord.Intents.members
         super().__init__(
             *args,
             intents=intents,
