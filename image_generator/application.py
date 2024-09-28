@@ -43,7 +43,7 @@ def update_discord_header_image():
         return
 
     with BytesIO() as image_binary:
-        image.save(image_binary, format='JPEG')
+        image.save(image_binary, format='PNG')
         images_storage.set(DISCOR_BANNER_IMAGE_KEY, image_binary.getvalue(), IMAGE_EXPIRATION_TIME)
     logger.info('Updated discord header image')
 
