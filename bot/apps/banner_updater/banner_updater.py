@@ -1,4 +1,3 @@
-from io import BytesIO
 from typing import TYPE_CHECKING
 
 from discord.ext import commands, tasks
@@ -35,5 +34,4 @@ class BannerUpdater(commands.Cog):
             logger.warning('Header image not loaded')
         else:
             guild = self.bot.get_main_guild()
-            with BytesIO(image_bytes) as image_binary:
-                await guild.edit(banner=image_binary)
+            await guild.edit(banner=image_bytes)
