@@ -1,8 +1,8 @@
 from discord import InputTextStyle, Interaction, TextChannel
 
+from bot.apps.find_friends.cooldowns import find_friend_cooldown
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum, LocalizationDict
-from core.redis_cooldown import RedisLocaleCooldown
 from core.ui.modals import BaseLocalizationModal, InputText
 
 from .embeds import FindFriendEmbed
@@ -64,14 +64,13 @@ class FindFriendModal(BaseLocalizationModal):
         },
     }
 
-    def __init__(self, locale: LocaleEnum, redis_cooldown: RedisLocaleCooldown):
+    def __init__(self, locale: LocaleEnum):
         title = self.title_localization[locale]
         super().__init__(title=title, locale=locale)
         self.locale = locale
-        self.redis_cooldown = redis_cooldown
 
     async def callback(self, interaction: Interaction):
-        if await self.redis_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
+        if await find_friend_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
             raise
 
         embed = FindFriendEmbed.build(
@@ -90,7 +89,7 @@ class FindFriendModal(BaseLocalizationModal):
 
         await find_friends_channel.send(content=interaction.user.mention, embed=embed)
         await interaction.response.send_message(content=self.response_localization[self.locale], ephemeral=True)
-        await self.redis_cooldown.set_user_cooldown(
+        await find_friend_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
             cooldown_in_seconds=dynamic_settings.find_friend_cooldown,

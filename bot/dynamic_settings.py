@@ -39,5 +39,9 @@ class DynamicSettings(BaseRedisSettings):
     def reverse_locale_roles(self) -> dict[RoleId, LocaleEnum]:
         return {value: key for key, value in self.locale_roles.items()}
 
+    @property
+    def reverse_find_friend_channels(self) -> dict[ChannelId, LocaleEnum]:
+        return {value: key for key, value in self.find_friend_channels.items()}
+
 
 dynamic_settings = DynamicSettings(settings.REDIS_URL, namespace='settings')

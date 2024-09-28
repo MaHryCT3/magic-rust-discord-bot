@@ -33,6 +33,12 @@ class ServicingPostsCog(commands.Cog):
             return
         if channel_settings.remove_bot_msg and message.author.bot:
             return await message.delete()
+        if (
+            channel_settings.remove_user_msg
+            and not message.author.bot
+            and not message.author.guild_permissions.administrator
+        ):
+            return await message.delete()
 
         if channel_settings.add_like:
             await message.add_reaction(Emojis.LIKE)
