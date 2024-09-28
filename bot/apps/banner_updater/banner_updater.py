@@ -23,6 +23,10 @@ class BannerUpdater(commands.Cog):
     def cog_unload(self):
         self.update_server_status.cancel()
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.update_server_status.start()
+
     @tasks.loop(seconds=BANNER_UPDATE_SECONDS)
     @suppress_exceptions
     async def update_server_status(self):
