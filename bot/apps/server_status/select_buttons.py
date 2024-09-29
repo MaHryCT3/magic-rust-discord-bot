@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 import discord
 
 from core.api_clients.magic_rust import LIMIT_LABELS, GameModeTypes, Maps
+from core.api_clients.magic_rust.models import GAMEMODE_LABELS
 from core.localization import LocaleEnum, day_name
 from core.utils.date_time import WeekDay
 
@@ -68,7 +69,7 @@ class GameModeSelect(BaseFilterSelect):
 
     @classmethod
     def _get_default_options(cls, _locale: LocaleEnum):
-        options = [discord.SelectOption(label=gm_type) for gm_type in GameModeTypes]
+        options = [discord.SelectOption(label=GAMEMODE_LABELS[gm_type], value=gm_type) for gm_type in GameModeTypes]
         options.insert(0, discord.SelectOption(label='-', value=EmptyEnum.EMPTY))
         return options
 

@@ -12,6 +12,8 @@ LIMIT_LABELS = {
     3: 'MAX 3',
 }
 
+GAMEMODE_LABELS = {'modded': 'modded', 'vanilla': 'vanilla', 'vanillax2': 'vanilla x2'}
+
 
 class LimitEnum(IntEnum):
     NO_LIMIT = 0
