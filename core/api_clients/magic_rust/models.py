@@ -5,13 +5,6 @@ from pydantic import BaseModel, Field
 
 from core.utils.date_time import WeekDay
 
-LIMIT_LABELS = {
-    0: 'NO LIMIT',
-    1: 'SOLO',
-    2: 'MAX 2',
-    3: 'MAX 3',
-}
-
 
 class LimitEnum(IntEnum):
     NO_LIMIT = 0
@@ -71,3 +64,17 @@ class CombinedServerData(FullServerData, MonitoringServerData):
     @classmethod
     def combine(cls, monitoring_server_data: MonitoringServerData, full_server_data: FullServerData) -> Self:
         return cls(**(full_server_data.model_dump(by_alias=True) | monitoring_server_data.model_dump(by_alias=True)))
+
+
+LIMIT_LABELS = {
+    LimitEnum.NO_LIMIT: 'NO LIMIT',
+    LimitEnum.SOLO: 'SOLO',
+    LimitEnum.MAX_2: 'MAX 2',
+    LimitEnum.MAX_3: 'MAX 3',
+}
+
+GAME_MODE_LABELS = {
+    GameModeTypes.MODDED: 'modded',
+    GameModeTypes.VANILLA: 'vanilla',
+    GameModeTypes.VANILLA_X2: 'vanilla x2',
+}

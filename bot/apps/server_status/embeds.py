@@ -1,6 +1,7 @@
 import discord
 
 from core.api_clients.magic_rust import CombinedServerData
+from core.api_clients.magic_rust.models import GAME_MODE_LABELS
 from core.localization import LocaleEnum, LocalizationDict, day_name
 from core.utils.colors import get_random_blue_color
 
@@ -35,8 +36,8 @@ class ServerInfoEmbed(discord.Embed):
         self.add_field(
             name=f'{server_data.title}',
             value=f'>>> -# {server_data.ip}\n\
-            {server_data.gm.value}\n\
-            {server_data.map.value}\n\
+            {GAME_MODE_LABELS[server_data.gm]}\n\
+            {server_data.map}\n\
             {server_data.limit.get_label()}\n\
             {server_data.players}/{server_data.maxplayers}\n\
             {self.wipe_label_localization[locale]}{day_name(server_data.wipeday, locale)}',

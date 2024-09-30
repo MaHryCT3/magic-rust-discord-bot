@@ -3,3 +3,4 @@ class Emojis:
     DISLIKE = '👎'
     MESSAGE = '💬'
     PEOPLES = '🧑‍🤝‍🧑'
+    DIZZY = '😵'
