@@ -2,6 +2,8 @@ from discord import Member, PermissionOverwrite, VoiceChannel, VoiceState
 from discord.ext import commands
 
 from bot.apps.voice_channels.constants import CREATE_VOICE_COOLDOWN_NAMESPACE
+from bot.apps.voice_channels.control_panel.embeds import ControlPanelEmbed
+from bot.apps.voice_channels.control_panel.views import ControlPanelView
 from bot.apps.voice_channels.embeds import RoomCreationCooldownEmbed
 from bot.apps.voice_channels.exceptions import (
     CategoryNotConfiguredError,
@@ -49,6 +51,7 @@ class RoomCreator(commands.Cog):
         if cooldown_residue := await self.create_room_cooldown.get_user_cooldown_residue(member.id, cooldown):
             raise RoomCreateCooldownError(cooldown=cooldown, retry_after=cooldown_residue, locale=locale)
         new_channel = await self.create_room(member.display_name, locale)
+        await member.move_to(new_channel)
         await self.create_room_cooldown.set_user_cooldown(
             user_id=member.id,
             cooldown_in_seconds=cooldown,
@@ -58,7 +61,10 @@ class RoomCreator(commands.Cog):
         permissions.move_members = True
         permissions.set_voice_channel_status = True
         await new_channel.set_permissions(member, overwrite=permissions)
-        await member.move_to(new_channel)
+        await new_channel.send(
+            embed=ControlPanelEmbed.build(locale=locale),
+            view=ControlPanelView(locale=locale, voice_channel=new_channel),
+        )
 
     async def create_room(self, room_name: str, locale: LocaleEnum) -> VoiceChannel:
         guild = self.bot.get_main_guild()
