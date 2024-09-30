@@ -1,6 +1,6 @@
 import discord
 
-from bot.apps.find_friends.constants import FIND_FRIEND_COLOR
+from bot.constants import MAIN_COLOR
 from core.localization import LocaleEnum, LocalizationDict
 from core.utils.format_strings import bold_message
 
@@ -23,7 +23,7 @@ class FindFriendEmbed(discord.Embed):
         servers: str,
         locale: LocaleEnum,
     ):
-        embed = cls(color=FIND_FRIEND_COLOR)
+        embed = cls(color=MAIN_COLOR)
         embed.set_author(name=author_name, icon_url=author_icon_url)
         embed.title = article
         embed.add_field(name='', value=message, inline=False)
