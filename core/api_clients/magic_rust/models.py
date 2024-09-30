@@ -73,7 +73,7 @@ LIMIT_LABELS = {
     LimitEnum.MAX_3: 'MAX 3',
 }
 
-GAMEMODE_LABELS = {
+GAME_MODE_LABELS = {
     GameModeTypes.MODDED: 'modded',
     GameModeTypes.VANILLA: 'vanilla',
     GameModeTypes.VANILLA_X2: 'vanilla x2',

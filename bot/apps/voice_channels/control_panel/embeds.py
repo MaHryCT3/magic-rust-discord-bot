@@ -1,7 +1,7 @@
 import discord
 
+from bot.constants import MAIN_COLOR
 from core.localization import LocaleEnum, LocalizationDict
-from core.utils.format_strings import bold_message
 
 
 class ControlPanelEmbed(discord.Embed):
@@ -11,29 +11,14 @@ class ControlPanelEmbed(discord.Embed):
             LocaleEnum.ru: 'Панель управления каналом',
         }
     )
-    kick_localization = LocalizationDict(
-        {
-            LocaleEnum.en: ':dizzy_face:  Kick',
-            LocaleEnum.ru: ':dizzy_face:  Выгнать',
-        }
-    )
-    kick_description_localization = LocalizationDict(
-        {
-            LocaleEnum.en: f'Kick channel member {bold_message("permanently")}',
-            LocaleEnum.ru: f'Выгнать участника канала {bold_message("навсегда")}',
-        }
-    )
 
     @classmethod
     def build(
         cls,
         locale: LocaleEnum,
     ):
-        embed = cls()
+        embed = cls(color=MAIN_COLOR)
         embed.title = cls.title_localization[locale]
-        embed.add_field(
-            name=cls.kick_localization[locale], value=cls.kick_description_localization[locale], inline=False
-        )
         return embed
 
 
