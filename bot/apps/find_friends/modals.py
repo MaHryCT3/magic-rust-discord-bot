@@ -4,6 +4,7 @@ from bot.apps.find_friends.cooldowns import find_friend_cooldown
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum, LocalizationDict
 from core.ui.modals import BaseLocalizationModal, InputText
+from core.utils.regex import remove_url_from_text
 
 from .embeds import FindFriendEmbed
 from .exceptions import CommandNotConfiguredError
@@ -18,10 +19,17 @@ class FindFriendModal(BaseLocalizationModal):
     )
     response_localization = LocalizationDict(
         {
-            LocaleEnum.en: "You've successfully sent a find freind request.",
+            LocaleEnum.en: "You've successfully sent a find friend request.",
             LocaleEnum.ru: 'Вы успешно отправили заявку на поиск друга.',
         }
     )
+    url_in_response_localization = LocalizationDict(
+        {
+            LocaleEnum.en: 'Links have been removed from the form. You should not use them from now on.',
+            LocaleEnum.ru: 'Из формы были удалены ссылки. Впредь не стоит их использовать.',
+        }
+    )
+
     article_input = InputText(
         max_length=50,
     )
@@ -73,6 +81,8 @@ class FindFriendModal(BaseLocalizationModal):
         if await find_friend_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
             raise
 
+        is_have_urls = self._clear_url_from_inputs()
+
         embed = FindFriendEmbed.build(
             interaction.user.display_name,
             interaction.user.display_avatar.url,
@@ -88,9 +98,27 @@ class FindFriendModal(BaseLocalizationModal):
             raise CommandNotConfiguredError(self.locale)
 
         await find_friends_channel.send(content=interaction.user.mention, embed=embed)
-        await interaction.response.send_message(content=self.response_localization[self.locale], ephemeral=True)
+        await interaction.response.send_message(content=self._get_respond_message(is_have_urls), ephemeral=True)
         await find_friend_cooldown.set_user_cooldown(
             user_id=interaction.user.id,
             locale=self.locale,
             cooldown_in_seconds=dynamic_settings.find_friend_cooldown,
         )
+
+    def _clear_url_from_inputs(self) -> bool:
+        is_have_urls = False
+        for attr in ['article_input', 'message_input', 'server_input']:
+            attr_value = getattr(self, attr)
+            len_before_clear = len(attr_value)
+            cleared_text = remove_url_from_text(attr_value)
+            if len(cleared_text) < len_before_clear:
+                is_have_urls = True
+                setattr(self, attr, cleared_text)
+        return is_have_urls
+
+    def _get_respond_message(self, is_have_url: bool) -> str:
+        text = self.response_localization[self.locale]
+        if is_have_url:
+            extra_text = self.url_in_response_localization[self.locale]
+            text += f'\n{extra_text}'
+        return text
