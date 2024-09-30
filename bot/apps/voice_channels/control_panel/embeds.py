@@ -13,8 +13,8 @@ class ControlPanelEmbed(discord.Embed):
     )
     kick_localization = LocalizationDict(
         {
-            LocaleEnum.en: ':dizzy_face: Kick',
-            LocaleEnum.ru: ':dizzy_face: Выгнать',
+            LocaleEnum.en: ':dizzy_face:  Kick',
+            LocaleEnum.ru: ':dizzy_face:  Выгнать',
         }
     )
     kick_description_localization = LocalizationDict(
