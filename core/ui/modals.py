@@ -23,7 +23,7 @@ class InputText(discord.ui.InputText):
         return instance.children[self.input_position].value
 
     def __set__(self, instance: 'BaseModal', value):
-        instance.children[self.input_position].value = value
+        instance.children[self.input_position]._input_value = value
 
 
 class BaseModal(discord.ui.Modal):
