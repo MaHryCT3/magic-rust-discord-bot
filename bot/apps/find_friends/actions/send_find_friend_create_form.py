@@ -5,7 +5,6 @@ import discord
 import sentry_sdk
 from redis import ConnectionPool, StrictRedis
 
-from bot.apps.find_friends.constants import FIND_FRIEND_COLOR
 from bot.apps.find_friends.ui.create_friend_form import CreateFindFriendFormView
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
@@ -20,8 +19,8 @@ class ResendFindFriendCreateForm(AbstractAction):
 
     _last_form_message_redis_key_template = 'find_friend_form:{locale}'
     _title_localization = {
-        LocaleEnum.ru: 'Создать заявку👇',
-        LocaleEnum.en: 'Create find friend form👇',
+        LocaleEnum.ru: '👇Создать заявку',
+        LocaleEnum.en: '👇Create find friend form',
     }
 
     @cached_property
@@ -47,7 +46,7 @@ class ResendFindFriendCreateForm(AbstractAction):
 
     def _get_embed(self) -> discord.Embed:
         return discord.Embed(
-            color=FIND_FRIEND_COLOR,
+            color=discord.Color.dark_purple(),
             title=self._title_localization[self.locale],
         )
 

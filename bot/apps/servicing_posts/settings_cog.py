@@ -28,7 +28,16 @@ class ServicingPostsSettingsCog(commands.Cog):
         self.posts_settings_service = posts_settings
 
     @servicing_posts_group.command(description='Добавить канал в обслуживание')
-    async def add_channel(self, ctx: discord.ApplicationContext, channel: TextChannel, locale: LocaleEnum):
+    async def add_channel(
+        self,
+        ctx: discord.ApplicationContext,
+        channel: discord.Option(
+            discord.SlashCommandOptionType.channel,
+            channel_types=[discord.ChannelType.text, discord.ChannelType.news],
+        ),
+        locale: LocaleEnum,
+    ):
+        channel: TextChannel
         select = SelectServicingActionSelect(
             channel_id=channel.id,
             channel_name=channel.name,
@@ -70,7 +79,21 @@ class ServicingPostsSettingsCog(commands.Cog):
         )
 
     @servicing_posts_group.command(description='Копирование настроек с другого канала')
-    async def copy_settings(self, ctx: discord.ApplicationContext, from_channel: TextChannel, to_channel: TextChannel):
+    async def copy_settings(
+        self,
+        ctx: discord.ApplicationContext,
+        from_channel: discord.Option(
+            discord.SlashCommandOptionType.channel,
+            channel_types=[discord.ChannelType.text, discord.ChannelType.news],
+        ),
+        to_channel: discord.Option(
+            discord.SlashCommandOptionType.channel,
+            channel_types=[discord.ChannelType.text, discord.ChannelType.news],
+        ),
+    ):
+        from_channel: TextChannel
+        to_channel: TextChannel
+
         channel_settings = await self.posts_settings_service.get_setting(from_channel.id)
         if not channel_settings:
             await ctx.respond(f'У канала {from_channel.mention}', ephemeral=True, delete_after=10)
