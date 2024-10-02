@@ -19,8 +19,8 @@ class ResendFindFriendCreateForm(AbstractAction):
 
     _last_form_message_redis_key_template = 'find_friend_form:{locale}'
     _title_localization = {
-        LocaleEnum.ru: '👇Создать заявку',
-        LocaleEnum.en: '👇Create find friend form',
+        LocaleEnum.ru: 'Чтобы создать заявку, жмите кнопку👇',
+        LocaleEnum.en: 'Create find friend form👇',
     }
 
     @cached_property

@@ -9,10 +9,26 @@ from bot.apps.find_friends.actions.send_find_friend_modal import (
 )
 from bot.apps.find_friends.exceptions import BaseFindFriendsError
 from core.emojis import Emojis
-from core.localization import LocaleEnum
+from core.localization import LocaleEnum, LocalizationDict
 
 
 class CreateFindFriendFormButton(discord.ui.Button):
+    label_localization = LocalizationDict(
+        {
+            LocaleEnum.en: ' Create form',
+            LocaleEnum.ru: ' Создать заявку',
+        }
+    )
+
+    def __init__(self, *args, locale: LocaleEnum, **kwargs):
+        super().__init__(
+            *args,
+            custom_id=f'create_form:{locale.value}:button',
+            emoji=Emojis.PEOPLES,
+            label=self.label_localization[locale],
+            **kwargs,
+        )
+
     async def callback(self, interaction: Interaction):
         action = SendFindFriendModalAction(interaction, interaction.user)
         await action.execute()
@@ -23,10 +39,7 @@ class CreateFindFriendFormView(discord.ui.View):
     def __init__(self, locale: LocaleEnum, **kwargs):
         kwargs.setdefault('timeout', None)
         super().__init__(
-            CreateFindFriendFormButton(
-                emoji=Emojis.PEOPLES,
-                custom_id=f'create_form:{locale.value}:button',
-            ),
+            CreateFindFriendFormButton(locale=locale),
             **kwargs,
         )
         self.locale = locale
