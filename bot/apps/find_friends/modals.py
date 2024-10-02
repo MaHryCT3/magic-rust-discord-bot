@@ -37,7 +37,9 @@ class FindFriendModal(BaseLocalizationModal):
         max_length=1024,
         style=InputTextStyle.multiline,
     )
-    server_input = InputText()
+    server_input = InputText(
+        max_length=50,
+    )
 
     inputs_localization_map = {
         article_input: {
