@@ -1,4 +1,5 @@
 import discord
+
 from bot.bot import MagicRustBot
 from bot.dynamic_settings import dynamic_settings
 
@@ -18,6 +19,7 @@ class PublishNewsButton(discord.ui.Button):
         await interaction.message.edit(content=content, poll=None, files=[], embeds=[], view=None)
         await interaction.message.channel.send('Новость успешно опубликована', delete_after=10, ephemeral=True)
         return super().callback(interaction)
+
 
 class DeclineNewsButton(discord.ui.Button):
     def __init__(self, *args, bot: MagicRustBot, **kwargs):

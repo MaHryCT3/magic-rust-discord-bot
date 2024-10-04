@@ -1,7 +1,7 @@
 import discord
+
 from bot.apps.news_reposts.buttons import DeclineNewsButton, PublishNewsButton
 from bot.bot import MagicRustBot
-from bot.dynamic_settings import dynamic_settings
 
 
 class PreviewView(discord.View):
@@ -9,4 +9,3 @@ class PreviewView(discord.View):
         publish_button = PublishNewsButton(bot=bot)
         decline_button = DeclineNewsButton(bot=bot)
         super().__init__(publish_button, decline_button)
-    

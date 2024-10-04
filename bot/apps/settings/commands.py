@@ -137,7 +137,9 @@ class SettingsCog(commands.Cog):
     async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
         dynamic_settings.repost_preview_channel = channel.id
         await self._make_channel_non_textable(channel)
-        logger.info(f'{ctx.author}:{ctx.author.id} изменил канал для предварительного отображения репостов: {channel.name}:{channel.id}')
+        logger.info(
+            f'{ctx.author}:{ctx.author.id} изменил канал для предварительного отображения репостов: {channel.name}:{channel.id}'
+        )
         await ctx.respond(
             f'Канал для предварительного отображения репостов установлен {channel.mention}',
             ephemeral=True,
