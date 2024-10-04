@@ -48,12 +48,13 @@ class NewsRepostsCog(commands.Cog):
 
     async def _send_captured_new(self, news: CapturedNews):
         embeds = self._build_news_embeds(news)
-        channel: discord.TextChannel = await self.bot.fetch_channel(dynamic_settings.repost_channel)
+        channel: discord.TextChannel = await self.bot.fetch_channel(dynamic_settings.repost_preview_channel)
 
         view = discord.ui.View(discord.ui.Button(label='Перейти к посту', url=news.original_link))
-        await channel.send(embeds=embeds, view=view)
+        content = news.original_link
         if news.poll or news.files:
-            await channel.send(poll=news.poll, files=news.files)
+            await channel.send(content=content, poll=news.poll, files=news.files, embeds=embeds, view=view)
+        await channel.send(content=content, embeds=embeds, view=view)
 
     @staticmethod
     def _build_news_embeds(news: CapturedNews) -> list[discord.Embed]:

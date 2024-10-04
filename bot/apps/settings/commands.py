@@ -32,6 +32,10 @@ class SettingsCog(commands.Cog):
         'voice_channels',
         description='Настройка голосовых комнат',
     )
+    reposts_subgroup = settings_group.create_subgroup(
+        'reposts',
+        description='Настройка новостных репостов',
+    )
 
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
@@ -114,7 +118,7 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @settings_group.command(
+    @reposts_subgroup.command(
         description='Изменить канал для репостов',
     )
     async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
@@ -123,6 +127,19 @@ class SettingsCog(commands.Cog):
         logger.info(f'{ctx.author}:{ctx.author.id} изменил канал для репостов: {channel.name}:{channel.id}')
         await ctx.respond(
             f'Канал для репостов установлен {channel.mention}',
+            ephemeral=True,
+            delete_after=10,
+        )
+
+    @reposts_subgroup.command(
+        description='Изменить канал для предварительного отображения новостных постов',
+    )
+    async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
+        dynamic_settings.repost_preview_channel = channel.id
+        await self._make_channel_non_textable(channel)
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил канал для предварительного отображения репостов: {channel.name}:{channel.id}')
+        await ctx.respond(
+            f'Канал для предварительного отображения репостов установлен {channel.mention}',
             ephemeral=True,
             delete_after=10,
         )
