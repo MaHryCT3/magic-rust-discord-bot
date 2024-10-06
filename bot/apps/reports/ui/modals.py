@@ -21,7 +21,7 @@ class BaseReportModal(BaseLocalizationModal):
 
     player_info_input = InputText(
         max_length=250,
-        placeholder='https://steamcommunity.com/profiles/76561198365812808, https://steamcommu',
+        placeholder='https://steamcommunity.com/profiles/76561199999999999, https://steamcommu',
         style=discord.InputTextStyle.multiline,
         required=True,
     )

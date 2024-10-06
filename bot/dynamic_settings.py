@@ -33,7 +33,11 @@ class DynamicSettings(BaseRedisSettings):
         cast_on_load=cast_dict(LocaleEnum, RoleId),
     )
     # Канал куда будут постятся новости из других соцсетей проекта
-    repost_channel: int = SettingValue(default=0)
+    repost_channel: ChannelId = SettingValue(default=0)
+    # Тикеты
+    ticket_category_id: CategoryId = SettingValue(default=0)
+    ticket_history_channel_id: ChannelId = SettingValue(default=0)
+    ticket_roles_ids: list[RoleId] = SettingValue(default_factory=list)
 
     @property
     def reverse_locale_roles(self) -> dict[RoleId, LocaleEnum]:

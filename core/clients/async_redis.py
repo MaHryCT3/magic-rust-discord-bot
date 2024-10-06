@@ -10,13 +10,13 @@ class AsyncRedisNameSpace:
         self._redis = StrictRedis(connection_pool=connection_pool, decode_responses=True)
         self.namespace = namespace
 
-    async def get(self, key: str, as_bytes: bool = False) -> Any:
+    async def get(self, key: str | int, as_bytes: bool = False) -> Any:
         response = await self._redis.get(self.make_key(key))
         if as_bytes:
             return response
         return self._decode_response(response)
 
-    async def set(self, key: str, value: Any, expire: int = None):
+    async def set(self, key: str | int, value: Any, expire: int = None):
         value = self._encode_redis_request(value)
         await self._redis.set(self.make_key(key), value, ex=expire)
 
@@ -24,7 +24,7 @@ class AsyncRedisNameSpace:
         keys = await self._redis.keys(self.make_key(pattern))
         return [self._decode_response(answer) for answer in await self._redis.mget(keys)]
 
-    async def delete(self, key: str) -> int:
+    async def delete(self, key: str | int) -> int:
         full_key = self.make_key(key)
         return await self._redis.delete(full_key)
 
