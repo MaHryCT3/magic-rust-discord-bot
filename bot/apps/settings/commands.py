@@ -28,9 +28,14 @@ class SettingsCog(commands.Cog):
         'find_friends',
         description='Настройка команды поиска друга',
     )
-    voide_channels_subgroup = settings_group.create_subgroup(
+    voice_channels_subgroup = settings_group.create_subgroup(
         'voice_channels',
         description='Настройка голосовых комнат',
+    )
+
+    tickets_subgroup = settings_group.create_subgroup(
+        'tickets',
+        description='Настройки тикетов',
     )
 
     def __init__(self, bot: 'MagicRustBot'):
@@ -127,7 +132,7 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @voide_channels_subgroup.command(
+    @voice_channels_subgroup.command(
         name='cooldown',
         description='Изменить кулдаун создания голосовых каналов, указывать в секундах',
     )
@@ -144,7 +149,7 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @voide_channels_subgroup.command(
+    @voice_channels_subgroup.command(
         name='master_channels',
         description='Изменить комнаты создания голосовых каналов',
     )
@@ -166,7 +171,7 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
-    @voide_channels_subgroup.command(
+    @voice_channels_subgroup.command(
         name='categories',
         description='Изменить разделы для голосовых комнат',
     )
@@ -183,6 +188,32 @@ class SettingsCog(commands.Cog):
         logger.info(f'{ctx.author}:{ctx.author.id} изменил каналы создания голосовых комнат на {current_channels}')
         await ctx.respond(
             f'Канал создания голосовых комнат для региона {locale} была установлен на {category}',
+            ephemeral=True,
+            delete_after=10,
+        )
+
+    @tickets_subgroup.command(
+        name='category',
+        description='Изменить категории тикетов',
+    )
+    async def ticket_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel):
+        dynamic_settings.ticket_category_id = category.id
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил категорию тикетов {category.id}')
+        await ctx.respond(
+            f'Категория тикетов изменена {category.mention}',
+            ephemeral=True,
+            delete_after=10,
+        )
+
+    @tickets_subgroup.command(
+        name='history_channel',
+        description='Изменить канал истории тикетов',
+    )
+    async def tickets_history_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
+        dynamic_settings.ticket_history_channel_id = channel.id
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил канал истории тикетов {channel.id}')
+        await ctx.respond(
+            f'Канал истории тикетов изменен на {channel.mention}',
             ephemeral=True,
             delete_after=10,
         )

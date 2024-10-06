@@ -30,6 +30,8 @@ class InfoProvider(commands.Cog):
         guild = self.bot.get_main_guild()
         fetched_guild = await self.bot.fetch_main_guild()
         online_presence = fetched_guild.approximate_presence_count
-        voice_presence = sum([len(voice_channel.members) for voice_channel in guild.voice_channels])
+        voice_presence = sum(
+            [len(voice_channel.members) for voice_channel in guild.voice_channels + guild.stage_channels]
+        )
         self.info_storage.set(DISCORD_ONLINE_PRESENCE_KEY, online_presence, INFO_EXPIRATION_TIME)
         self.info_storage.set(DISCORD_VOICE_PRESENCE_KEY, voice_presence, INFO_EXPIRATION_TIME)
