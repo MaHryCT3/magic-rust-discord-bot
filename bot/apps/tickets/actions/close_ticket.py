@@ -59,7 +59,7 @@ class CloseTicketAction(AbstractAction):
         try:
             await self._send_ticket_to_member(ticket, ticket_user, exported_chat, ended_embed)
         except discord.Forbidden:
-            logger.info('Не удалось отправить историю тикета в личку, так как она закрыта')
+            logger.info(f'Не удалось отправить историю тикета #{ticket.ticket_number} в личку, так как она закрыта')
 
     def _get_closed_ticket_embed(self, ticket: OpenedTicketStruct, ticket_user: discord.Member):
         return TicketHeaderEmbed.build(

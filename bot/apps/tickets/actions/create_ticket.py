@@ -29,6 +29,11 @@ class CreateTicketAction(AbstractAction[discord.TextChannel]):
     def created_at(self):
         return datetime.datetime.now(tz=settings.TIMEZONE)
 
+    @cached_property
+    def tickets_moderators_roles(self) -> list[discord.Role]:
+        moderators_roles_ids = dynamic_settings.ticket_roles_ids
+        return [role for role in self.guild.roles if role.id in moderators_roles_ids]
+
     def __post_init__(self):
         self._ticket_counter = TicketCounter()
         self._opened_tickets = OpenedTicketsService()
@@ -69,7 +74,7 @@ class CreateTicketAction(AbstractAction[discord.TextChannel]):
     async def create_ticket_channel(self, category: discord.CategoryChannel, ticket_number: int):
         room_name = f'ticket-{ticket_number}'
 
-        member_permissions = discord.PermissionOverwrite(
+        view_ticket_permission = discord.PermissionOverwrite(
             view_channel=True,
             read_message_history=True,
             send_messages=True,
@@ -78,13 +83,17 @@ class CreateTicketAction(AbstractAction[discord.TextChannel]):
             view_channel=False,
         )
 
+        overwrites = {
+            self.guild.default_role: everyone_permission,
+            self.member: view_ticket_permission,
+        }
+        for ticket_moderator_role in self.tickets_moderators_roles:
+            overwrites[ticket_moderator_role] = view_ticket_permission
+
         channel = await self.guild.create_text_channel(
             name=room_name,
             category=category,
-            overwrites={
-                self.guild.default_role: everyone_permission,
-                self.member: member_permissions,
-            },
+            overwrites=overwrites,
         )
         return channel
 
@@ -98,8 +107,10 @@ class CreateTicketAction(AbstractAction[discord.TextChannel]):
             description=self.description,
         )
         header_view = TicketHeaderView(locale=self.locale)
+        mention_moderators = '\n'.join([role.mention for role in self.tickets_moderators_roles])
 
         await channel.send(
+            mention_moderators,
             embed=header_embed,
             view=header_view,
         )

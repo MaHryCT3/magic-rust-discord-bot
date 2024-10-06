@@ -218,6 +218,47 @@ class SettingsCog(commands.Cog):
             delete_after=10,
         )
 
+    @tickets_subgroup.command(
+        name='add_role',
+        description='Добавить роль модератора для тикета',
+    )
+    async def tickets_add_role(self, ctx: discord.ApplicationContext, role: discord.Role):
+        roles = dynamic_settings.ticket_roles_ids
+        if role.id in roles:
+            return await ctx.respond(
+                f'Роль {role.mention} уже добавлена',
+                delete_after=10,
+                ephemeral=True,
+            )
+        roles.append(role.id)
+        dynamic_settings.ticket_roles_ids = roles
+
+        logger.info(f'{ctx.author}:{ctx.author.id} добавил {role.mention}|{role.id} в тикеты')
+        await ctx.respond(
+            f'Роль {role.mention} добавлена в тикеты',
+            delete_after=10,
+            ephemeral=True,
+        )
+
+    @tickets_subgroup.command(name='delete_role', description='Удалить роль для модератора тикетов')
+    async def tickets_delete_role(self, ctx: discord.ApplicationContext, role: discord.Role):
+        roles = dynamic_settings.ticket_roles_ids
+        if role.id not in roles:
+            return await ctx.respond(
+                f'Роль {role.mention} и так не в списке',
+                delete_after=10,
+                ephemeral=True,
+            )
+        roles.remove(role.id)
+        dynamic_settings.ticket_roles_ids = roles
+
+        logger.info(f'{ctx.author}:{ctx.author.id} убрал {role.mention}|{role.id} из тикетов')
+        await ctx.respond(
+            f'Роль {role.mention} убрана из тикетов',
+            delete_after=10,
+            ephemeral=True,
+        )
+
     @settings_group.command(description='Выгрузка настроек')
     @commands.is_owner()
     async def dump(self, ctx: discord.ApplicationContext):
