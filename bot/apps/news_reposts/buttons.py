@@ -12,13 +12,21 @@ class PublishNewsButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         channel: discord.TextChannel = await self.bot.fetch_channel(dynamic_settings.repost_channel)
         view = discord.ui.View(discord.ui.Button(label='Перейти к посту', url=interaction.message.content))
-        await channel.send(embeds=interaction.message.embeds, view=view)
+        news_message = await channel.send(embeds=interaction.message.embeds, view=view)
         if interaction.message.poll or interaction.message.attachments:
-            await channel.send(poll=interaction.message.poll, files=interaction.message.attachments)
-        content = f'{interaction.message.content}\nНовость опубликована {interaction.user.display_name}'
-        await interaction.message.edit(content=content, poll=None, files=[], embeds=[], view=None)
-        await interaction.message.channel.send('Новость успешно опубликована', delete_after=10, ephemeral=True)
+            poll = self._copy_poll(interaction.message.poll)
+            await channel.send(poll=poll, files=interaction.message.attachments)
+        content = f'{news_message.jump_url}\nНовость опубликована {interaction.user.mention}'
+        await interaction.message.channel.send(content=content)
+        await interaction.message.delete()
+        await interaction.respond('Новость успешно опубликована', delete_after=10, ephemeral=True)
         return super().callback(interaction)
+
+    @classmethod
+    def _copy_poll(cls, poll: discord.Poll) -> discord.Poll:
+        return discord.Poll(
+            question=poll.question, answers=poll.answers, duration=poll.duration, layout_type=poll.layout_type
+        )
 
 
 class DeclineNewsButton(discord.ui.Button):
@@ -27,7 +35,8 @@ class DeclineNewsButton(discord.ui.Button):
         super().__init__(*args, label='Скрыть', style=discord.ButtonStyle.red, **kwargs)
 
     async def callback(self, interaction: discord.Interaction):
-        content = f'{interaction.message.content}\nНовость отклонена {interaction.user.display_name}'
-        await interaction.message.edit(content=content, poll=None, files=[], embeds=[], view=None)
+        await interaction.message.delete()
+        content = f'{interaction.message.content}\nНовость скрыта {interaction.user.mention}'
+        await interaction.message.channel.send(content=content)
         await interaction.message.channel.send('Новость скрыта', delete_after=10, ephemeral=True)
-        return super().callback(interaction)
+        return await super().callback(interaction)

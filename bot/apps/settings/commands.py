@@ -134,7 +134,7 @@ class SettingsCog(commands.Cog):
     @reposts_subgroup.command(
         description='Изменить канал для предварительного отображения новостных постов',
     )
-    async def repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
+    async def pre_repost_channel(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
         dynamic_settings.repost_preview_channel = channel.id
         await self._make_channel_non_textable(channel)
         logger.info(

@@ -8,6 +8,7 @@ from bot.apps.news_reposts.services.captures import (
     VKNewsCapture,
 )
 from bot.apps.news_reposts.services.captures.structs import CapturedNewsSources
+from bot.apps.news_reposts.views import PreviewView
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.api_clients.vk import BotPolling, VKAPIClient
@@ -50,11 +51,8 @@ class NewsRepostsCog(commands.Cog):
         embeds = self._build_news_embeds(news)
         channel: discord.TextChannel = await self.bot.fetch_channel(dynamic_settings.repost_preview_channel)
 
-        view = discord.ui.View(discord.ui.Button(label='Перейти к посту', url=news.original_link))
         content = news.original_link
-        if news.poll or news.files:
-            await channel.send(content=content, poll=news.poll, files=news.files, embeds=embeds, view=view)
-        await channel.send(content=content, embeds=embeds, view=view)
+        await channel.send(content=content, poll=news.poll, files=news.files, embeds=embeds, view=PreviewView(self.bot))
 
     @staticmethod
     def _build_news_embeds(news: CapturedNews) -> list[discord.Embed]:
