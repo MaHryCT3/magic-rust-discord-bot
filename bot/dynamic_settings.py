@@ -33,6 +33,7 @@ class DynamicSettings(BaseRedisSettings):
         cast_on_load=cast_dict(LocaleEnum, RoleId),
     )
     # Канал куда будут постятся новости из других соцсетей проекта
+    repost_preview_channel: int = SettingValue(default=0)
     repost_channel: int = SettingValue(default=0)
 
     @property

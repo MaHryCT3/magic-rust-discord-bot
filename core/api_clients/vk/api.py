@@ -39,6 +39,7 @@ class VKAPIClient:
     async def get_long_poll_server(self, group_id: int) -> LongPollServer:
         payload = {'group_id': group_id}
         data = await self.call_method('groups.getLongPollServer', payload=payload)
+        print(data)
         return LongPollServer(**data['response'])
 
     async def call_method(self, method_name: str, payload: dict) -> dict:
