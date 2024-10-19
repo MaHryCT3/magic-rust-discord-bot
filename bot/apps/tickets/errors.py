@@ -10,7 +10,7 @@ class TicketError(CommandError):
 class UserAlreadyHaveTicket(TicketError):
     message_localization = {
         LocaleEnum.ru: 'У вас уже открыт тикет: {ticket_channel_mention}',
-        LocaleEnum.en: 'You already have a ticket open: {ticket_channel_mention}}',
+        LocaleEnum.en: 'You already have a ticket open: {ticket_channel_mention}',
     }
 
     def __init__(self, locale: LocaleEnum, ticket_channel_mention: str):
