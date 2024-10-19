@@ -44,7 +44,7 @@ class CreateFindFriendFormView(discord.ui.View):
         )
         self.locale = locale
 
-    async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
+    async def on_error(self, error: Exception, item: Item, interaction: Interaction):
         if isinstance(error, BaseFindFriendsError):
             return await interaction.respond(
                 error.message,

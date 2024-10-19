@@ -20,6 +20,7 @@ all_apps = [
     'voice_channels',
     'news_reposts',
     'reports',
+    'tickets',
     'users',
     'servicing_posts',
 ]

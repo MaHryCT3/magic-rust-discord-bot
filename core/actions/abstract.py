@@ -1,14 +1,17 @@
 from abc import ABC, abstractmethod
+from typing import Generic, TypeVar
+
+ActionReturn = TypeVar('ActionReturn')
 
 
-class AbstractAction(ABC):
+class AbstractAction(ABC, Generic[ActionReturn]):
     async def validate(self):  # noqa: B027
         pass
 
     @abstractmethod
-    async def action(self):
+    async def action(self) -> ActionReturn:
         pass
 
-    async def execute(self):
+    async def execute(self) -> ActionReturn:
         await self.validate()
-        await self.action()
+        return await self.action()
