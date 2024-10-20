@@ -19,7 +19,7 @@ class InputText(discord.ui.InputText):
         self.input_position = len(owner.inputs)
         owner.inputs.append(self)
 
-    def __get__(self, instance: 'BaseModal', owner):
+    def __get__(self, instance: 'BaseModal', owner) -> str:
         return instance.children[self.input_position].value
 
     def __set__(self, instance: 'BaseModal', value):

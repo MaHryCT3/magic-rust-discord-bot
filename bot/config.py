@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     VK_MAIN_GROUP_TOKEN: str
     VK_MAIN_GROUP_ID: int
     REPORT_VK_BOT_TOKEN: str
+    STEAM_API_TOKEN: str
 
     REDIS_URL: str = 'redis://localhost:6379'
     SETUP_APPS: list[str] | None = None

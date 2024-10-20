@@ -5,3 +5,7 @@ class Emojis:
     TICKET = '🎫'
     PEOPLES = '🧑‍🤝‍🧑'
     DIZZY = '😵'
+    ACCEPT = '✅'
+    REJECT = '❌'
+    AWAITING = '⏳'
+    WARNING = '⚠️'

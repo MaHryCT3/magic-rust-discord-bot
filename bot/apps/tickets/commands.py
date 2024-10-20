@@ -50,7 +50,6 @@ class CommandsTicketsCog(Cog):
         view = MakeTicketView(locale)
 
         await ctx.send(view=view, embeds=[image_embed])
-        await ctx.interaction.response.pong()
 
     @ticket_group.command()
     async def remove_ticket(self, ctx: discord.ApplicationContext, member: discord.Member):
