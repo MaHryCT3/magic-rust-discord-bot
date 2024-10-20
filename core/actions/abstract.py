@@ -9,7 +9,7 @@ class AbstractAction(ABC, Generic[ActionReturn]):
         pass
 
     @abstractmethod
-    async def action(self):
+    async def action(self) -> ActionReturn:
         pass
 
     async def execute(self) -> ActionReturn:
