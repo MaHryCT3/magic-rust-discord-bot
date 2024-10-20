@@ -62,6 +62,7 @@ class ModerateUnbanTicket(AbstractAction, ABC):
         embed.timestamp = datetime.datetime.now(tz=settings.TIMEZONE)
         embed.set_status(ticket.status).set_reviewed_by(self.initiator_user)
 
+        moderate_message.embeds = [embed]
         await moderate_message.edit(
             view=None,
             embeds=[embed],

@@ -19,7 +19,7 @@ services:
       - DISCORD_BOT_TOKEN=${DISCORD_REPORT_BOT_TOKEN}
     tty: true
     restart: always
-    command: python -m bot reports tickets
+    command: python -m bot reports tickets unban_tickets
 
   voice_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA
