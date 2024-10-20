@@ -51,8 +51,8 @@ class BaseReportModal(BaseLocalizationModal):
     }
 
     answer_localization_map: dict[LocaleEnum, str] = {
-        LocaleEnum.en: 'Report has send',
-        LocaleEnum.ru: 'Жалоба отправлена',
+        LocaleEnum.en: 'Report has send. Thank you for reaching out',
+        LocaleEnum.ru: 'Жалоба отправлена. Спасибо за обращение',
     }
 
     def __init__(self, *args, server: MonitoringServerData, **kwargs):
@@ -94,7 +94,7 @@ class BaseReportModal(BaseLocalizationModal):
 
     async def _send_answer(self, interaction: Interaction):
         answer_message = self.answer_localization_map[self.locale]
-        await interaction.respond(answer_message, ephemeral=True, delete_after=10)
+        await interaction.respond(answer_message, ephemeral=True, delete_after=20)
 
 
 class CheaterReportModal(BaseReportModal):
