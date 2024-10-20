@@ -30,6 +30,7 @@ pre-commit = "^3.7.1"
 validators = "^0.33.0"
 py-cord = "^2.6.0"
 python-dateutil = "^2.9.0.post0"
+chat-exporter = "^2.8.0"
 
 
 [tool.poetry.group.image-generator.dependencies]
