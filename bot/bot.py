@@ -11,6 +11,7 @@ from core.localization import LocaleEnum
 from core.logger import logger
 
 all_apps = [
+    'auto_moderation',
     'find_friends',
     'settings',
     'bot_messages',
