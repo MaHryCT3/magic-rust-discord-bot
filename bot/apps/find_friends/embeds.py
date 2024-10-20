@@ -17,7 +17,7 @@ class FindFriendEmbed(discord.Embed):
     def build(
         cls,
         author_name: str,
-        author_icon_url: str,
+        author_icon_url: str | None,
         article: str,
         message: str,
         servers: str,

@@ -87,7 +87,7 @@ class FindFriendModal(BaseLocalizationModal):
 
         embed = FindFriendEmbed.build(
             interaction.user.display_name,
-            interaction.user.display_avatar.url,
+            getattr(interaction.user.display_avatar, 'url', None),
             self.article_input,
             self.message_input,
             self.server_input,
