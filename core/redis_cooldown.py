@@ -11,11 +11,18 @@ class RedisCooldown:
     cooldown_base_namespace: str = 'cooldown:{}'
     # Хранит unix время начала кулдауна
 
-    def __init__(self, redis_url: str, cooldown_namespace: str):
+    def __init__(
+        self,
+        redis_url: str,
+        cooldown_namespace: str,
+        default_cooldown_expire_seconds: int = 60 * 60 * 24 * 30,
+    ):
         self._storage = AsyncRedisNameSpace(
             url=redis_url,
             namespace=self.cooldown_base_namespace.format(cooldown_namespace),
         )
+        # время через которое удалить запись из редиса, если кулдаун больше времени, то будет установлено время кулдауна
+        self.default_cooldown_expire_seconds = default_cooldown_expire_seconds
 
     async def get_user_cooldown_residue(self, user_id: int, cooldown_in_seconds: int) -> float | None:
         cooldown = await self.get_cooldown_start_at(user_id)
@@ -43,7 +50,13 @@ class RedisCooldown:
         return False
 
     async def set_user_cooldown(self, user_id: int, cooldown_in_seconds: int):
-        await self._storage.set(user_id, time.time(), expire=cooldown_in_seconds)
+        cooldown_expire = (
+            cooldown_in_seconds
+            if cooldown_in_seconds > self.default_cooldown_expire_seconds
+            else self.default_cooldown_expire_seconds
+        )
+
+        await self._storage.set(user_id, time.time(), expire=cooldown_expire)
         logger.info(f'Set cooldown for user_id={user_id} at {time.time()}')
 
     async def reset_cooldown(self, user_id: int):

@@ -38,6 +38,11 @@ class SettingsCog(commands.Cog):
         description='Настройки тикетов',
     )
 
+    unban_tickets_subgroup = settings_group.create_subgroup(
+        'unban_tickets',
+        description='Настройка разбана',
+    )
+
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
         self.servicing_posts_settings = ServicingPostsSettingsService()
@@ -240,7 +245,10 @@ class SettingsCog(commands.Cog):
             ephemeral=True,
         )
 
-    @tickets_subgroup.command(name='delete_role', description='Удалить роль для модератора тикетов')
+    @tickets_subgroup.command(
+        name='delete_role',
+        description='Удалить роль для модератора тикетов',
+    )
     async def tickets_delete_role(self, ctx: discord.ApplicationContext, role: discord.Role):
         roles = dynamic_settings.ticket_roles_ids
         if role.id not in roles:
@@ -257,6 +265,19 @@ class SettingsCog(commands.Cog):
             f'Роль {role.mention} убрана из тикетов',
             delete_after=10,
             ephemeral=True,
+        )
+
+    @unban_tickets_subgroup.command(
+        name='moderate_channel',
+        description='Установить канал для модерирования тикетов',
+    )
+    async def unban_tickets_channel_id(self, ctx: discord.ApplicationContext, channel: discord.TextChannel):
+        dynamic_settings.unban_ticket_channel_id = channel.id
+        logger.info(f'{ctx.author}:{ctx.author.id} изменил канал модерирования тикетов {channel.id}')
+        await ctx.respond(
+            f'Канал модерирования тикетов изменен на {channel.mention}',
+            ephemeral=True,
+            delete_after=10,
         )
 
     @settings_group.command(description='Выгрузка настроек')

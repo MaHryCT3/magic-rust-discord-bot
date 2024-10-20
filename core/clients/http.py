@@ -30,12 +30,14 @@ class HTTPClient:
         url: str,
         query: dict | None = None,
         headers: dict | None = None,
+        **kwargs,
     ) -> Response:
         return await self.request(
             url,
             http_method='GET',
             query=query,
             headers=headers,
+            **kwargs,
         )
 
     async def post(

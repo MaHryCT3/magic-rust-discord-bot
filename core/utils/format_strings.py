@@ -13,5 +13,15 @@ def mention_channel(channel_id: int) -> str:
     return f'<#{channel_id}>'
 
 
+def mention_user(user_id: int) -> str:
+    return f'<@{user_id}>'
+
+
 def format_default_time(dt: datetime.datetime) -> str:
+    """28 November 2018 09:01"""
     return f'<t:{int(dt.timestamp())}>'
+
+
+def format_relative_time(timestamp: int) -> str:
+    """3 years ago"""
+    return f'<t:{timestamp}:R>'

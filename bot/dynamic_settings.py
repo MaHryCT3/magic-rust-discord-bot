@@ -38,6 +38,8 @@ class DynamicSettings(BaseRedisSettings):
     ticket_category_id: CategoryId = SettingValue(default=0)
     ticket_history_channel_id: ChannelId = SettingValue(default=0)
     ticket_roles_ids: list[RoleId] = SettingValue(default_factory=list)
+    # Тикеты на разбан
+    unban_ticket_channel_id: ChannelId = SettingValue(default=0)
 
     @property
     def reverse_locale_roles(self) -> dict[RoleId, LocaleEnum]:

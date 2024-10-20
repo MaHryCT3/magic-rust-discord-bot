@@ -21,6 +21,7 @@ all_apps = [
     'news_reposts',
     'reports',
     'tickets',
+    'unban_tickets',
     'users',
     'servicing_posts',
 ]
