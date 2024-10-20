@@ -31,7 +31,7 @@ class UnbanTicketEmbed(discord.Embed):
     def set_reviewed_by(self, reviewed_by: discord.User) -> Self:
         return self.set_footer(
             text=reviewed_by.name,
-            icon_url=reviewed_by.avatar.url,
+            icon_url=getattr(reviewed_by.avatar, 'url', None),
         )
 
     @classmethod
@@ -47,7 +47,7 @@ class UnbanTicketEmbed(discord.Embed):
         embed = cls(color=UNBAN_TICKET_COLOR, timestamp=reviewed_at)
         embed.set_author(
             name=user.name,
-            icon_url=user.avatar.url,
+            icon_url=getattr(user.avatar, 'url', None),
         )
         embed.add_field(name='SteamID', value=steam_id)
         embed.add_field(name='Причина', value=reason)
