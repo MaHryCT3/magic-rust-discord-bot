@@ -1,6 +1,8 @@
+import datetime
 import logging
 import time
 
+from bot.config import settings
 from core.clients.async_redis import AsyncRedisNameSpace
 from core.localization import LocaleEnum
 
@@ -44,15 +46,17 @@ class RedisCooldown:
         cooldown = await self._storage.get(user_id)
         return cooldown
 
-    async def is_user_on_cooldown(self, user_id: int) -> bool:
-        if await self._storage.get(user_id):
-            return True
-        return False
+    async def is_user_on_cooldown(self, user_id: int, cooldown_in_seconds: int) -> bool:
+        cooldown_end_at = await self.get_cooldown_end_at(user_id, cooldown_in_seconds)
+        now_time = datetime.datetime.now(tz=settings.TIMEZONE).timestamp()
+        if cooldown_end_at and now_time > cooldown_end_at:
+            return False
+        return True
 
     async def set_user_cooldown(self, user_id: int, cooldown_in_seconds: int):
         cooldown_expire = (
             cooldown_in_seconds
-            if cooldown_in_seconds > self.default_cooldown_expire_seconds
+            if self.default_cooldown_expire_seconds > cooldown_in_seconds
             else self.default_cooldown_expire_seconds
         )
 
@@ -98,8 +102,11 @@ class RedisLocaleCooldown:
     async def get_cooldown_start_at(self, user_id: int, locale: LocaleEnum) -> float | None:
         return await self._cooldown_map[locale].get_cooldown_start_at(user_id=user_id)
 
-    async def is_user_on_cooldown(self, user_id: int, locale: LocaleEnum) -> bool:
-        return await self._cooldown_map[locale].is_user_on_cooldown(user_id)
+    async def is_user_on_cooldown(self, user_id: int, locale: LocaleEnum, cooldown_in_seconds: int) -> bool:
+        return await self._cooldown_map[locale].is_user_on_cooldown(
+            user_id,
+            cooldown_in_seconds=cooldown_in_seconds,
+        )
 
     async def set_user_cooldown(self, user_id: int, locale: LocaleEnum, cooldown_in_seconds: int):
         await self._cooldown_map[locale].set_user_cooldown(

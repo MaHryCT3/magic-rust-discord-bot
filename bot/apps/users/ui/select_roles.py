@@ -64,7 +64,10 @@ class SelectRoleButton(discord.ui.Button):
         await interaction.respond(answer, ephemeral=True, delete_after=15)
 
     async def _check_on_cooldown(self, interaction: Interaction) -> bool:
-        if await select_role_cooldown.is_user_on_cooldown(interaction.user.id):
+        if await select_role_cooldown.is_user_on_cooldown(
+            interaction.user.id,
+            cooldown_in_seconds=SELECT_ROLE_COOLDOWN_SECOND,
+        ):
             await interaction.respond(
                 "Вы недавно уже выбирали роль, попробуйте позже.\n"
                 "You've already selected a role recently, try again later.",
