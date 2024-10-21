@@ -56,7 +56,7 @@ class RedisCooldown:
     async def set_user_cooldown(self, user_id: int, cooldown_in_seconds: int):
         cooldown_expire = (
             cooldown_in_seconds
-            if self.default_cooldown_expire_seconds > cooldown_in_seconds
+            if cooldown_in_seconds > self.default_cooldown_expire_seconds
             else self.default_cooldown_expire_seconds
         )
 
