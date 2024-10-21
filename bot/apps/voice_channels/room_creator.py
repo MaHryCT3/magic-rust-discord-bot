@@ -2,7 +2,10 @@ from discord import Member, PermissionOverwrite, VoiceChannel, VoiceState
 from discord.ext import commands
 
 from bot.apps.voice_channels.constants import CREATE_VOICE_COOLDOWN_NAMESPACE
-from bot.apps.voice_channels.control_panel.embeds import ControlPanelEmbed
+from bot.apps.voice_channels.control_panel.embeds import (
+    ControlPanelImageEmbed,
+    ControlPanelTextEmbed,
+)
 from bot.apps.voice_channels.control_panel.views import ControlPanelView
 from bot.apps.voice_channels.embeds import RoomCreationCooldownEmbed
 from bot.apps.voice_channels.exceptions import (
@@ -62,7 +65,10 @@ class RoomCreator(commands.Cog):
         permissions.set_voice_channel_status = True
         await new_channel.set_permissions(member, overwrite=permissions)
         await new_channel.send(
-            embed=ControlPanelEmbed.build(locale=locale),
+            embeds=[
+                ControlPanelImageEmbed.build(locale=locale),
+                ControlPanelTextEmbed.build(locale=locale),
+            ],
             view=ControlPanelView(locale=locale, voice_channel=new_channel),
         )
 

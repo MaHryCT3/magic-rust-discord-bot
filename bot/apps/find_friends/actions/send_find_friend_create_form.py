@@ -18,9 +18,9 @@ class ResendFindFriendCreateForm(AbstractAction):
     channel: discord.TextChannel
 
     _last_form_message_redis_key_template = 'find_friend_form:{locale}'
-    _title_localization = {
-        LocaleEnum.ru: 'Чтобы создать заявку, жмите кнопку👇',
-        LocaleEnum.en: 'Create find friend form👇',
+    _localization_image = {
+        LocaleEnum.ru: 'https://i.imgur.com/9pQ2Nix.jpeg',
+        LocaleEnum.en: 'https://i.imgur.com/bCSJetE.jpeg',
     }
 
     @cached_property
@@ -47,8 +47,7 @@ class ResendFindFriendCreateForm(AbstractAction):
     def _get_embed(self) -> discord.Embed:
         return discord.Embed(
             color=discord.Color.dark_purple(),
-            title=self._title_localization[self.locale],
-        )
+        ).set_image(url=self._localization_image[self.locale])
 
     async def _delete_previous_message(self):
         last_message_id = self._redis.get(self.last_message_redis_key)
