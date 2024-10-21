@@ -80,7 +80,11 @@ class FindFriendModal(BaseLocalizationModal):
         self.locale = locale
 
     async def callback(self, interaction: Interaction):
-        if await find_friend_cooldown.is_user_on_cooldown(interaction.user.id, self.locale):
+        if await find_friend_cooldown.is_user_on_cooldown(
+            interaction.user.id,
+            self.locale,
+            cooldown_in_seconds=dynamic_settings.find_friend_cooldown,
+        ):
             raise
 
         is_have_urls = self._clear_url_from_inputs()
