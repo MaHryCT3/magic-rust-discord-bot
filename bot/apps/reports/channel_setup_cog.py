@@ -26,11 +26,11 @@ class ChannelSetupCog(commands.Cog):
 
     image_embed_localization: dict[LocaleEnum, discord.Embed] = {
         LocaleEnum.ru: discord.Embed(
-            image='https://i.imgur.com/A9iqjxG.jpeg',
+            image='https://i.imgur.com/XRKJqQe.jpeg',
             colour=MAIN_COLOR,
         ),
         LocaleEnum.en: discord.Embed(
-            image='https://i.imgur.com/6tyie7P.jpeg',
+            image='https://i.imgur.com/i8q7KAf.jpeg',
             colour=MAIN_COLOR,
         ),
     }

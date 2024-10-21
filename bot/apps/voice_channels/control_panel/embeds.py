@@ -4,13 +4,17 @@ from bot.constants import MAIN_COLOR
 from core.localization import LocaleEnum, LocalizationDict
 
 
-class ControlPanelEmbed(discord.Embed):
-    title_localization = LocalizationDict(
-        {
-            LocaleEnum.en: 'Channel control panel',
-            LocaleEnum.ru: 'Панель управления каналом',
-        }
-    )
+class ControlPanelImageEmbed(discord.Embed):
+    image_localization = {
+        LocaleEnum.en: 'https://i.imgur.com/ApQ9szo.jpeg',
+        LocaleEnum.ru: 'https://i.imgur.com/cSCDDBP.jpeg',
+    }
+    title_localization = {
+        LocaleEnum.ru: 'Вы можете настроить канал используя обычные настройки дискорда. '
+        'Указать лимит, переименовать канал и так далее',
+        LocaleEnum.en: 'You can customize the channel using the default discord settings. '
+        'Specify a limit, rename the channel, etc.',
+    }
 
     @classmethod
     def build(
@@ -18,7 +22,24 @@ class ControlPanelEmbed(discord.Embed):
         locale: LocaleEnum,
     ):
         embed = cls(color=MAIN_COLOR)
-        embed.title = cls.title_localization[locale]
+        embed.set_image(url=cls.image_localization[locale])
+        return embed
+
+
+class ControlPanelTextEmbed(discord.Embed):
+    title_localization = {
+        LocaleEnum.ru: 'Вы можете настроить канал используя обычные настройки дискорда. '
+        'Указать лимит, переименовать канал и так далее',
+        LocaleEnum.en: 'You can customize the channel using the default discord settings. '
+        'Specify a limit, rename the channel, etc.',
+    }
+
+    @classmethod
+    def build(
+        cls,
+        locale: LocaleEnum,
+    ):
+        embed = cls(color=MAIN_COLOR, title=cls.title_localization[locale])
         return embed
 
 
