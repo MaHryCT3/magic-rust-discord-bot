@@ -49,9 +49,9 @@ class RedisCooldown:
     async def is_user_on_cooldown(self, user_id: int, cooldown_in_seconds: int) -> bool:
         cooldown_end_at = await self.get_cooldown_end_at(user_id, cooldown_in_seconds)
         now_time = datetime.datetime.now(tz=settings.TIMEZONE).timestamp()
-        if cooldown_end_at and now_time > cooldown_end_at:
-            return False
-        return True
+        if cooldown_end_at and cooldown_end_at > now_time:
+            return True
+        return False
 
     async def set_user_cooldown(self, user_id: int, cooldown_in_seconds: int):
         cooldown_expire = (
