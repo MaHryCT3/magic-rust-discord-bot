@@ -65,6 +65,7 @@ class RoomCreator(commands.Cog):
         permissions.set_voice_channel_status = True
         await new_channel.set_permissions(member, overwrite=permissions)
         await new_channel.send(
+            member.mention,
             embeds=[
                 ControlPanelImageEmbed.build(locale=locale),
                 ControlPanelTextEmbed.build(locale=locale),
