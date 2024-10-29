@@ -30,7 +30,16 @@ class CommandsUnbanTicketsCog(Cog):
         ),
         contexts={discord.InteractionContextType.guild},
     )
-
+    image_embed_localization = {
+        LocaleEnum.ru: discord.Embed(
+            color=MAIN_COLOR,
+            image='https://i.imgur.com/JG4n7j0.jpeg',
+        ),
+        LocaleEnum.en: discord.Embed(
+            color=MAIN_COLOR,
+            image='https://i.imgur.com/IY6FSdd.jpeg',
+        ),
+    }
     embed_localization = {
         LocaleEnum.ru: discord.Embed(
             title='Заявка на разбан',
@@ -54,10 +63,11 @@ class CommandsUnbanTicketsCog(Cog):
 
     @unban_ticket_group.command()
     async def spawn_message(self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum)):
+        image_embed = self.image_embed_localization[locale]
         embed = self.embed_localization[locale]
         view = CreateUnbanTicketView(locale=locale)
 
-        await ctx.send(view=view, embeds=[embed])
+        await ctx.send(view=view, embeds=[image_embed, embed])
 
     @unban_ticket_group.command()
     async def approve(self, ctx: discord.ApplicationContext, user: discord.User):
