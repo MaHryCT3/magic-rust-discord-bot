@@ -9,12 +9,6 @@ class ControlPanelImageEmbed(discord.Embed):
         LocaleEnum.en: 'https://i.imgur.com/ApQ9szo.jpeg',
         LocaleEnum.ru: 'https://i.imgur.com/cSCDDBP.jpeg',
     }
-    title_localization = {
-        LocaleEnum.ru: 'Вы можете настроить канал используя обычные настройки дискорда. '
-        'Указать лимит, переименовать канал и так далее',
-        LocaleEnum.en: 'You can customize the channel using the default discord settings. '
-        'Specify a limit, rename the channel, etc.',
-    }
 
     @classmethod
     def build(
@@ -28,7 +22,7 @@ class ControlPanelImageEmbed(discord.Embed):
 
 class ControlPanelTextEmbed(discord.Embed):
     title_localization = {
-        LocaleEnum.ru: 'Вы можете настроить канал используя обычные настройки дискорда. '
+        LocaleEnum.ru: 'Вы можете настроить канал, используя обычные настройки дискорда. '
         'Указать лимит, переименовать канал и так далее',
         LocaleEnum.en: 'You can customize the channel using the default discord settings. '
         'Specify a limit, rename the channel, etc.',
