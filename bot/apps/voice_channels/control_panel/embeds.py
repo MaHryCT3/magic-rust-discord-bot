@@ -10,7 +10,7 @@ class ControlPanelImageEmbed(discord.Embed):
         LocaleEnum.ru: 'https://i.imgur.com/cSCDDBP.jpeg',
     }
     title_localization = {
-        LocaleEnum.ru: 'Вы можете настроить канал используя обычные настройки дискорда. '
+        LocaleEnum.ru: 'Вы можете настроить канал, используя обычные настройки дискорда. '
         'Указать лимит, переименовать канал и так далее',
         LocaleEnum.en: 'You can customize the channel using the default discord settings. '
         'Specify a limit, rename the channel, etc.',
