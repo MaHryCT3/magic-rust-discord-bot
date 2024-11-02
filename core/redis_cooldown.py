@@ -28,7 +28,7 @@ class RedisCooldown:
 
     async def get_user_cooldown_residue(self, user_id: int, cooldown_in_seconds: int) -> float | None:
         cooldown = await self.get_cooldown_start_at(user_id)
-        if not cooldown:
+        if not self._is_on_cooldown(cooldown, cooldown_in_seconds):
             return None
 
         cooldown_residue = (cooldown + cooldown_in_seconds) - time.time()
@@ -38,9 +38,9 @@ class RedisCooldown:
 
     async def get_cooldown_end_at(self, user_id: int, cooldown_in_seconds: int) -> float | None:
         cooldown = await self.get_cooldown_start_at(user_id)
-        if not cooldown:
+        if not self._is_on_cooldown(cooldown, cooldown_in_seconds):
             return None
-        return cooldown + cooldown_in_seconds
+        return cooldown
 
     async def get_cooldown_start_at(self, user_id: int) -> float | None:
         cooldown = await self._storage.get(user_id)
@@ -48,10 +48,7 @@ class RedisCooldown:
 
     async def is_user_on_cooldown(self, user_id: int, cooldown_in_seconds: int) -> bool:
         cooldown_end_at = await self.get_cooldown_end_at(user_id, cooldown_in_seconds)
-        now_time = datetime.datetime.now(tz=settings.TIMEZONE).timestamp()
-        if cooldown_end_at and cooldown_end_at > now_time:
-            return True
-        return False
+        return bool(cooldown_end_at)
 
     async def set_user_cooldown(self, user_id: int, cooldown_in_seconds: int):
         cooldown_expire = (
@@ -66,6 +63,15 @@ class RedisCooldown:
     async def reset_cooldown(self, user_id: int):
         await self._storage.delete(user_id)
         logger.info(f'Cooldown for {user_id} has been reset manual')
+
+    def _is_on_cooldown(self, cooldown_start: float | None, cooldown_in_seconds: int) -> bool:
+        if not cooldown_start:
+            return False
+        now_time = datetime.datetime.now(tz=settings.TIMEZONE).timestamp()
+        end_at = cooldown_start + cooldown_in_seconds
+        if end_at > now_time:
+            return True
+        return False
 
 
 class RedisLocaleCooldown:
