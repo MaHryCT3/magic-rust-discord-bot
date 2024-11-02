@@ -40,7 +40,7 @@ class RedisCooldown:
         cooldown = await self.get_cooldown_start_at(user_id)
         if not self._is_on_cooldown(cooldown, cooldown_in_seconds):
             return None
-        return cooldown
+        return cooldown + cooldown_in_seconds
 
     async def get_cooldown_start_at(self, user_id: int) -> float | None:
         cooldown = await self._storage.get(user_id)
