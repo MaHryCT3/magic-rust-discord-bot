@@ -1,7 +1,7 @@
 from enum import IntEnum, StrEnum
 from typing import Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from core.utils.date_time import WeekDay
 
@@ -49,6 +49,13 @@ class FullServerData(BaseModel):
     lastupdate: int
     num: int
 
+    @field_validator('players', 'joining', 'queue', 'maxplayers', 'sleepers')
+    @classmethod
+    def set_default_0(cls, value, _) -> int:
+        if not value:
+            return 0
+        return value
+
 
 class MonitoringServerData(BaseModel):
     ip: str
@@ -58,6 +65,13 @@ class MonitoringServerData(BaseModel):
     joining: int
     queue: int
     maxplayers: int
+
+    @field_validator('players', 'joining', 'queue', 'maxplayers', mode='before')
+    @classmethod
+    def set_default_0(cls, value, _) -> int:
+        if not value:
+            return 0
+        return value
 
 
 class CombinedServerData(FullServerData, MonitoringServerData):

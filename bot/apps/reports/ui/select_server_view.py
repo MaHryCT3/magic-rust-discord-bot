@@ -36,7 +36,7 @@ class ServersSelect(discord.ui.Select):
             discord.SelectOption(
                 label=server.title,
             )
-            for server in self.servers
+            for server in self.servers[:25]
         ]
 
     async def callback(self, interaction: Interaction):
