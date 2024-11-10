@@ -8,7 +8,7 @@ from bot.apps.reports.errors import UserReportCooldownError
 from bot.apps.reports.services.cooldowns import report_cooldown
 from bot.apps.reports.services.report_sender import ChatTypes, ReportVKSender
 from core.api_clients.magic_rust import (
-    MonitoringServerData,
+    CombinedServerData,
     ServerTypes,
     get_only_server_name_from_title,
 )
@@ -55,7 +55,7 @@ class BaseReportModal(BaseLocalizationModal):
         LocaleEnum.ru: 'Жалоба отправлена. Спасибо за обращение',
     }
 
-    def __init__(self, *args, server: MonitoringServerData, **kwargs):
+    def __init__(self, *args, server: CombinedServerData, **kwargs):
         self.server = server
         super().__init__(*args, **kwargs)
         self.server_short_name = get_only_server_name_from_title(server.title)
