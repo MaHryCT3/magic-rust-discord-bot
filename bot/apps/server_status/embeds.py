@@ -1,3 +1,5 @@
+from collections.abc import Iterable
+
 import discord
 
 from core.api_clients.magic_rust import CombinedServerData
@@ -42,3 +44,7 @@ class ServerInfoEmbed(discord.Embed):
             {server_data.players}/{server_data.maxplayers}\n\
             {self.wipe_label_localization[locale]}{day_name(server_data.wipeday, locale)}',
         )
+
+    def add_servers(self, servers_data: Iterable[CombinedServerData], locale: LocaleEnum):
+        for server in servers_data:
+            self.add_server(server, locale=locale)
