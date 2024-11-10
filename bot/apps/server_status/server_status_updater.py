@@ -52,11 +52,19 @@ class ServerStatusUpdater(commands.Cog):
                 logger.warning('Server status image not loaded')
             else:
                 image_binary = BytesIO(image_bytes)
+
+                file = File(image_binary, filename='server_status.png')
                 if not last_message or not last_message.attachments:
                     await channel.send(
-                        file=File(image_binary, filename='server_status.png'),
+                        file=file,
                         view=self.filter_view_localization[locale],
                     )
                 else:
-                    await last_message.edit(file=File(image_binary, filename='server_status.png'), attachments=[])
+                    await last_message.edit(
+                        file=file,
+                        attachments=[],
+                    )
                 image_binary.close()
+
+
+#

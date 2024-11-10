@@ -1,3 +1,4 @@
+import itertools
 from enum import StrEnum
 from typing import Self
 
@@ -49,9 +50,8 @@ class ServerFilterView(discord.ui.View):
         self.map: str | None = None
 
     async def update(self, interaction: discord.Interaction):
-        servers_data: list[FullServerData] = await MagicRustServerDataAPI().get_combined_servers_data()
+        servers_data = await MagicRustServerDataAPI().get_combined_servers_data()
         servers_data.sort(key=lambda item: item.num)
-        server_info_embed = ServerInfoEmbed()
         filtered_servers_data = [
             server_data for server_data in servers_data if self._is_server_satisfying_filter(server_data)
         ]
@@ -59,8 +59,13 @@ class ServerFilterView(discord.ui.View):
         if not filtered_servers_data:
             await interaction.response.edit_message(embeds=[], files=[], attachments=[], view=self)
             return
-        for server_data in filtered_servers_data:
-            server_info_embed.add_server(server_data, self.locale)
+
+        embeds = []
+        # 25 ограничение полей в ембедах
+        for server_datas in itertools.batched(filtered_servers_data, 25):
+            embed = ServerInfoEmbed()
+            embed.add_servers(server_datas, locale=self.locale)
+            embeds.append(embed)
 
         self.availible_gms = {
             server_data.gm
@@ -84,7 +89,7 @@ class ServerFilterView(discord.ui.View):
             if self._is_server_satisfying_filter(server_data, exclude=self.FilterFields.MAP)
         }
         self._set_availible_selects()
-        await interaction.response.edit_message(embed=server_info_embed, files=[], attachments=[], view=self)
+        await interaction.response.edit_message(embeds=embeds, files=[], attachments=[], view=self)
 
     def _is_server_satisfying_filter(self, server_data: FullServerData, exclude: FilterFields | None = None) -> bool:
         return (
