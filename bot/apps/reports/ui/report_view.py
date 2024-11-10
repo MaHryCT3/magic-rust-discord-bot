@@ -7,19 +7,17 @@ from discord.ui import Item
 from bot.apps.reports.constants import REPORT_COOLDOWN
 from bot.apps.reports.errors import ReportsError, UserReportCooldownError
 from bot.apps.reports.services.cooldowns import report_cooldown
-from bot.apps.reports.ui.select_server_view import (
-    SelectCheaterReportServerView,
-    SelectLimitReportServerView,
+from bot.apps.reports.ui.server_select_view import (
+    BaseServerSelectView,
+    CheaterServerSelectView,
+    LimitServerSelectView,
 )
-from core.api_clients.magic_rust import (
-    MagicRustServerDataAPI,
-    sort_monitoring_server_data_by_server_number,
-)
+from core.api_clients.magic_rust import MagicRustServerDataAPI
 from core.localization import LocaleEnum, LocalizationDict
 
 
 class BaseReportButton(discord.ui.Button):
-    select_view_class: type[discord.ui.View]
+    select_view_class: type[BaseServerSelectView]
     button_name: str
     localization_text_map: dict[LocaleEnum, str]
     style: discord.ButtonStyle
@@ -47,8 +45,7 @@ class BaseReportButton(discord.ui.Button):
         ):
             raise UserReportCooldownError(cooldown_end_timestamp=cooldown_end_at, locale=self.locale)
 
-        servers_data = await MagicRustServerDataAPI().get_monitoring_servers_data()
-        sort_monitoring_server_data_by_server_number(servers_data)
+        servers_data = await MagicRustServerDataAPI().get_combined_servers_data()
 
         select_server_view = self.select_view_class(servers_data, self.locale)
         await interaction.respond(
@@ -60,7 +57,7 @@ class BaseReportButton(discord.ui.Button):
 
 
 class CheaterReportButton(BaseReportButton):
-    select_view_class = SelectCheaterReportServerView
+    select_view_class = CheaterServerSelectView
     button_name = 'cheater'
     localization_text_map: dict[LocaleEnum, str] = {
         LocaleEnum.en: 'Report cheater',
@@ -70,7 +67,7 @@ class CheaterReportButton(BaseReportButton):
 
 
 class LimitReportButton(BaseReportButton):
-    select_view_class = SelectLimitReportServerView
+    select_view_class = LimitServerSelectView
     button_name = 'limit'
     localization_text_map: dict[LocaleEnum, str] = {
         LocaleEnum.en: 'Report players limit violations',

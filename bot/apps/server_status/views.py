@@ -96,15 +96,15 @@ class ServerFilterView(discord.ui.View):
 
     def _set_availible_selects(self):
         self.clear_items()
-        if len(self.availible_gms) > 1 or self.gm != None:
+        if len(self.availible_gms) > 1 or self.gm is not None:
             self.gm_select.set_availible_options(self.availible_gms, default=self.gm)
             self.add_item(self.gm_select)
-        if len(self.availible_limits) > 1 or self.limit != None:
+        if len(self.availible_limits) > 1 or self.limit is not None:
             self.limit_select.set_availible_options(self.availible_limits, default=str(self.limit))
             self.add_item(self.limit_select)
-        if len(self.availible_wipedays) > 1 or self.wipeday != None:
+        if len(self.availible_wipedays) > 1 or self.wipeday is not None:
             self.wipeday_select.set_availible_options(self.availible_wipedays, default=str(self.wipeday))
             self.add_item(self.wipeday_select)
-        if len(self.availible_maps) > 1 or self.map != None:
+        if len(self.availible_maps) > 1 or self.map is not None:
             self.map_select.set_availible_options(self.availible_maps, default=self.map)
             self.add_item(self.map_select)
