@@ -27,7 +27,7 @@ class BaseCheck(ABC):
             if ctx.author.guild_permissions.administrator:
                 return True
         elif self.owners_allowed:
-            if ctx.bot.owner_ids:
+            if ctx.user.id in ctx.bot.owner_ids:
                 return True
         return False
 
