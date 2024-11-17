@@ -10,7 +10,7 @@ from bot.apps.tickets.services.opened_tickets import (
     OpenedTicketsService,
     OpenedTicketStruct,
 )
-from bot.apps.tickets.ui.ticket_header import TicketHeaderEmbed
+from bot.apps.tickets.ui.ticket_header.embed import TicketHeaderEmbed
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction

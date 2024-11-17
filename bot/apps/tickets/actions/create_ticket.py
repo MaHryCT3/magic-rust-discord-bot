@@ -5,12 +5,15 @@ from functools import cached_property
 import discord
 
 from bot.apps.tickets.errors import UserAlreadyHaveTicket
+from bot.apps.tickets.overwrites import user_ticket_overwrites
+from bot.apps.tickets.services.channel_name_maker import make_ticket_channel_name
 from bot.apps.tickets.services.opened_tickets import (
     OpenedTicketsService,
     OpenedTicketStruct,
 )
 from bot.apps.tickets.services.ticket_counter import TicketCounter
-from bot.apps.tickets.ui.ticket_header import TicketHeaderEmbed, TicketHeaderView
+from bot.apps.tickets.ui.ticket_header.embed import TicketHeaderEmbed
+from bot.apps.tickets.ui.ticket_header.view import TicketHeaderView
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction
@@ -72,23 +75,18 @@ class CreateTicketAction(AbstractAction[discord.TextChannel]):
         raise AssertionError('Не получилось найти категорию для тикетов')
 
     async def create_ticket_channel(self, category: discord.CategoryChannel, ticket_number: int):
-        room_name = f'ticket-{ticket_number}'
+        room_name = make_ticket_channel_name(ticket_number=ticket_number)
 
-        view_ticket_permission = discord.PermissionOverwrite(
-            view_channel=True,
-            read_message_history=True,
-            send_messages=True,
-        )
         everyone_permission = discord.PermissionOverwrite(
             view_channel=False,
         )
 
         overwrites = {
             self.guild.default_role: everyone_permission,
-            self.member: view_ticket_permission,
+            self.member: user_ticket_overwrites,
         }
         for ticket_moderator_role in self.tickets_moderators_roles:
-            overwrites[ticket_moderator_role] = view_ticket_permission
+            overwrites[ticket_moderator_role] = user_ticket_overwrites
 
         channel = await self.guild.create_text_channel(
             name=room_name,

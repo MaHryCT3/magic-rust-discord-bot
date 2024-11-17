@@ -1,26 +1,28 @@
 import discord
 from discord.commands import SlashCommandGroup
+from discord.ext import commands, tasks
 from discord.ext.commands import Cog
 
+from bot.apps.tickets.actions.close_resolved_tickets import CloseResolvedTicketsAction
+from bot.apps.tickets.actions.mark_ticket_as_resolved import MarkTicketAsResolvedAction
 from bot.apps.tickets.errors import TicketError
 from bot.apps.tickets.services.opened_tickets import OpenedTicketsService
-from bot.apps.tickets.ui import MakeTicketView
-from bot.apps.tickets.ui.ticket_header import TicketHeaderView
+from bot.apps.tickets.ui.make_ticket import MakeTicketView
+from bot.apps.tickets.ui.resolve_ticket.views import ResolveTicketView
+from bot.apps.tickets.ui.ticket_header.view import TicketHeaderView
 from bot.bot import MagicRustBot
 from bot.config import settings
 from bot.constants import MAIN_COLOR
-from core.checks import is_owner
+from bot.dynamic_settings import dynamic_settings
+from core.checks import DynamicSpecificRoleCheck, is_owner
 from core.localization import LocaleEnum
+from core.utils.decorators import suppress_exceptions
 
 
 class CommandsTicketsCog(Cog):
     ticket_group = SlashCommandGroup(
         name='ticket',
         checks=[is_owner(settings.DISCORD_OWNER_IDS)],
-        default_member_permissions=discord.Permissions(
-            administrator=True,
-            ban_members=True,
-        ),
         contexts={discord.InteractionContextType.guild},
     )
     image_embed_localization: dict[LocaleEnum, discord.Embed] = {
@@ -36,15 +38,24 @@ class CommandsTicketsCog(Cog):
 
     def __init__(self, bot: MagicRustBot):
         self.bot = bot
+        self.guild = None
 
     @Cog.listener()
     async def on_ready(self):
-        for view in MakeTicketView.all_locales_init():
-            self.bot.add_view(view)
-        for view in TicketHeaderView.all_locales_init():
-            self.bot.add_view(view)
+        for locale in LocaleEnum:
+            self.bot.add_view(ResolveTicketView(locale=locale))
+            self.bot.add_view(TicketHeaderView(locale=locale))
+            self.bot.add_view(MakeTicketView(locale=locale))
+
+        if guild := self.bot.get_main_guild():
+            self.guild = guild
+        else:
+            self.guild = self.bot.fetch_main_guild()
+
+        self.close_resolved_tickets.start()
 
     @ticket_group.command(description='Создать сообщение для создания тикетов')
+    @commands.has_permissions(administrator=True)
     async def spawn_ticket(self, ctx: discord.ApplicationContext, locale: discord.Option(LocaleEnum)):
         image_embed = self.image_embed_localization[locale]
         view = MakeTicketView(locale)
@@ -52,6 +63,7 @@ class CommandsTicketsCog(Cog):
         await ctx.send(view=view, embeds=[image_embed])
 
     @ticket_group.command()
+    @commands.has_permissions(administrator=True)
     async def remove_ticket(self, ctx: discord.ApplicationContext, member: discord.Member):
         ticket_service = OpenedTicketsService()
         ticket = await ticket_service.get_user_ticket_by_user_id(member.id)
@@ -59,6 +71,25 @@ class CommandsTicketsCog(Cog):
             return await ctx.respond(f'Не найдено тикета у {member.mention}', ephemeral=True)
         await ticket_service.delete_user_ticket(ticket)
         await ctx.respond(f'Запись о тикете удалена для {member.mention}', ephemeral=True)
+
+    @ticket_group.command()
+    @commands.check(DynamicSpecificRoleCheck(lambda: dynamic_settings.ticket_roles_ids))
+    async def resolve(self, ctx: discord.ApplicationContext):
+        action = MarkTicketAsResolvedAction(
+            resolved_by=ctx.author,
+            channel=ctx.channel,
+        )
+        await action.execute()
+        await ctx.respond(
+            'Вопрос помечен как решенный, автор не сможет отправлять сообщения, пока не нажмет "Вопрос не решен"',
+            delete_after=20,
+            ephemeral=True,
+        )
+
+    @tasks.loop(minutes=5)
+    @suppress_exceptions
+    async def close_resolved_tickets(self):
+        await CloseResolvedTicketsAction(self.guild).execute()
 
     async def cog_command_error(self, ctx: discord.ApplicationContext, error: TicketError):
         if isinstance(error, TicketError):

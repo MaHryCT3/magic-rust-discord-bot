@@ -1,5 +1,3 @@
-from typing import Self
-
 import discord
 from discord import Interaction
 
@@ -33,10 +31,6 @@ class MakeTicketView(discord.ui.View):
     async def make_report_button_callback(self, interaction: discord.Interaction):
         modal = MakeTicketModal(locale=self.locale)
         await interaction.response.send_modal(modal)
-
-    @classmethod
-    def all_locales_init(cls) -> list[Self]:
-        return [cls(locale=locale) for locale in LocaleEnum]
 
 
 class MakeTicketModal(BaseLocalizationModal):
