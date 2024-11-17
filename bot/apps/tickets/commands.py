@@ -11,10 +11,9 @@ from bot.apps.tickets.ui.make_ticket import MakeTicketView
 from bot.apps.tickets.ui.resolve_ticket.views import ResolveTicketView
 from bot.apps.tickets.ui.ticket_header.view import TicketHeaderView
 from bot.bot import MagicRustBot
-from bot.config import settings
 from bot.constants import MAIN_COLOR
 from bot.dynamic_settings import dynamic_settings
-from core.checks import DynamicSpecificRoleCheck, is_owner
+from core.checks import DynamicSpecificRoleCheck
 from core.localization import LocaleEnum
 from core.utils.decorators import suppress_exceptions
 
@@ -22,7 +21,7 @@ from core.utils.decorators import suppress_exceptions
 class CommandsTicketsCog(Cog):
     ticket_group = SlashCommandGroup(
         name='ticket',
-        checks=[is_owner(settings.DISCORD_OWNER_IDS)],
+        checks=[],
         contexts={discord.InteractionContextType.guild},
     )
     image_embed_localization: dict[LocaleEnum, discord.Embed] = {
