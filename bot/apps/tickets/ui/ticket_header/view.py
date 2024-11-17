@@ -1,5 +1,3 @@
-from typing import Self
-
 import discord
 
 from bot.apps.tickets.actions.close_ticket import CloseTicketAction
@@ -32,7 +30,3 @@ class TicketHeaderView(discord.ui.View):
         await interaction.response.edit_message(view=self)
 
         await CloseTicketAction(interaction.channel, interaction.user).execute()
-
-    @classmethod
-    def all_locales_init(cls) -> list[Self]:
-        return [cls(locale=locale) for locale in LocaleEnum]

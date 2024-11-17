@@ -2,9 +2,10 @@ from typing import Any, NoReturn
 
 import discord
 import sentry_sdk
-from discord import ApplicationContext, DiscordException
+from discord import ApplicationContext, CheckFailure, DiscordException
 from discord.bot import Bot
 
+from bot.apps.users.utils import get_member_locale
 from bot.config import settings
 from bot.dynamic_settings import CategoryId, dynamic_settings
 from core.localization import LocaleEnum
@@ -63,6 +64,19 @@ class MagicRustBot(Bot):
         return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)
 
     async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
+        if isinstance(exception, CheckFailure):
+            locale = get_member_locale(context.user) or LocaleEnum.ru
+            error_map = {
+                LocaleEnum.en: "You can't use this command😞",
+                LocaleEnum.ru: 'Вы не можете использовать эту команду😞',
+            }
+            await context.respond(
+                error_map[locale],
+                ephemeral=True,
+                delete_after=20,
+            )
+            return
+
         await super().on_application_command_error(context, exception)
         sentry_sdk.capture_exception(exception)
 

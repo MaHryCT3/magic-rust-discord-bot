@@ -19,6 +19,7 @@ class OpenedTicketStruct:
     ticket_number: int
     user_steam: str
     description: str
+    resolved_at: datetime.datetime | None = None
 
 
 class OpenedTicketsService:
@@ -48,8 +49,13 @@ class OpenedTicketsService:
         await self._storage_ticket.delete(ticket.channel_id)
         await self._user_to_channel.delete(ticket.user_id)
 
+    async def get_all_tickets(self) -> list[OpenedTicketStruct]:
+        data = await self._storage_ticket.mget_by_pattern(pattern='*')
+        return [self._to_struct(item) for item in data]
+
     @staticmethod
     def _to_struct(raw_data: dict) -> OpenedTicketStruct:
+        resolved_at = raw_data.get('resolved_at')
         return OpenedTicketStruct(
             user_id=int(raw_data['user_id']),
             channel_id=int(raw_data['channel_id']),
@@ -58,4 +64,5 @@ class OpenedTicketsService:
             created_at=datetime.datetime.fromisoformat(raw_data['created_at']),
             user_steam=raw_data['user_steam'],
             description=raw_data['description'],
+            resolved_at=datetime.datetime.fromisoformat(resolved_at) if resolved_at else None,
         )
