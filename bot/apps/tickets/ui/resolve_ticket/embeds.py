@@ -20,7 +20,7 @@ class ResolveTicketEmbed(discord.Embed):
     }
 
     footer_localization: dict[LocaleEnum, str] = {
-        LocaleEnum.ru: f'Тикет автоматически закроется через {HOURS_TO_CLOSE_TICKET_MARK_AS_RESOLVED} часов',
+        LocaleEnum.ru: f'Тикет автоматически закроется через {HOURS_TO_CLOSE_TICKET_MARK_AS_RESOLVED} час',
         LocaleEnum.en: f'The ticket will automatically close after {HOURS_TO_CLOSE_TICKET_MARK_AS_RESOLVED} hours',
     }
 
