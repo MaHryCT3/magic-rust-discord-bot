@@ -140,8 +140,9 @@ class MapSelect(BaseFilterSelect):
             discord.SelectOption(label='-', value=EmptyEnum.EMPTY),
             discord.SelectOption(label=Maps.PRECEDURAL_PLUS),
             discord.SelectOption(label=Maps.BARREN_PLUS),
+            discord.SelectOption(label=Maps.CUSTOM),
         ]
         return options
 
     def on_value_changed(self, value: str | None):
-        self.filter_view.map = value
+        self.filter_view.map_type = value

@@ -12,7 +12,7 @@ from bot.apps.server_status.select_buttons import (
     MapSelect,
     WipeDaySelect,
 )
-from core.api_clients.magic_rust import FullServerData, MagicRustServerDataAPI
+from core.api_clients.magic_rust import FullServerData, MagicRustServerDataAPI, Maps
 from core.localization import LocaleEnum
 
 
@@ -47,7 +47,7 @@ class ServerFilterView(discord.ui.View):
         self.gm: str | None = None
         self.limit: int | None = None
         self.wipeday: int | None = None
-        self.map: str | None = None
+        self.map_type: Maps | None = None
 
     async def update(self, interaction: discord.Interaction):
         servers_data = await MagicRustServerDataAPI().get_combined_servers_data()
@@ -84,7 +84,7 @@ class ServerFilterView(discord.ui.View):
             if self._is_server_satisfying_filter(server_data, exclude=self.FilterFields.WIPEDAY)
         }
         self.availible_maps = {
-            server_data.map
+            server_data.map_type
             for server_data in servers_data
             if self._is_server_satisfying_filter(server_data, exclude=self.FilterFields.MAP)
         }
@@ -96,7 +96,7 @@ class ServerFilterView(discord.ui.View):
             (self.gm in (None, server_data.gm) or exclude == self.FilterFields.GM)
             and (self.limit in (None, server_data.limit) or exclude == self.FilterFields.LIMIT)
             and (self.wipeday in (None, server_data.wipeday) or exclude == self.FilterFields.WIPEDAY)
-            and (self.map in (None, server_data.map) or exclude == self.FilterFields.MAP)
+            and (self.map_type in (None, server_data.map_type) or exclude == self.FilterFields.MAP)
         )
 
     def _set_availible_selects(self):
@@ -110,6 +110,6 @@ class ServerFilterView(discord.ui.View):
         if len(self.availible_wipedays) > 1 or self.wipeday is not None:
             self.wipeday_select.set_availible_options(self.availible_wipedays, default=str(self.wipeday))
             self.add_item(self.wipeday_select)
-        if len(self.availible_maps) > 1 or self.map is not None:
-            self.map_select.set_availible_options(self.availible_maps, default=self.map)
+        if len(self.availible_maps) > 1 or self.map_type is not None:
+            self.map_select.set_availible_options(self.availible_maps, default=self.map_type)
             self.add_item(self.map_select)

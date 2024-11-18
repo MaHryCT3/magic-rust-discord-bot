@@ -19,6 +19,7 @@ class LimitEnum(IntEnum):
 class Maps(StrEnum):
     PRECEDURAL_PLUS = 'Procedural Plus'
     BARREN_PLUS = 'Barren Plus'
+    CUSTOM = 'Custom'
 
 
 class GameModeTypes(StrEnum):
@@ -35,7 +36,8 @@ class ServerTypes(StrEnum):
 
 class FullServerData(BaseModel):
     ip: str
-    map: Maps
+    map: str
+    map_type: Maps = Field(validation_alias='map')
     players: int
     sleepers: int
     maxplayers: int
@@ -54,6 +56,13 @@ class FullServerData(BaseModel):
     def set_default_0(cls, value, _) -> int:
         if not value:
             return 0
+        return value
+
+    @field_validator('map_type', mode='before')
+    @classmethod
+    def set_default_map_type_custom(cls, value, _) -> str:
+        if value not in Maps:
+            return Maps.CUSTOM
         return value
 
 
