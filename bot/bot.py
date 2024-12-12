@@ -47,9 +47,6 @@ class MagicRustBot(Bot):
             self.load_extension(app_full_path)
             logger.info(f'app {app_full_path} is loaded')
 
-    def get_main_guild(self) -> discord.Guild | None:
-        return self.get_guild(int(settings.MAGIC_RUST_GUILD_ID))
-
     def get_category(self, category_id: CategoryId) -> discord.CategoryChannel | None:
         for category in self.get_main_guild().categories:
             if category.id == category_id:
@@ -60,8 +57,16 @@ class MagicRustBot(Bot):
         role_id = dynamic_settings.locale_roles[locale]
         return self.get_main_guild().get_role(role_id)
 
-    async def fetch_main_guild(self) -> discord.Guild:
-        return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=True)
+    def get_main_guild(self) -> discord.Guild | None:
+        return self.get_guild(int(settings.MAGIC_RUST_GUILD_ID))
+
+    async def fetch_main_guild(self, with_count: bool = True) -> discord.Guild:
+        return await self.fetch_guild(settings.MAGIC_RUST_GUILD_ID, with_counts=with_count)
+
+    async def get_or_fetch_main_guild(self) -> discord.Guild:
+        if guild := self.get_main_guild():
+            return guild
+        return await self.fetch_main_guild(with_count=False)
 
     async def on_application_command_error(self, context: ApplicationContext, exception: DiscordException) -> None:
         if isinstance(exception, CheckFailure):

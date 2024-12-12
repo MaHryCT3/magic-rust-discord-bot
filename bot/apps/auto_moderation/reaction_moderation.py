@@ -43,7 +43,7 @@ class ReactionModerationCog(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        self.guild = await self.bot.fetch_main_guild()
+        self.guild = await self.bot.get_or_fetch_main_guild()
 
     @Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
