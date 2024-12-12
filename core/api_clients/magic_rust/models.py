@@ -82,6 +82,13 @@ class MonitoringServerData(BaseModel):
             return 0
         return value
 
+    @field_validator('server_type', mode='before')
+    @classmethod
+    def validate_server_type(cls, value, _) -> str:
+        if value in ['main', 'long']:
+            return ServerTypes.OFFICIAL
+        return value
+
 
 class CombinedServerData(FullServerData, MonitoringServerData):
     @classmethod
