@@ -15,6 +15,7 @@ from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction
 from core.logger import logger
+from core.shortcuts import get_or_fetch_member
 
 
 @dataclass
@@ -32,7 +33,7 @@ class CloseTicketAction(AbstractAction):
             raise Exception()
 
         try:
-            ticket_user = await self.channel.guild.fetch_member(ticket.user_id)
+            ticket_user = await get_or_fetch_member(self.channel.guild, ticket.user_id)
         except discord.NotFound:
             # если его например кикнули с канала после создания тикета, то мы его не найдем
             ticket_user = None
@@ -52,14 +53,15 @@ class CloseTicketAction(AbstractAction):
         # удаляем запись из редиса о тикете
         await self._opened_tickets.delete_user_ticket(ticket)
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(2.5)
         await self.channel.delete(reason='Ticket closed')
 
         # отправляем пользователю историю тикета
-        try:
-            await self._send_ticket_to_member(ticket, ticket_user, exported_chat, ended_embed)
-        except discord.Forbidden:
-            logger.info(f'Не удалось отправить историю тикета #{ticket.ticket_number} в личку, так как она закрыта')
+        if ticket_user:
+            try:
+                await self._send_ticket_to_member(ticket, ticket_user, exported_chat, ended_embed)
+            except discord.Forbidden:
+                logger.info(f'Не удалось отправить историю тикета #{ticket.ticket_number} в личку, так как она закрыта')
 
     def _get_closed_ticket_embed(self, ticket: OpenedTicketStruct, ticket_user: discord.Member):
         return TicketHeaderEmbed.build(
