@@ -90,7 +90,6 @@ class MagicRustBot(Bot):
         return await super().on_error(event_method, *args, **kwargs)
 
     async def on_connect(self):
-        await super().on_connect()
 
         # load emojis
         guild = await self.get_or_fetch_main_guild()
@@ -98,6 +97,7 @@ class MagicRustBot(Bot):
         CustomEmojis.load_emojis(emojis)
 
         self._load_apps()
+        await super().on_connect()
 
     async def on_ready(self):
         info = await self.application_info()
