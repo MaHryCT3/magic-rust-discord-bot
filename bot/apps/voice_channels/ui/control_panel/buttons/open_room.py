@@ -3,15 +3,11 @@ from discord import Interaction
 
 from bot.apps.voice_channels.actions import OpenRoomAction
 from bot.apps.voice_channels.ui.control_panel.permissions import check_panel_access
+from bot.custom_emoji import CustomEmojis
 from core.localization import LocaleEnum
 
 
 class OpenRoomButton(discord.ui.Button):
-    label_localization = {
-        LocaleEnum.ru: ' Открыть комнату',
-        LocaleEnum.en: ' Open room',
-    }
-
     response_localization = {
         LocaleEnum.ru: 'Комната открыта',
         LocaleEnum.en: 'Room opened',
@@ -21,9 +17,10 @@ class OpenRoomButton(discord.ui.Button):
         self.locale = locale
         self.voice_channel = voice_channel
         super().__init__(
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.gray,
             custom_id=f'control-panel:{voice_channel.id}:button:open',
-            label=self.label_localization[locale],
+            emoji=CustomEmojis.OPEN_ROOM,
+            row=0,
         )
 
     async def callback(self, interaction: Interaction):

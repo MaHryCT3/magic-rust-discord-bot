@@ -3,23 +3,20 @@ from discord import Interaction
 
 from bot.apps.voice_channels.actions import ChangeNameAction
 from bot.apps.voice_channels.ui.control_panel.permissions import check_panel_access
+from bot.custom_emoji import CustomEmojis
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
 
 
 class ChangeNameButton(discord.ui.Button):
-    label_localization = {
-        LocaleEnum.ru: ' Изменить название',
-        LocaleEnum.en: ' Change name',
-    }
-
     def __init__(self, locale: LocaleEnum, voice_channel: discord.VoiceChannel):
         self.locale = locale
         self.voice_channel = voice_channel
         super().__init__(
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.gray,
             custom_id=f'control-panel:{voice_channel.id}:button:change-name',
-            label=self.label_localization[locale],
+            emoji=CustomEmojis.CHANGE_NAME,
+            row=1,
         )
 
     async def callback(self, interaction: discord.Interaction):

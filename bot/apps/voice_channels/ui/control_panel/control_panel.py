@@ -27,12 +27,12 @@ class ControlPanelView(discord.ui.View):
         self.voice_channel = voice_channel
 
         super().__init__(
-            KickButton(self.locale, self.voice_channel),
-            TransferRightsButton(self.locale, self.voice_channel),
-            ChangeNameButton(self.locale, self.voice_channel),
-            OpenRoomButton(self.locale, self.voice_channel),
-            CloseRoomButton(self.locale, self.voice_channel),
             SetRoomLimitButton(self.locale, self.voice_channel),
+            CloseRoomButton(self.locale, self.voice_channel),
+            OpenRoomButton(self.locale, self.voice_channel),
+            ChangeNameButton(self.locale, self.voice_channel),
+            TransferRightsButton(self.locale, self.voice_channel),
+            KickButton(self.locale, self.voice_channel),
             timeout=None,
         )
 

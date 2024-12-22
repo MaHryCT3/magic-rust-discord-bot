@@ -2,15 +2,11 @@ import discord
 
 from bot.apps.voice_channels.actions import TransferRightsAction
 from bot.apps.voice_channels.ui.control_panel.permissions import check_panel_access
+from bot.custom_emoji import CustomEmojis
 from core.localization import LocaleEnum, LocalizationDict
 
 
 class TransferRightsButton(discord.ui.Button):
-    label_localization = {
-        LocaleEnum.en: ' Transfer rights',
-        LocaleEnum.ru: ' Передать права',
-    }
-
     no_user_to_transfer_rights_localization = {
         LocaleEnum.ru: 'Нет пользователей для передачи прав',
         LocaleEnum.en: 'No user to transfer rights',
@@ -33,10 +29,10 @@ class TransferRightsButton(discord.ui.Button):
         self.locale = locale
         self.voice_channel = voice_channel
         super().__init__(
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.gray,
             custom_id=f'control-panel:{voice_channel.id}:button:transfer-rights',
-            # emoji=Emojis.DIZZY,  # TODO: Waiting emoji
-            label=self.label_localization[locale],
+            emoji=CustomEmojis.GRANT,
+            row=1,
         )
 
     async def callback(self, interaction: discord.Interaction):

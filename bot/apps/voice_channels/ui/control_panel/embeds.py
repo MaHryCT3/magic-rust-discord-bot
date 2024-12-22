@@ -27,8 +27,8 @@ class InsufficientPermissionsEmbed(discord.Embed):
 
 class ControlPanelImageEmbed(discord.Embed):
     image_localization = {
-        LocaleEnum.en: 'https://i.imgur.com/ApQ9szo.jpeg',
-        LocaleEnum.ru: 'https://i.imgur.com/cSCDDBP.jpeg',
+        LocaleEnum.en: 'https://i.imgur.com/MACUJao.png',
+        LocaleEnum.ru: 'https://i.imgur.com/9HBlp3F.png',
     }
 
     @classmethod
@@ -41,6 +41,7 @@ class ControlPanelImageEmbed(discord.Embed):
         return embed
 
 
+# NOTE: Более не используется
 class ControlPanelTextEmbed(discord.Embed):
     title_localization = {
         LocaleEnum.ru: 'Вы можете настроить канал, используя обычные настройки дискорда. '

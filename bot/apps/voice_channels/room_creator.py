@@ -14,7 +14,6 @@ from bot.apps.voice_channels.permissions import (
 from bot.apps.voice_channels.ui.control_panel.control_panel import ControlPanelView
 from bot.apps.voice_channels.ui.control_panel.embeds import (
     ControlPanelImageEmbed,
-    ControlPanelTextEmbed,
 )
 from bot.bot import MagicRustBot
 from bot.config import logger, settings
@@ -40,9 +39,11 @@ class RoomCreator(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        print('HELLO' * 20)
         guild = await self.bot.get_or_fetch_main_guild()
         for locale, category_id in dynamic_settings.user_rooms_categories.items():
             category = await get_or_fetch_channel(guild, category_id)
+            print(category)
             for voice_channel in category.voice_channels:
                 self.bot.add_view(
                     ControlPanelView(
@@ -82,7 +83,6 @@ class RoomCreator(commands.Cog):
             member.mention,
             embeds=[
                 ControlPanelImageEmbed.build(locale=locale),
-                ControlPanelTextEmbed.build(locale=locale),
             ],
             view=ControlPanelView(
                 locale=locale,

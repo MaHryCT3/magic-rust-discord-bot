@@ -2,16 +2,11 @@ import discord
 
 from bot.apps.voice_channels.actions import KickMemberAction
 from bot.apps.voice_channels.ui.control_panel.permissions import check_panel_access
-from core.emojis import Emojis
+from bot.custom_emoji import CustomEmojis
 from core.localization import LocaleEnum, LocalizationDict
 
 
 class KickButton(discord.ui.Button):
-    label_localization = {
-        LocaleEnum.en: ' Kick',
-        LocaleEnum.ru: ' Выгнать',
-    }
-
     no_user_to_kick_localization = {
         LocaleEnum.ru: 'Нет пользователей для кика',
         LocaleEnum.en: 'No user to kick',
@@ -34,10 +29,10 @@ class KickButton(discord.ui.Button):
         self.locale = locale
         self.voice_channel = voice_channel
         super().__init__(
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.gray,
             custom_id=f'control-panel:{voice_channel.id}:button:kick',
-            emoji=Emojis.DIZZY,
-            label=self.label_localization[locale],
+            emoji=CustomEmojis.KICK,
+            row=1,
         )
 
     async def callback(self, interaction: discord.Interaction):

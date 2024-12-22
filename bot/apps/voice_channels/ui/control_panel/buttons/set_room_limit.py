@@ -2,22 +2,19 @@ import discord
 
 from bot.apps.voice_channels.actions import SetRoomLimitAction
 from bot.apps.voice_channels.ui.control_panel.permissions import check_panel_access
+from bot.custom_emoji import CustomEmojis
 from core.localization import LocaleEnum
 
 
 class SetRoomLimitButton(discord.ui.Button):
-    label_localization = {
-        LocaleEnum.ru: ' Изменить лимит',
-        LocaleEnum.en: ' Change limit',
-    }
-
     def __init__(self, locale: LocaleEnum, voice_channel: discord.VoiceChannel):
         self.locale = locale
         self.voice_channel = voice_channel
         super().__init__(
-            style=discord.ButtonStyle.primary,
+            style=discord.ButtonStyle.gray,
             custom_id=f'control-panel:{voice_channel.id}:button:limit',
-            label=self.label_localization[locale],
+            emoji=CustomEmojis.LIMIT,
+            row=0,
         )
 
     async def callback(self, interaction: discord.Interaction):

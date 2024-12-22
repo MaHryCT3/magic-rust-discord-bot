@@ -7,6 +7,7 @@ from discord.bot import Bot
 
 from bot.apps.users.utils import get_member_locale
 from bot.config import settings
+from bot.custom_emoji import CustomEmojis
 from bot.dynamic_settings import CategoryId, dynamic_settings
 from core.localization import LocaleEnum
 from core.logger import logger
@@ -39,7 +40,6 @@ class MagicRustBot(Bot):
             owner_ids=settings.DISCORD_OWNER_IDS,
             **kwargs,
         )
-        self._load_apps()
 
     def _load_apps(self):
         for app_name in self.setup_apps:
@@ -88,6 +88,16 @@ class MagicRustBot(Bot):
     async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
         sentry_sdk.capture_exception()
         return await super().on_error(event_method, *args, **kwargs)
+
+    async def on_connect(self):
+        await super().on_connect()
+
+        # load emojis
+        guild = await self.get_or_fetch_main_guild()
+        emojis = await guild.fetch_emojis()
+        CustomEmojis.load_emojis(emojis)
+
+        self._load_apps()
 
     async def on_ready(self):
         info = await self.application_info()
