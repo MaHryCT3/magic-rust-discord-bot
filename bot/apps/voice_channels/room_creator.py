@@ -39,11 +39,9 @@ class RoomCreator(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('HELLO' * 20)
         guild = await self.bot.get_or_fetch_main_guild()
         for locale, category_id in dynamic_settings.user_rooms_categories.items():
             category = await get_or_fetch_channel(guild, category_id)
-            print(category)
             for voice_channel in category.voice_channels:
                 self.bot.add_view(
                     ControlPanelView(
