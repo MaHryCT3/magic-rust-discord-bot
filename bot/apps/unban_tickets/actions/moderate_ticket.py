@@ -1,6 +1,7 @@
 import dataclasses
 import datetime
 from abc import ABC
+from dataclasses import dataclass
 from typing import ClassVar
 
 import discord
@@ -16,6 +17,7 @@ from bot.apps.unban_tickets.services.unban_tickets import (
     UnbanTicketStruct,
 )
 from bot.config import settings
+from bot.constants import DATETIME_FORMAT
 from core.actions.abstract import AbstractAction
 from core.emojis import Emojis
 from core.localization import LocaleEnum
@@ -45,11 +47,11 @@ class ModerateUnbanTicket(AbstractAction, ABC):
             await self._close_ticket(ticket, self.moderate_message)
         try:
             await self._send_result_to_user(ticket, self.bot)
-        except discord.Forbidden:
+        except discord.Forbidden as exception:
             if self.moderate_message:
                 await self._add_to_message_information_about_failed_to_send_result(self.moderate_message)
             else:
-                raise UserDmIsClosed() from None
+                raise UserDmIsClosed() from exception
 
         await unban_ticket_cooldown.set_user_cooldown(
             self.user_id,
@@ -62,10 +64,10 @@ class ModerateUnbanTicket(AbstractAction, ABC):
         embed.timestamp = datetime.datetime.now(tz=settings.TIMEZONE)
         embed.set_status(ticket.status).set_reviewed_by(self.initiator_user)
 
-        moderate_message.embeds = [embed]
+        moderate_message.embeds[0] = embed
         await moderate_message.edit(
             view=None,
-            embeds=[embed],
+            embeds=moderate_message.embeds,
         )
 
     async def _send_result_to_user(self, ticket: UnbanTicketStruct, bot: MagicRustBot):
@@ -108,3 +110,63 @@ class RejectUnbanTicket(ModerateUnbanTicket):
         'to the conclusion that unban your account is not yet possible.',
     }
     ticket_status: ClassVar[UnbanTicketsStatus] = UnbanTicketsStatus.REJECTED
+
+
+@dataclass
+class NeedToAddInFriendAction(AbstractAction):
+    user_id: int
+    bot: MagicRustBot
+    add_in_friend: discord.User
+    moderate_message: discord.Message | None = None
+
+    message_localization: ClassVar[dict[LocaleEnum, str]] = {
+        LocaleEnum.ru: 'Для продолжения процедуры разбана вам необходимо '
+        'добавить в друзья модератора {moderator_mention}',
+        LocaleEnum.en: 'You need to add the moderator {moderator_mention}'
+        ' as a friend to continue the unban procedure .',
+    }
+
+    async def action(self) -> None:
+        unban_ticket_service = UnbanTicketsService()
+
+        ticket = await unban_ticket_service.get_by_user(self.user_id)
+        if not ticket:
+            raise UserDontHaveTicket()
+
+        try:
+            await self._send_message_to_user(ticket)
+        except discord.Forbidden as ex:
+            raise UserDmIsClosed() from ex
+
+        await self._add_information_about_sent_friend_invite(self.moderate_message)
+
+    async def _add_information_about_sent_friend_invite(self, message: discord.Message):
+        # сейчас если тикет не закрыт там может быть только 1 ембед, в другом случае если их два
+        # значит кто то уже пытался добавить в друзья, пробуем достать информацию.
+
+        if len(message.embeds) == 2:  # noqa: PLR2004
+            info_embed = message.embeds[1]
+            exists_text = info_embed.fields[0].value
+        else:
+            exists_text = ''
+
+        now_time = datetime.datetime.now(tz=settings.TIMEZONE).strftime(DATETIME_FORMAT)
+        embed = discord.Embed(
+            colour=discord.Color.red(),
+        ).add_field(
+            name='',
+            value=f'{exists_text}\n{now_time} {self.add_in_friend.mention} попросил игрока добавить его в друзья',
+        )
+
+        finally_embeds = message.embeds.copy()
+        if exists_text:
+            finally_embeds[1] = embed
+        else:
+            finally_embeds.append(embed)
+
+        await message.edit(embeds=finally_embeds)
+
+    async def _send_message_to_user(self, ticket: UnbanTicketStruct):
+        user = await self.bot.fetch_user(ticket.user_id)
+        message = self.message_localization[ticket.locale].format(moderator_mention=self.add_in_friend.mention)
+        await user.send(message)
