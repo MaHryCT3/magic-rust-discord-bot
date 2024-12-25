@@ -4,8 +4,10 @@ import discord
 
 from bot.apps.unban_tickets.actions.moderate_ticket import (
     ApproveUnbanTicket,
+    NeedToAddInFriendAction,
     RejectUnbanTicket,
 )
+from bot.apps.unban_tickets.errors import UserDmIsClosed
 from core.utils.regex import get_user_id_from_mention
 
 
@@ -35,10 +37,19 @@ class ModerateDiscordView(discord.ui.View):
         )
         reject_button.callback = self.reject_button_callback
 
+        need_to_add_in_friend_button = discord.ui.Button(
+            style=discord.ButtonStyle.primary,
+            label='Попросить добавить в друзья',
+            custom_id='moderate_unban_ticket:send_friend',
+            row=1,
+        )
+        need_to_add_in_friend_button.callback = self.need_to_add_in_friend_callback
+
         super().__init__(
             to_rcc_button,
             approve_button,
             reject_button,
+            need_to_add_in_friend_button,
             timeout=None,
         )
 
@@ -59,6 +70,23 @@ class ModerateDiscordView(discord.ui.View):
             moderate_message=interaction.message,
             initiator_user=interaction.user,
         ).execute()
+
+    async def need_to_add_in_friend_callback(self, interaction: discord.Interaction):
+        user_id = self._get_user_id(interaction)
+        try:
+            await NeedToAddInFriendAction(
+                user_id=user_id,
+                bot=interaction.client,
+                moderate_message=interaction.message,
+                add_in_friend=interaction.user,
+            ).execute()
+        except UserDmIsClosed:
+            return await interaction.respond(
+                'Не удалось отправить сообщение пользователю',
+                ephemeral=True,
+                delete_after=20,
+            )
+        await interaction.response.defer()
 
     def _get_user_id(self, interaction: discord.Interaction):
         return get_user_id_from_mention(interaction.message.content)

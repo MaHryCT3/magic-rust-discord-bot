@@ -32,8 +32,9 @@ class CustomEmojiDescriptor:
 
 
 class BaseCustomEmojis:
-    _emoji_field_name_map: dict[EmojiName, EmojiField] = {}
     """Кастомные эмоджи, которые загружены на сервер"""
+
+    _emoji_field_name_map: dict[EmojiName, EmojiField] = {}
 
     @classmethod
     def load_emojis(cls, custom_emojis: list[Emoji]):
