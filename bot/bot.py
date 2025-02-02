@@ -13,7 +13,6 @@ from core.localization import LocaleEnum
 from core.logger import logger
 
 all_apps = [
-    'activity',
     'auto_moderation',
     'find_friends',
     'settings',
@@ -22,6 +21,7 @@ all_apps = [
     'server_status',
     'banner_updater',
     'voice_channels',
+    'voice_activity',
     'news_reposts',
     'reports',
     'tickets',
