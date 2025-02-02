@@ -13,6 +13,7 @@ from core.localization import LocaleEnum
 from core.logger import logger
 
 all_apps = [
+    'activity',
     'auto_moderation',
     'find_friends',
     'settings',
