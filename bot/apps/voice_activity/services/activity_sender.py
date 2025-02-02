@@ -4,7 +4,7 @@ import aio_pika
 from aio_pika import Message
 from aio_pika.abc import AbstractChannel
 
-from bot.apps.activity.structs.activity_message import ActivityMessage
+from bot.apps.voice_activity.structs.activity_message import ActivityMessage
 from bot.config import settings
 from core.logger import logger
 

@@ -1,7 +1,10 @@
 import datetime
 from dataclasses import dataclass
 
-from bot.apps.activity.structs.enums import ActivitySessionChannelType, ActivityStatus
+from bot.apps.voice_activity.structs.enums import (
+    ActivitySessionChannelType,
+    ActivityStatus,
+)
 
 
 @dataclass(kw_only=True)

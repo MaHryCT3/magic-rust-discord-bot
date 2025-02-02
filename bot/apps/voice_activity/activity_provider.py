@@ -3,9 +3,9 @@ from discord.ext import tasks
 from discord.ext.commands import Cog
 
 from bot import MagicRustBot
-from bot.apps.activity.actions.send_activity import SendActivityAction
-from bot.apps.activity.services.activity_sender import ActivitySenderService
-from bot.apps.activity.structs.enums import ActivityStatus
+from bot.apps.voice_activity.actions.send_activity import SendActivityAction
+from bot.apps.voice_activity.services.activity_sender import ActivitySenderService
+from bot.apps.voice_activity.structs.enums import ActivityStatus
 from core.shortcuts import get_or_fetch_member
 from core.utils.decorators import suppress_exceptions
 
