@@ -3,7 +3,7 @@ from discord.ext import commands, tasks
 
 from bot.bot import MagicRustBot
 from bot.dynamic_settings import dynamic_settings
-from core.utils.decorators import loop_stability_checker, suppress_exceptions
+from core.utils.decorators import suppress_exceptions
 
 SERVER_DELETE_UPDATE_SECONDS = 60.0
 
@@ -27,7 +27,6 @@ class RoomCleaner(commands.Cog):
             await before.channel.delete()
 
     @tasks.loop(seconds=SERVER_DELETE_UPDATE_SECONDS)
-    @loop_stability_checker(seconds=SERVER_DELETE_UPDATE_SECONDS)
     @suppress_exceptions
     async def delete_empty_channels(self):
         guild = self.bot.get_main_guild()
