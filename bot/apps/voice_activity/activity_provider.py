@@ -38,6 +38,7 @@ class ActivityProviderCog(Cog):
                 member=member,
                 voice_state=before,
                 activity_status=ActivityStatus.LEAVE,
+                sender_service=self._sender_service,
             ).execute()
 
         if after.afk or after.channel is None:
@@ -48,12 +49,14 @@ class ActivityProviderCog(Cog):
                 member=member,
                 voice_state=after,
                 activity_status=ActivityStatus.JOIN,
+                sender_service=self._sender_service,
             ).execute()
         else:
             await SendActivityAction(
                 member=member,
                 voice_state=after,
                 activity_status=ActivityStatus.ACTIVE,
+                sender_service=self._sender_service,
             ).execute()
 
     @tasks.loop(seconds=60)
@@ -67,11 +70,15 @@ class ActivityProviderCog(Cog):
                 continue
 
             for member_id, voice_state in channel.voice_states.items():
-                await SendActivityAction(
+                voice_state.channel = channel
+
+                coro = SendActivityAction(
                     member=await get_or_fetch_member(self._guild, member_id),
                     voice_state=voice_state,
                     activity_status=ActivityStatus.ACTIVE,
-                ).execute()
+                    sender_service=self._sender_service,
+                ).execute
+                await suppress_exceptions(coro)()
 
     @staticmethod
     def _is_changed_or_joined_in_channel(before: discord.VoiceState, after: discord.VoiceState) -> bool:
