@@ -11,7 +11,7 @@ from core.logger import logger
 
 class ActivitySenderService:
     def __init__(self):
-        self._rabbit_connection = aio_pika.Connection(
+        self._rabbit_connection = aio_pika.RobustConnection(
             url=settings.RABBIT_MQ_URI,
         )
 
