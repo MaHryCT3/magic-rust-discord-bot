@@ -19,7 +19,7 @@ class ActivitySenderService:
 
     async def _on_start_first_call(self):
         await self._rabbit_connection.connect()
-        self.channel = await self._rabbit_connection.channel()
+        self._channel = await self._rabbit_connection.channel()
 
     async def send_activity(self, activity_message: ActivityMessage):
         if not self._channel:
@@ -43,7 +43,7 @@ class ActivitySenderService:
             content_type='application/json',
         )
 
-        await self.channel.default_exchange.publish(
+        await self._channel.default_exchange.publish(
             message,
             routing_key=settings.ACTIVITY_QUEUE_NAME,
         )
