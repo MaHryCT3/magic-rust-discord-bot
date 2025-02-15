@@ -23,7 +23,12 @@ class ActivityView(discord.ui.View):
         self.locale = locale
         self.user = user
         self.channel = channel
+        self.offset = 0
 
+        # марка на том что прошлый запрос не вернул данных
+        self._is_prev_was_empty = False
+
+        # Селектор выбора периода (Недели, месяца)
         self._period_type_translator = ACTIVITY_PERIOD_TYPE_TRANSLATE[self.locale]
         self._period_type_selector = discord.ui.Select(
             placeholder='Период',
@@ -31,14 +36,24 @@ class ActivityView(discord.ui.View):
         self._period_type_selector.options = self._get_period_type_options()
         self._period_type_selector.callback = self._period_select_type_callback
 
+        # Селектор для выбора промежутка дат
         self._period_selector = discord.ui.Select(
             placeholder='Промежуток времени',
         )
         self._period_selector.options = self.period_selector_service.get_available_options()
         self._period_selector.callback = self._period_select_callback
+
+        # Кнопки для переключения между страницами
+        self._next_button = discord.ui.Button(emoji='➡', row=2)
+        self._next_button.callback = self._next_button_callback
+
+        self._prev_button = discord.ui.Button(emoji='⬅', row=2, disabled=True)
+        self._prev_button.callback = self._prev_button_callback
         super().__init__(
             self._period_type_selector,
             self._period_selector,
+            self._prev_button,
+            self._next_button,
             timeout=None,
         )
 
@@ -56,13 +71,17 @@ class ActivityView(discord.ui.View):
             period_start, period_end = self.period_selector_service.get_time_period_by_select(period_value[0])
         else:
             period_start, period_end = self.period_selector_service.get_default_period()
-        print(period_start, period_end)
         embed = await MakeActivityStatsResponseAction(
+            offset=self.offset,
             period_start=period_start,
             period_end=period_end,
             guild=guild,
             locale=self.locale,
         ).execute()
+
+        if not embed.fields:
+            self._next_button.disabled = True
+
         return embed
 
     async def update(self, interaction: discord.Interaction):
@@ -88,6 +107,18 @@ class ActivityView(discord.ui.View):
 
     async def _period_select_type_callback(self, interaction: discord.Interaction) -> None:
         self.refresh_select_options()
+        await self.update(interaction)
+
+    async def _next_button_callback(self, interaction: discord.Interaction) -> None:
+        self.offset += 1
+        self._prev_button.disabled = False
+        await self.update(interaction)
+
+    async def _prev_button_callback(self, interaction: discord.Interaction):
+        self.offset -= 1
+        if self.offset == 0:
+            self._prev_button.disabled = True
+        self._next_button.disabled = False
         await self.update(interaction)
 
     def _get_period_type_options(self):
