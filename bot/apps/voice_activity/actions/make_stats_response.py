@@ -16,12 +16,6 @@ _title_localization: dict[LocaleEnum, str] = {
     LocaleEnum.en: 'Activity rating in voice channels',
 }
 
-# _line_template_localization: dict[LocaleEnum, str] = {
-#     LocaleEnum.ru: '#{place} {user_name} ⏳{activity_time} | ⏱️{total_time} '
-#     '| 🔇{total_microphone_disabled} | 🔕{total_sound_disabled_duration}',
-#     LocaleEnum.en: '#{place} {user_name} ⏳{activity_time} | ⏱️{total_time} '
-#     '| 🔇{total_microphone_disabled} | 🔕{total_sound_disabled_duration}',
-# }
 _line_template_localization: dict[LocaleEnum, str] = {
     LocaleEnum.ru: '#{place} {user_name} \n Активное время: ⏳{activity_time}\n'
     ' Не засчитанное: 🔇{total_sound_disabled} (no mic, no sound)',
@@ -68,9 +62,6 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
                 inline=False,
             )
         return embed
-        # rating_text = '\n'.join(lines)
-        # print(rating_text)
-        # return embed.add_field(name='', value=rating_text)
 
     async def _make_embed_line(self, place: int, activity: UserActivity) -> str:
         member = await get_or_fetch_member(self.guild, activity.user_id)

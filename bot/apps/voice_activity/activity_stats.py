@@ -12,10 +12,6 @@ class ActivityStatusCog(Cog):
     activity_group = SlashCommandGroup(
         name='activity',
         description='Просмотр статистики голосовой активности',
-        default_member_permissions=discord.Permissions(
-            administrator=True,
-            ban_members=True,
-        ),
         contexts={discord.InteractionContextType.guild},
     )
 
