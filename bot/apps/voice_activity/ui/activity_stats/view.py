@@ -25,9 +25,6 @@ class ActivityView(discord.ui.View):
         self.channel = channel
         self.offset = 0
 
-        # марка на том что прошлый запрос не вернул данных
-        self._is_prev_was_empty = False
-
         # Селектор выбора периода (Недели, месяца)
         self._period_type_translator = ACTIVITY_PERIOD_TYPE_TRANSLATE[self.locale]
         self._period_type_selector = discord.ui.Select(
