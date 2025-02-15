@@ -24,6 +24,8 @@ class PeriodSelectService:
             selects = self._get_month_selects()
         elif self.period_type == ActivityPeriodTypeEnum.WEEK:
             selects = self._get_weeks_selects()
+        elif self.period_type == ActivityPeriodTypeEnum.DAYS:
+            selects = self._get_day_selects()
         else:
             raise TypeError(f'Неизвестный тип {self.period_type}')
 
@@ -49,6 +51,8 @@ class PeriodSelectService:
             return date, date + relativedelta(months=1)
         if self.period_type == ActivityPeriodTypeEnum.WEEK:
             return date, date + datetime.timedelta(days=7)
+        if self.period_type == ActivityPeriodTypeEnum.DAYS:
+            return date, date + datetime.timedelta(days=1)
         raise TypeError(f'Неизвестный тип {self.period_type}')
 
     def get_default_period(self):
@@ -102,3 +106,20 @@ class PeriodSelectService:
         end_week = get_next_sunday(week)
         format_str = '%d.%m'
         return f'{week.strftime(format_str)} - {end_week.strftime(format_str)}'
+
+    def _get_day_selects(self) -> list[discord.SelectOption]:
+        days = list(
+            rrule(
+                DAILY,
+                count=7,
+                dtstart=datetime.date.today() - datetime.timedelta(days=6),
+            )
+        )[::-1]
+
+        return [
+            discord.SelectOption(
+                label=day.strftime('%d.%m'),
+                value=day.isoformat(),
+            )
+            for day in days
+        ]

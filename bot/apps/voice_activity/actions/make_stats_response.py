@@ -17,9 +17,9 @@ _title_localization: dict[LocaleEnum, str] = {
 }
 
 _line_template_localization: dict[LocaleEnum, str] = {
-    LocaleEnum.ru: '#{place} {user_name} ({user_login}) \n Активное время: ⏳{activity_time}\n'
+    LocaleEnum.ru: '#**{place} {user_name} ({user_login})** \n Активное время: ⏳{activity_time}\n'
     ' Не засчитанное: 🔇{total_sound_disabled} (no mic, no sound)',
-    LocaleEnum.en: '#{place} {user_name} ({user_login}) \n Active time: ⏳{activity_time}\n'
+    LocaleEnum.en: '#**{place} {user_name} ({user_login})** \n Active time: ⏳{activity_time}\n'
     ' Unscored: 🔇{total_sound_disabled} (no mic, no sound)',
 }
 
@@ -34,6 +34,9 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
     guild: discord.Guild
     locale: LocaleEnum
 
+    # по сути хардкод
+    _limit: int = 10
+
     activity_api: ActivityAPI = field(default_factory=ActivityAPI)
 
     async def action(self):
@@ -42,6 +45,8 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
             end_at=self.period_end,
             user_id=self.user.id if self.user else None,
             channel_id=self.channel.id if self.channel else None,
+            offset=self.offset,
+            limit=self._limit,
         )
         return await self._make_embed(activity)
 
@@ -53,7 +58,7 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
 
         for place, activity in enumerate(activities, start=1):
             line = await self._make_embed_line(
-                place=self.offset + place,
+                place=self.offset * self._limit + place,
                 activity=activity,
             )
             embed.add_field(
