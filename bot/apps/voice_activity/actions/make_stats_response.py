@@ -69,13 +69,16 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
         return embed
 
     async def _make_embed_line(self, place: int, activity: UserActivity) -> str:
-        member = await get_or_fetch_member(self.guild, activity.user_id)
+        try:
+            member = await get_or_fetch_member(self.guild, activity.user_id)
+        except discord.NotFound:
+            member = None
 
         line_template = _line_template_localization[self.locale]
         line = line_template.format(
             place=place,
-            user_name=member.nick or member.global_name,
-            user_login=member.name,
+            user_name=(member.nick or member.global_name) if member else 'Неизвестный',
+            user_login=member.name if member else '',
             activity_time=human_time(int(activity.activity_time_duration.total_seconds()), self.locale),
             total_time=human_time(int(activity.total_session_duration.total_seconds()), self.locale),
             total_sound_disabled=human_time(
