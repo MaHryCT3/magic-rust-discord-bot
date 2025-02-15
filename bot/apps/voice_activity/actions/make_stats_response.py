@@ -69,8 +69,7 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
         return embed
 
     async def _make_embed_line(self, place: int, activity: UserActivity) -> str:
-        # member = await get_or_fetch_member(self.guild, activity.user_id)
-        member = await get_or_fetch_member(self.guild, 223462256355180544)
+        member = await get_or_fetch_member(self.guild, activity.user_id)
 
         line_template = _line_template_localization[self.locale]
         line = line_template.format(
