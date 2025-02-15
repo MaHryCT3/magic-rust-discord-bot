@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     REDIS_URL: str = 'redis://localhost:6379'
     SETUP_APPS: list[str] | None = None
 
+    # Activity Backend
+    ACTIVITY_BACKEND_URL: str
+    ACTIVITY_BACKEND_API_TOKEN: str
+
     # MQ
     RABBIT_MQ_URI: str
     ACTIVITY_QUEUE_NAME: str = 'activity'
@@ -35,5 +39,5 @@ settings = Settings(_env_file='.env')
 
 
 logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
-logging.getLogger('aio_pika').setLevel(logging.INFO)
-logging.getLogger('aiormq').setLevel(logging.INFO)
+logging.getLogger('aio_pika').setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
+logging.getLogger('aiormq').setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
