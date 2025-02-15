@@ -17,9 +17,9 @@ _title_localization: dict[LocaleEnum, str] = {
 }
 
 _line_template_localization: dict[LocaleEnum, str] = {
-    LocaleEnum.ru: '#{place} {user_name} \n Активное время: ⏳{activity_time}\n'
+    LocaleEnum.ru: '#{place} {user_name} ({user_login}) \n Активное время: ⏳{activity_time}\n'
     ' Не засчитанное: 🔇{total_sound_disabled} (no mic, no sound)',
-    LocaleEnum.en: '#{place} {user_name} \n Active time: ⏳{activity_time}\n'
+    LocaleEnum.en: '#{place} {user_name} ({user_login}) \n Active time: ⏳{activity_time}\n'
     ' Unscored: 🔇{total_sound_disabled} (no mic, no sound)',
 }
 
@@ -69,7 +69,8 @@ class MakeActivityStatsResponseAction(AbstractAction[discord.Embed]):
         line_template = _line_template_localization[self.locale]
         line = line_template.format(
             place=place,
-            user_name=member.mention,
+            user_name=member.nick or member.global_name,
+            user_login=member.name,
             activity_time=human_time(int(activity.activity_time_duration.total_seconds()), self.locale),
             total_time=human_time(int(activity.total_session_duration.total_seconds()), self.locale),
             total_sound_disabled=human_time(
