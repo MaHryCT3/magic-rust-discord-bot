@@ -104,6 +104,7 @@ class ActivityView(discord.ui.View):
 
     async def _period_select_type_callback(self, interaction: discord.Interaction) -> None:
         self.refresh_select_options()
+        self.offset = 0
         await self.update(interaction)
 
     async def _next_button_callback(self, interaction: discord.Interaction) -> None:
