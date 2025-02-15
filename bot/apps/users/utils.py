@@ -6,7 +6,12 @@ from core.localization import LocaleEnum
 from core.logger import logger
 
 
-def get_member_locale(member: discord.Member, raise_exception: bool = False) -> LocaleEnum | None:
+def get_member_locale(
+    member: discord.Member,
+    raise_exception: bool = False,
+    default_locale: LocaleEnum | None = None,
+) -> LocaleEnum | None:
+
     reverse_roles_map = dynamic_settings.reverse_locale_roles
     for role in member.roles:
         # BUG role can be None if there is no roles: member.roles=[None]
@@ -14,5 +19,9 @@ def get_member_locale(member: discord.Member, raise_exception: bool = False) -> 
             return LocaleEnum(reverse_roles_map[role.id])
 
     logger.warning(f'{member}:{member.id} не имеет роли языка')
+
     if raise_exception:
         raise UserHasNotRoleError()
+
+    if default_locale:
+        return default_locale
