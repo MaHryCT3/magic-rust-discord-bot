@@ -8,7 +8,7 @@ services:
       - DISCORD_BOT_TOKEN=${DISCORD_MAIN_BOT_TOKEN}
     tty: true
     restart: always
-    command: python -m bot settings users servicing_posts bot_messages news_reposts find_friends
+    command: python -m bot settings users servicing_posts bot_messages find_friends
 
 
   report_bot:

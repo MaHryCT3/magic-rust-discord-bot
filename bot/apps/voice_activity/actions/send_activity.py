@@ -25,7 +25,15 @@ class SendActivityAction(AbstractAction):
         default_factory=ActivitySenderService,
     )
 
+    @property
+    def ignore_channel_ids(self):
+        # Канал для создания каналов юзер находится меньше секунды, не имеет смысла записывать
+        return dynamic_settings.channel_creating_channels.values()
+
     async def action(self):
+        if self.voice_state.channel.id in self.ignore_channel_ids:
+            return
+
         activity_message = ActivityMessage(
             datetime=datetime.datetime.now(tz=settings.TIMEZONE),
             user_id=str(self.member.id),

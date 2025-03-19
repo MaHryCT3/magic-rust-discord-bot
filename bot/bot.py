@@ -2,9 +2,10 @@ from typing import Any, NoReturn
 
 import discord
 import sentry_sdk
-from discord import ApplicationContext, CheckFailure, DiscordException
+from discord import ApplicationContext, CheckFailure, DiscordException, Intents
 from discord.bot import Bot
 
+from bot.apps.apps_config import APPS
 from bot.apps.users.utils import get_member_locale
 from bot.config import settings
 from bot.custom_emoji import CustomEmojis
@@ -12,29 +13,11 @@ from bot.dynamic_settings import CategoryId, dynamic_settings
 from core.localization import LocaleEnum
 from core.logger import logger
 
-all_apps = [
-    'auto_moderation',
-    'find_friends',
-    'settings',
-    'bot_messages',
-    'info_provider',
-    'server_status',
-    'banner_updater',
-    'voice_channels',
-    'voice_activity',
-    'news_reposts',
-    'reports',
-    'tickets',
-    'unban_tickets',
-    'users',
-    'servicing_posts',
-]
-
 
 class MagicRustBot(Bot):
     def __init__(self, *args, setup_apps: list[str] | None = None, **kwargs):
-        self.setup_apps = setup_apps or all_apps
-        intents = discord.Intents.default() + discord.Intents.message_content + discord.Intents.members
+        self.setup_apps = setup_apps or APPS.keys()
+        intents = self._get_intents()
         super().__init__(
             *args,
             intents=intents,
@@ -42,9 +25,16 @@ class MagicRustBot(Bot):
             **kwargs,
         )
 
+    def _get_intents(self):
+        return sum([APPS[app].intents for app in self.setup_apps], start=Intents.none())
+
     def _load_apps(self):
         for app_name in self.setup_apps:
             app_full_path = 'bot.apps.' + app_name + '.setup'
+            if app_full_path in self.extensions:
+                logger.info(f'extension {app_full_path} already loaded, skip..')
+                continue
+
             self.load_extension(app_full_path)
             logger.info(f'app {app_full_path} is loaded')
 

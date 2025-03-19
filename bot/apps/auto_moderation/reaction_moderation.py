@@ -3,6 +3,7 @@ from discord.ext.commands import Cog
 
 from bot import MagicRustBot
 from core.logger import logger
+from core.shortcuts import get_or_fetch_channel
 
 
 class ReactionModerationCog(Cog):
@@ -53,7 +54,7 @@ class ReactionModerationCog(Cog):
         else:
             return
 
-        channel = await self.guild.fetch_channel(payload.channel_id)
+        channel = await get_or_fetch_channel(self.guild, payload.channel_id)
         message = await channel.fetch_message(payload.message_id)
         await message.clear_reaction(payload.emoji)
         logger.info(
