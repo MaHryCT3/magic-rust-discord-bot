@@ -3,7 +3,8 @@ import traceback
 
 import sentry_sdk
 
-from bot.bot import MagicRustBot, all_apps
+from bot.apps.apps_config import APPS
+from bot.bot import MagicRustBot
 from bot.config import settings
 from core.utils.decorators import patch_traceback
 
@@ -20,7 +21,7 @@ def parse_setup_apps() -> list[str] | None:
     parser.add_argument(
         'apps',
         default=None,
-        choices=all_apps,
+        choices=APPS.keys(),
         type=str,
         nargs='*',
     )

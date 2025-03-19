@@ -27,7 +27,7 @@ class InfoProvider(commands.Cog):
     @suppress_exceptions
     async def provide_info(self):
         await self.bot.wait_until_ready()
-        guild = self.bot.get_main_guild()
+        guild = await self.bot.get_or_fetch_main_guild()
         fetched_guild = await self.bot.fetch_main_guild()
         online_presence = fetched_guild.approximate_presence_count
         voice_presence = sum(

@@ -54,7 +54,7 @@ class ServerStatusUpdater(commands.Cog):
                 image_binary = BytesIO(image_bytes)
 
                 file = File(image_binary, filename='server_status.png')
-                if not last_message or not last_message.attachments:
+                if not last_message:
                     await channel.send(
                         file=file,
                         view=self.filter_view_localization[locale],

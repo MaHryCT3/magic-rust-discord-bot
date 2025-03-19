@@ -59,11 +59,17 @@ class ResendFindFriendCreateForm(AbstractAction):
             message = await self.channel.fetch_message(last_message_id)
         except discord.HTTPException as ex:
             sentry_sdk.capture_exception(ex)
-            logger.warning(exc_info=ex)
+            logger.warning(
+                'Exception when fetching last message',
+                exc_info=True,
+            )
             return
 
         try:
             await message.delete(delay=5)
         except discord.HTTPException as ex:
             sentry_sdk.capture_exception(ex)
-            logger.warning(exc_info=ex)
+            logger.warning(
+                'Exception when delete previous message',
+                exc_info=True,
+            )
