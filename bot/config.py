@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     ACTIVITY_BACKEND_URL: str
     ACTIVITY_BACKEND_API_TOKEN: str
 
+    # Tickets Backend
+    TICKETS_BACKEND_URL: str
+    TICKETS_BACKEND_API_TOKEN: str
+
     # MQ
     RABBIT_MQ_URI: str
     ACTIVITY_QUEUE_NAME: str = 'activity'

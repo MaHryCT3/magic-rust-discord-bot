@@ -17,6 +17,7 @@ class Emojis:
     REJECT = '❌'
     AWAITING = '⏳'
     WARNING = '⚠️'
+    STAR = '⭐'
 
 
 class CustomEmojiDescriptor:

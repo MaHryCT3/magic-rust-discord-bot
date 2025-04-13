@@ -4,7 +4,7 @@ import discord
 
 from bot.constants import MAIN_COLOR
 from core.localization import LocaleEnum
-from core.utils.format_strings import format_default_time
+from core.utils.format_strings import format_default_time, format_link_text
 
 
 class TicketHeaderEmbed(discord.Embed):
@@ -33,6 +33,11 @@ class TicketHeaderEmbed(discord.Embed):
         LocaleEnum.en: '⏰Close Time',
     }
 
+    transcript_localization = {
+        LocaleEnum.ru: '📜История',
+        LocaleEnum.en: '📜History',
+    }
+
     @classmethod
     def build(
         cls,
@@ -44,6 +49,7 @@ class TicketHeaderEmbed(discord.Embed):
         opened_by: discord.Member | None = None,
         closed_by: discord.Member | None = None,
         closed_at: datetime.datetime | None = None,
+        transcript_url: str | None = None,
     ):
         embed = cls(color=MAIN_COLOR)
         embed.fields = []
@@ -69,6 +75,15 @@ class TicketHeaderEmbed(discord.Embed):
             value=description,
             inline=False,
         )
+        if transcript_url:
+            embed.add_field(
+                name='',
+                value=format_link_text(
+                    text=cls.transcript_localization[locale],
+                    link=transcript_url,
+                ),
+                inline=False,
+            )
         if closed_by:
             embed.add_field(
                 name=cls.closed_by_localization[locale],

@@ -3,4 +3,9 @@ from typing import Final
 TICKET_COUNTER_KEY: Final[str] = 'ticket_counter'
 OPENED_TICKETS_NAMESPACE: Final[str] = 'opened_tickets'
 USER_TICKET_CHANNEL_NAMESPACE: Final[str] = 'user_ticket_channel'
-HOURS_TO_CLOSE_TICKET_MARK_AS_RESOLVED: Final[int] = 1
+HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED: Final[int] = 1
+
+
+# ------------------ REVIEW AWAITING ------------------
+REVIEW_AWAITING_NAMESPACE: Final[str] = 'review_awaiting'
+REVIEW_AWAITING_HOURS: Final[int] = 24  # нужно учитывать время запуска таски
