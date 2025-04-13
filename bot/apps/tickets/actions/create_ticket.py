@@ -12,8 +12,8 @@ from bot.apps.tickets.services.opened_tickets import (
     OpenedTicketStruct,
 )
 from bot.apps.tickets.services.ticket_counter import TicketCounter
-from bot.apps.tickets.ui.ticket_header.embed import TicketHeaderEmbed
-from bot.apps.tickets.ui.ticket_header.view import TicketHeaderView
+from bot.apps.tickets.ui.ticket_header.channel_view import TicketHeaderView
+from bot.apps.tickets.ui.ticket_header.header_embed import TicketHeaderEmbed
 from bot.config import settings
 from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction

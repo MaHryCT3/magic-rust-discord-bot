@@ -26,3 +26,17 @@ async def get_or_fetch_channel(guild: discord.Guild, channel_id: int) -> Union['
     if channel := guild.get_channel(channel_id):
         return channel
     return await guild.fetch_channel(channel_id)
+
+
+async def get_or_fetch_user(bot: discord.Client, user_id: int) -> discord.User:
+    if user := bot.get_user(user_id):
+        return user
+    return await bot.fetch_user(user_id)
+
+
+async def get_or_fetch_user_message(bot: discord.Client, user_id: int, message_id: int) -> discord.Message:
+    if message := bot.get_message(message_id):
+        return message
+
+    user = await get_or_fetch_user(bot, user_id)
+    return await user.fetch_message(message_id)

@@ -1,27 +1,29 @@
 import discord
 from discord.commands import SlashCommandGroup
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord.ext.commands import Cog
 
-from bot.apps.tickets.actions.close_resolved_tickets import CloseResolvedTicketsAction
 from bot.apps.tickets.actions.mark_ticket_as_resolved import MarkTicketAsResolvedAction
 from bot.apps.tickets.errors import TicketError
 from bot.apps.tickets.services.opened_tickets import OpenedTicketsService
+from bot.apps.tickets.services.review_awaiting import ReviewAwaitingService
 from bot.apps.tickets.ui.make_ticket import MakeTicketView
 from bot.apps.tickets.ui.resolve_ticket.views import ResolveTicketView
-from bot.apps.tickets.ui.ticket_header.view import TicketHeaderView
+from bot.apps.tickets.ui.ticket_header.channel_view import TicketHeaderView
+from bot.apps.tickets.ui.ticket_header.score_view import TicketScoreView
 from bot.bot import MagicRustBot
 from bot.constants import MAIN_COLOR
 from bot.dynamic_settings import dynamic_settings
 from core.checks import DynamicSpecificRoleCheck
 from core.localization import LocaleEnum
-from core.utils.decorators import suppress_exceptions
 
 
 class CommandsTicketsCog(Cog):
     ticket_group = SlashCommandGroup(
         name='ticket',
-        contexts={discord.InteractionContextType.guild},
+        contexts={
+            discord.InteractionContextType.guild,
+        },
     )
     image_embed_localization: dict[LocaleEnum, discord.Embed] = {
         LocaleEnum.ru: discord.Embed(
@@ -36,7 +38,7 @@ class CommandsTicketsCog(Cog):
 
     def __init__(self, bot: MagicRustBot):
         self.bot = bot
-        self.guild = None
+        self._review_awaiting_service = ReviewAwaitingService()
 
     @Cog.listener()
     async def on_ready(self):
@@ -45,12 +47,11 @@ class CommandsTicketsCog(Cog):
             self.bot.add_view(TicketHeaderView(locale=locale))
             self.bot.add_view(MakeTicketView(locale=locale))
 
-        if guild := self.bot.get_main_guild():
-            self.guild = guild
-        else:
-            self.guild = self.bot.fetch_main_guild()
-
-        self.close_resolved_tickets.start()
+        reviews_awaiting = await self._review_awaiting_service.get_all_awaiting_review()
+        for review in reviews_awaiting:
+            self.bot.add_view(
+                TicketScoreView(locale=review.locale, ticket_number=review.ticket_number),
+            )
 
     @ticket_group.command(description='Создать сообщение для создания тикетов')
     @commands.has_permissions(administrator=True)
@@ -83,11 +84,6 @@ class CommandsTicketsCog(Cog):
             delete_after=20,
             ephemeral=True,
         )
-
-    @tasks.loop(minutes=5)
-    @suppress_exceptions
-    async def close_resolved_tickets(self):
-        await CloseResolvedTicketsAction(self.guild).execute()
 
     async def cog_command_error(self, ctx: discord.ApplicationContext, error: TicketError):
         if isinstance(error, TicketError):

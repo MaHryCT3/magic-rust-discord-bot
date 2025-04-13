@@ -25,3 +25,7 @@ def format_default_time(dt: datetime.datetime) -> str:
 def format_relative_time(timestamp: int) -> str:
     """3 years ago"""
     return f'<t:{timestamp}:R>'
+
+
+def format_link_text(text: str, link: str) -> str:
+    return f'[{text}]({link})'

@@ -15,7 +15,7 @@ class HTTPClient:
         http_method: str,
         query: dict | None = None,
         payload: dict | None = None,
-        body: str | None = None,
+        body: dict | None = None,
         **kwargs,
     ) -> Response:
         url = urljoin(self.base_url, url)
@@ -45,12 +45,29 @@ class HTTPClient:
         url: str,
         query: dict | None = None,
         payload: dict | None = None,
-        body: str | None = None,
+        body: dict | None = None,
         headers: dict | None = None,
     ) -> Response:
         return await self.request(
             url,
             http_method='POST',
+            query=query,
+            payload=payload,
+            body=body,
+            headers=headers,
+        )
+
+    async def patch(
+        self,
+        url: str,
+        query: dict | None = None,
+        payload: dict | None = None,
+        body: dict | None = None,
+        headers: dict | None = None,
+    ):
+        return await self.request(
+            url,
+            http_method='PATCH',
             query=query,
             payload=payload,
             body=body,
