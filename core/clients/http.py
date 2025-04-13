@@ -1,7 +1,8 @@
 from urllib.parse import urljoin
 
-from aiohttp.log import client_logger as logger
 from httpx import AsyncClient, Response
+
+from core.logger import logger
 
 
 class HTTPClient:
