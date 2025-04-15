@@ -7,6 +7,7 @@ from bot.apps.tickets.services.review_awaiting import (
     ReviewAwaitingService,
     ReviewAwaitingStruct,
 )
+from bot.config import settings
 from core.actions.abstract import AbstractAction
 from core.logger import logger
 from core.shortcuts import get_or_fetch_user_message
@@ -25,7 +26,9 @@ class ReviewTimeoutAction(AbstractAction):
         review_awaiting = await self._awaiting_review_service.get_all_awaiting_review()
 
         for review in review_awaiting:
-            if datetime.datetime.now() - review.created_at > datetime.timedelta(hours=REVIEW_AWAITING_HOURS):
+            if datetime.datetime.now(tz=settings.TIMEZONE) - review.created_at > datetime.timedelta(
+                hours=REVIEW_AWAITING_HOURS
+            ):
                 await self._review_timout(review)
 
     async def _review_timout(self, review: ReviewAwaitingStruct):
