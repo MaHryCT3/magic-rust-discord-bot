@@ -65,6 +65,13 @@ class FullServerData(BaseModel):
             return Maps.CUSTOM
         return value
 
+    @field_validator('gm', mode='before')
+    @classmethod
+    def set_default_gm_modded(cls, value, _) -> str:
+        if value not in GameModeTypes:
+            return GameModeTypes.MODDED
+        return value
+
 
 class MonitoringServerData(BaseModel):
     ip: str
