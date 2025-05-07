@@ -29,7 +29,7 @@ services:
       - DISCORD_BOT_TOKEN=${DISCORD_VOICE_BOT_TOKEN}
     tty: true
     restart: always
-    command: python -m bot voice_channels voice_activity
+    command: python -m bot voice_channels voice_activity voice_records
 
   monitoring_bot:
     image: ghcr.io/mahryct3/magic-rust-discord-bot:$CI_COMMIT_SHORT_SHA

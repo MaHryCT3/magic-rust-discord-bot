@@ -58,4 +58,7 @@ APPS = {
     'voice_channels': AppConfig(
         intents=Intents.none() + Intents.guilds + Intents.members + Intents.voice_states,
     ),
+    'voice_records': AppConfig(
+        intents=Intents.none(),
+    ),
 }

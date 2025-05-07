@@ -16,7 +16,7 @@ class HTTPClient:
         http_method: str,
         query: dict | None = None,
         payload: dict | None = None,
-        body: dict | None = None,
+        body: dict | str | None = None,
         **kwargs,
     ) -> Response:
         url = urljoin(self.base_url, url)
@@ -46,7 +46,7 @@ class HTTPClient:
         url: str,
         query: dict | None = None,
         payload: dict | None = None,
-        body: dict | None = None,
+        body: dict | str | None = None,
         headers: dict | None = None,
     ) -> Response:
         return await self.request(
