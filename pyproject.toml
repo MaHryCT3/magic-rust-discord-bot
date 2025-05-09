@@ -20,6 +20,10 @@ colorama = "^0.4.6"
 sentry-sdk = "^2.14.0"
 chat-exporter = "^2.8.0"
 aio-pika = "^9.5.4"
+assemblyai = "^0.37.0"
+pydub = "^0.25.1"
+soundfile = "^0.13.1"
+scipy = "^1.15.2"
 
 
 [tool.poetry.group.dev.dependencies]

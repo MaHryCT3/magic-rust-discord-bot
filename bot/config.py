@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     TICKETS_BACKEND_URL: str
     TICKETS_BACKEND_API_TOKEN: str
 
+    # Voice record Backend
+    VOICE_RECORD_BACKEND_URL: str
+    VOICE_RECORD_BACKEND_API_TOKEN: str
+
     # MQ
     RABBIT_MQ_URI: str
     ACTIVITY_QUEUE_NAME: str = 'activity'
