@@ -5,7 +5,9 @@ from discord.ext.commands import Cog
 
 from bot import MagicRustBot
 from bot.apps.voice_records.actions.voice_process_start import VoiceProcessStartAction
-from bot.apps.voice_records.actions.voice_processes_update import VoiceProcessUpdateAction
+from bot.apps.voice_records.actions.voice_processes_update import (
+    VoiceProcessUpdateAction,
+)
 from core.utils.decorators import suppress_exceptions
 
 

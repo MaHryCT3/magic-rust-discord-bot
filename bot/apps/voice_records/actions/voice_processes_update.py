@@ -1,12 +1,18 @@
-from dataclasses import dataclass, field
 import io
+from dataclasses import dataclass, field
 
 import discord
 import sentry_sdk
 
-from bot.apps.voice_records.services.voice_process_storage import ActiveVoiceProcessStorage, ActiveVoiceProcessStruct
+from bot.apps.voice_records.services.voice_process_storage import (
+    ActiveVoiceProcessStorage,
+    ActiveVoiceProcessStruct,
+)
 from bot.apps.voice_records.services.voice_records_api import VoiceRecordsAPI
-from bot.apps.voice_records.structs.voice_record import VoiceRecord, VoiceProcessStatusEnum
+from bot.apps.voice_records.structs.voice_record import (
+    VoiceProcessStatusEnum,
+    VoiceRecord,
+)
 from bot.apps.voice_records.ui.voice_process import VoiceProcessEmbed
 from core.actions.abstract import AbstractAction
 from core.shortcuts import get_or_fetch_channel

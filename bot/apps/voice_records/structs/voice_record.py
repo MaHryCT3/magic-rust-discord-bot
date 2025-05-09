@@ -1,6 +1,7 @@
-from pydantic import BaseModel
 import datetime
 from enum import StrEnum
+
+from pydantic import BaseModel
 
 
 class VoiceProcessStatusEnum(StrEnum):

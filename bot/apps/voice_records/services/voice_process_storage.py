@@ -1,8 +1,8 @@
+import dataclasses
 from dataclasses import asdict
 
 from bot.config import settings
 from core.clients.async_redis import AsyncRedisNameSpace
-import dataclasses
 
 
 @dataclasses.dataclass

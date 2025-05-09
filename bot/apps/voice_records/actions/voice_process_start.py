@@ -1,10 +1,14 @@
+from dataclasses import dataclass, field
+
 import discord
 
-from bot.apps.voice_records.services.voice_process_storage import ActiveVoiceProcessStorage, ActiveVoiceProcessStruct
+from bot.apps.voice_records.services.voice_process_storage import (
+    ActiveVoiceProcessStorage,
+    ActiveVoiceProcessStruct,
+)
 from bot.apps.voice_records.services.voice_records_api import VoiceRecordsAPI
 from bot.apps.voice_records.ui.voice_process import VoiceProcessEmbed
 from core.actions.abstract import AbstractAction
-from dataclasses import dataclass, field
 
 
 @dataclass
