@@ -13,11 +13,11 @@ class VoiceProcessEmbed(discord.Embed):
         VoiceProcessStatusEnum.COMPLETED: '✅ Процесс завершен',
     }
 
-    text_template: str = """[Запись в обработке](url)
+    text_template: str = """[Запись в обработке]({url})
 Состояние: {voice_state}
     """
 
-    text_template_error: str = """[Запись в обработке](url)
+    text_template_error: str = """[Запись в обработке]({url})
 ❌Состояние: {voice_state}
 Произошла ошибка.
     """
@@ -32,12 +32,13 @@ class VoiceProcessEmbed(discord.Embed):
         if is_error:
             template = cls.text_template_error
 
+        text = template.format(
+            url=url,
+            voice_state=cls.process_status_translate[state],
+        )
         embed.add_field(
             name='',
-            value=template.format(
-                url=url,
-                voice_state=cls.process_status_translate[state],
-            ),
+            value=text,
         )
 
         return embed
