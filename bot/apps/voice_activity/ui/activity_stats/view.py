@@ -78,6 +78,8 @@ class ActivityView(discord.ui.View):
 
         if not embed.fields:
             self._next_button.disabled = True
+        else:
+            self._next_button.disabled = False
 
         return embed
 
