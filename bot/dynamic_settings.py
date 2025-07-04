@@ -41,7 +41,7 @@ class DynamicSettings(BaseRedisSettings):
     # Тикеты на разбан
     unban_ticket_channel_id: ChannelId = SettingValue(default=0)
     # Активновсть в каналах
-    voice_activity_ignore_roles: list[RoleId] = SettingValue(default=list)
+    voice_activity_ignore_roles: list[RoleId] = SettingValue(default_factory=list)
 
     @property
     def reverse_locale_roles(self) -> dict[RoleId, LocaleEnum]:
