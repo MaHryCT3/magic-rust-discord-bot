@@ -19,8 +19,11 @@ def suppress_exceptions(func):
             try:
                 return await func(*args, **kwargs)
             except Exception as e:
+                logger.error(
+                    f'Suppressed exception in {func.__name__}',
+                    exc_info=True,
+                )
                 sentry_sdk.capture_exception(e)
-                logger.error(f'Suppressed exception in {func.__name__}', exc_info=e)
 
     else:
 
@@ -28,8 +31,11 @@ def suppress_exceptions(func):
             try:
                 return func(*args, **kwargs)
             except Exception as e:
+                logger.error(
+                    f'Suppressed exception in {func.__name__}',
+                    exc_info=True,
+                )
                 sentry_sdk.capture_exception(e)
-                logger.error(f'Suppressed exception in {func.__name__}', exc_info=e)
 
     return decorator
 
