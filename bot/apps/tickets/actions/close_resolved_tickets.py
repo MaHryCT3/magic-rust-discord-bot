@@ -1,8 +1,9 @@
 import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import discord
 import sentry_sdk
+from discord import NotFound
 
 from bot.apps.tickets.actions.close_ticket import CloseTicketAction
 from bot.apps.tickets.constants import HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
@@ -23,8 +24,14 @@ class CloseResolvedTicketsAction(AbstractAction):
 
     guild: discord.Guild
 
+    _opened_tickets_service: OpenedTicketsService = field(
+        default_factory=OpenedTicketsService,
+        init=False,
+    )
+
     async def action(self):
-        tickets = await OpenedTicketsService().get_all_tickets()
+
+        tickets = await self._opened_tickets_service.get_all_tickets()
         for ticket in tickets:
             if ticket.resolved_at is None:
                 continue
@@ -33,6 +40,8 @@ class CloseResolvedTicketsAction(AbstractAction):
             if datetime.datetime.now(tz=settings.TIMEZONE) >= remove_ticket_at:
                 try:
                     await self._close_ticket(ticket)
+                except NotFound:
+                    await self._opened_tickets_service.delete_user_ticket(ticket)
                 except Exception as ex:
                     if settings.DEBUG:
                         raise ex from None
