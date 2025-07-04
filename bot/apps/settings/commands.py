@@ -43,6 +43,11 @@ class SettingsCog(commands.Cog):
         description='Настройка разбана',
     )
 
+    voice_activity_subgroup = settings_group.create_subgroup(
+        'voice_activity',
+        description='Настройка голосовой активности',
+    )
+
     def __init__(self, bot: 'MagicRustBot'):
         self.bot = bot
         self.servicing_posts_settings = ServicingPostsSettingsService()
@@ -278,6 +283,50 @@ class SettingsCog(commands.Cog):
             f'Канал модерирования тикетов изменен на {channel.mention}',
             ephemeral=True,
             delete_after=10,
+        )
+
+    @voice_activity_subgroup.command(
+        name='add_ignore_role',
+        description='Добавить роль для игнорирования сбора активности',
+    )
+    async def voice_activity_add_ignore_role(self, ctx: discord.ApplicationContext, role: discord.Role):
+        roles = dynamic_settings.voice_activity_ignore_roles
+        if role.id in roles:
+            return await ctx.respond(
+                f'Роль {role.mention} уже добавлена',
+                delete_after=10,
+                ephemeral=True,
+            )
+        roles.append(role.id)
+        dynamic_settings.voice_activity_ignore_roles = roles
+
+        logger.info(f'{ctx.author}:{ctx.author.id} добавил {role.mention}|{role.id} в игнор сбора активности')
+        await ctx.respond(
+            f'Роль {role.mention} добавлена в игнор сбора активности',
+            delete_after=10,
+            ephemeral=True,
+        )
+
+    @voice_activity_subgroup.command(
+        name='delete_ignore_role',
+        description='Удалить роль для игнорирования сбора активности',
+    )
+    async def voice_activity_delete_ignore_role(self, ctx: discord.ApplicationContext, role: discord.Role):
+        roles = dynamic_settings.voice_activity_ignore_roles
+        if role.id not in roles:
+            return await ctx.respond(
+                f'Роль {role.mention} и так не в списке',
+                delete_after=10,
+                ephemeral=True,
+            )
+        roles.remove(role.id)
+        dynamic_settings.voice_activity_ignore_roles = roles
+
+        logger.info(f'{ctx.author}:{ctx.author.id} убрал {role.mention}|{role.id} из игнора сбора активности')
+        await ctx.respond(
+            f'Роль {role.mention} убрана из игнора сбор активности',
+            delete_after=10,
+            ephemeral=True,
         )
 
     @settings_group.command(description='Выгрузка настроек')

@@ -30,9 +30,17 @@ class SendActivityAction(AbstractAction):
         # Канал для создания каналов юзер находится меньше секунды, не имеет смысла записывать
         return dynamic_settings.channel_creating_channels.values()
 
+    @property
+    def ignore_roles_ids(self):
+        return dynamic_settings.voice_activity_ignore_roles
+
     async def action(self):
         if self.voice_state.channel.id in self.ignore_channel_ids:
             return
+
+        for role in self.member.roles:
+            if role and role.id in self.ignore_roles_ids:
+                return
 
         activity_message = ActivityMessage(
             datetime=datetime.datetime.now(tz=settings.TIMEZONE),
