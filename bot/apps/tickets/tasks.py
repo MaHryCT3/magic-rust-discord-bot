@@ -16,6 +16,7 @@ class TasksCog(Cog):
     async def on_ready(self):
         self.guild = await self.bot.get_or_fetch_main_guild()
 
+        await self.bot.wait_until_ready()
         self.close_resolved_tickets.start()
         self.timeout_all_reviews.start()
 
@@ -28,7 +29,7 @@ class TasksCog(Cog):
     async def close_resolved_tickets(self):
         await CloseResolvedTicketsAction(self.guild).execute()
 
-    @tasks.loop(minutes=31)
+    @tasks.loop(minutes=30)
     @suppress_exceptions
     async def timeout_all_reviews(self):
         await ReviewTimeoutAction(self.bot).execute()
