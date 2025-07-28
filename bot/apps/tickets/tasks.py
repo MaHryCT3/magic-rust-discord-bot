@@ -1,3 +1,5 @@
+import asyncio
+
 from discord import Cog
 from discord.ext import tasks
 
@@ -27,6 +29,7 @@ class TasksCog(Cog):
     @tasks.loop(minutes=5)
     @suppress_exceptions
     async def close_resolved_tickets(self):
+        await asyncio.sleep(10)
         await CloseResolvedTicketsAction(self.guild).execute()
 
     @tasks.loop(minutes=30)
