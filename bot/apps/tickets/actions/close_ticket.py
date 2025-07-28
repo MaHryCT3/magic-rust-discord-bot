@@ -31,7 +31,7 @@ from core.shortcuts import get_or_fetch_member
 @dataclass
 class CloseTicketAction(AbstractAction):
     channel: discord.TextChannel
-    closed_by: discord.Member
+    closed_by: discord.Member | None = None
 
     _opened_tickets_service: OpenedTicketsService = field(
         default_factory=OpenedTicketsService,

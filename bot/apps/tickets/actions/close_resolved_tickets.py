@@ -50,7 +50,10 @@ class CloseResolvedTicketsAction(AbstractAction):
 
     async def _close_ticket(self, ticket: OpenedTicketStruct):
         channel = await get_or_fetch_channel(self.guild, ticket.channel_id)
-        closed_by = await get_or_fetch_member(self.guild, ticket.user_id)
+        try:
+            closed_by = await get_or_fetch_member(self.guild, ticket.user_id)
+        except NotFound:
+            closed_by = None
         await CloseTicketAction(
             channel=channel,
             closed_by=closed_by,
