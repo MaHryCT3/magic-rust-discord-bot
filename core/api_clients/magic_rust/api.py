@@ -24,6 +24,9 @@ class MagicRustServerDataAPI:
             if self._is_monitoring_server_data_valid(server_data)
         ]
 
+    async def get_discord_server_data(self) -> list:
+        servers_data = await self.http_client.get('api/getDiscordOnline')
+
     @cached(ttl=API_GET_REQUEST_CACHE_TIME)
     async def get_full_servers_data(self) -> list[FullServerData]:
         servers_data = await self.http_client.get('api/getOnline', headers={'Content-Type': 'text/html'})

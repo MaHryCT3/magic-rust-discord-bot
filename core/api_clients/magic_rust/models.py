@@ -106,6 +106,10 @@ class CombinedServerData(FullServerData, MonitoringServerData):
         return cls(**(full_server_data.model_dump(by_alias=True) | monitoring_server_data.model_dump(by_alias=True)))
 
 
+class MagicRustServerData(BaseModel):
+    ip: str
+
+
 LIMIT_LABELS = {
     LimitEnum.NO_LIMIT: 'NO LIMIT',
     LimitEnum.SOLO: 'SOLO',
