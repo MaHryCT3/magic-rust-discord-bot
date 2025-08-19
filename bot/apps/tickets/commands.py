@@ -85,22 +85,6 @@ class CommandsTicketsCog(Cog):
             ephemeral=True,
         )
 
-    @ticket_group.command()
-    async def test(self, ctx: discord.ApplicationContext):
-        import io
-
-        from chat_exporter import chat_exporter
-
-        exported = await chat_exporter.export(
-            channel=ctx.channel,
-        )
-        chat_history_file = discord.File(
-            io.BytesIO(exported.encode()),
-            filename='forum-test.html',
-        )
-
-        await ctx.author.send('форум', file=chat_history_file)
-
     async def cog_command_error(self, ctx: discord.ApplicationContext, error: TicketError):
         if isinstance(error, TicketError):
             return await ctx.respond(error.message, ephemeral=True)
