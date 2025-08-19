@@ -3,7 +3,7 @@ from math import ceil
 
 from PIL import Image
 
-from core.api_clients.magic_rust import CombinedServerData, MagicRustServerDataAPI
+from core.api_clients.magic_rust import MagicRustServerData, MagicRustServerDataAPI
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.exceptions import NoAPIDataException
 from image_generator.image_templates import Header, ServerCard
@@ -41,15 +41,15 @@ def load_image(path: str) -> Image.Image:
     return image
 
 
-async def get_combined_servers_data() -> list[CombinedServerData]:
-    return await MagicRustServerDataAPI().get_combined_servers_data()
+async def get_combined_servers_data() -> list[MagicRustServerData]:
+    return await MagicRustServerDataAPI().get_server_data()
 
 
 def get_server_status_image() -> Image.Image:
     servers_data = asyncio.run(get_combined_servers_data())
     if not servers_data:
         raise NoAPIDataException()
-    servers_data.sort(key=lambda item: item.num)
+    servers_data.sort(key=lambda item: item.server_number)
     count = (ceil(len(servers_data) / SERVERS_STATUS_CARD_COUNT_HORIZONTAL), SERVERS_STATUS_CARD_COUNT_HORIZONTAL)
     card_image: Image.Image = load_image(CARD_IMAGE_PATH)
     text_image: Image.Image = load_image(CARD_TEXT_IMAGE_PATH)
@@ -65,14 +65,17 @@ def get_server_status_image() -> Image.Image:
                 continue
             server_data = servers_data[server_num]
             progress = players_to_progress(
-                server_data.maxplayers, server_data.players, server_data.joining, server_data.queue
+                server_data.players_max,
+                server_data.players_online,
+                server_data.players_joining,
+                server_data.players_in_queue,
             )
             image = card.build(
                 server_data.title,
                 server_data.map,
                 progress,
-                server_data.players,
-                server_data.maxplayers,
+                server_data.players_online,
+                server_data.players_max,
             )
             result.paste(image, (image.size[0] * j, image.size[1] * i))
     return result

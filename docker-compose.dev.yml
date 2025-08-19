@@ -15,6 +15,8 @@ services:
       dockerfile: ./image_generator/Dockerfile
     tty: true
     command: python -m image_generator
+    volumes:
+      - .:/app
   
   bot:
     env_file:
@@ -23,3 +25,5 @@ services:
       dockerfile: ./bot/Dockerfile
     tty: true
     command: python -m bot
+    volumes:
+      - .:/app
