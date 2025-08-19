@@ -8,9 +8,8 @@ from bot.apps.reports.errors import UserReportCooldownError
 from bot.apps.reports.services.cooldowns import report_cooldown
 from bot.apps.reports.services.report_sender import ChatTypes, ReportVKSender
 from core.api_clients.magic_rust import (
-    CombinedServerData,
-    ServerTypes,
-    get_only_server_name_from_title,
+    GameModeTypes,
+    MagicRustServerData,
 )
 from core.localization import LocaleEnum
 from core.ui.modals import BaseLocalizationModal, InputText
@@ -55,12 +54,11 @@ class BaseReportModal(BaseLocalizationModal):
         LocaleEnum.ru: 'Жалоба отправлена. Спасибо за обращение',
     }
 
-    def __init__(self, *args, server: CombinedServerData, **kwargs):
+    def __init__(self, *args, server: MagicRustServerData, **kwargs):
         self.server = server
         super().__init__(*args, **kwargs)
-        self.server_short_name = get_only_server_name_from_title(server.title)
 
-        title = self.title_localization_map[self.locale].format(server_name=self.server_short_name)
+        title = self.title_localization_map[self.locale].format(server_name=self.server.short_title)
         self.title = title[: self.MAX_SERVER_NAME_LENGTH_IN_TITLE]
 
     async def callback(self, interaction: Interaction):
@@ -82,7 +80,7 @@ class BaseReportModal(BaseLocalizationModal):
 
     def _get_report_message(self, interaction: Interaction):
         return VK_REPORT_MESSAGE_TEMPLATE.format(
-            server_name=self.server_short_name,
+            server_name=self.server.short_title,
             discord_name=interaction.user.name,
             discord_id=interaction.user.id,
             players=self.player_info_input,
@@ -109,7 +107,7 @@ class CheaterReportModal(BaseReportModal):
         await ReportVKSender().send_message(chat_type, message=message)
 
     def _get_vk_chat_type_for_server(self) -> ChatTypes:
-        if self.server.server_type == ServerTypes.OFFICIAL:
+        if self.server.game_mode == GameModeTypes.VANILLA:
             return ChatTypes.OFFICIAL
         return ChatTypes.MODDED
 

@@ -30,7 +30,7 @@ def update_server_status_image():
     with BytesIO() as image_binary:
         image.save(image_binary, 'PNG', compress_level=0)
         image_binary.seek(0)
-        images_storage.set(SERVER_STATUS_IMAGE_KEY, image_binary.getvalue(), IMAGE_EXPIRATION_TIME)
+        images_storage.set(SERVER_STATUS_IMAGE_KEY, image_binary.getvalue(), 9999999999)
     logger.info('Updated server status image')
 
 

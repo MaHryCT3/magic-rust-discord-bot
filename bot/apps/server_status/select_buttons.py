@@ -136,12 +136,8 @@ class MapSelect(BaseFilterSelect):
 
     @classmethod
     def _get_default_options(cls, _locale: LocaleEnum):
-        options = [
-            discord.SelectOption(label='-', value=EmptyEnum.EMPTY),
-            discord.SelectOption(label=Maps.PRECEDURAL_PLUS),
-            discord.SelectOption(label=Maps.BARREN_PLUS),
-            discord.SelectOption(label=Maps.CUSTOM),
-        ]
+        maps_options = [discord.SelectOption(label=map) for map in Maps]
+        options = [discord.SelectOption(label='-', value=EmptyEnum.EMPTY), *maps_options]
         return options
 
     def on_value_changed(self, value: str | None):

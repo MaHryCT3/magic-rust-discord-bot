@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import discord
 
-from core.api_clients.magic_rust import CombinedServerData
+from core.api_clients.magic_rust import MagicRustServerData
 from core.api_clients.magic_rust.models import GAME_MODE_LABELS
 from core.localization import LocaleEnum, LocalizationDict, day_name
 from core.utils.colors import get_random_blue_color
@@ -34,17 +34,17 @@ class ServerInfoEmbed(discord.Embed):
         }
     )
 
-    def add_server(self, server_data: CombinedServerData, locale: LocaleEnum = LocaleEnum.ru):
+    def add_server(self, server_data: MagicRustServerData, locale: LocaleEnum = LocaleEnum.ru):
         self.add_field(
             name=f'{server_data.title}',
             value=f'>>> -# {server_data.ip}\n\
-            {GAME_MODE_LABELS[server_data.gm]}\n\
+            {GAME_MODE_LABELS[server_data.game_mode]}\n\
             {server_data.map}\n\
-            {server_data.limit.get_label()}\n\
-            {server_data.players}/{server_data.maxplayers}\n\
-            {self.wipe_label_localization[locale]}{day_name(server_data.wipeday, locale)}',
+            {server_data.player_limit.get_label()}\n\
+            {server_data.players_online}/{server_data.players_max}\n\
+            {self.wipe_label_localization[locale]}{day_name(server_data.wipe_day, locale)}',
         )
 
-    def add_servers(self, servers_data: Iterable[CombinedServerData], locale: LocaleEnum):
+    def add_servers(self, servers_data: Iterable[MagicRustServerData], locale: LocaleEnum):
         for server in servers_data:
             self.add_server(server, locale=locale)

@@ -6,7 +6,7 @@ from bot.apps.reports.ui.modals import (
     CheaterReportModal,
     LimitReportModal,
 )
-from core.api_clients.magic_rust import CombinedServerData
+from core.api_clients.magic_rust import MagicRustServerData
 from core.localization import LocaleEnum, day_name
 from core.utils.date_time import WeekDay
 
@@ -24,12 +24,12 @@ class BaseServerSelectView(discord.ui.View):
 
     modal_to_send: type[BaseReportModal]
 
-    def __init__(self, servers: list[CombinedServerData], locale: LocaleEnum):
+    def __init__(self, servers: list[MagicRustServerData], locale: LocaleEnum):
         self.servers = servers
         self.locale = locale
 
         # WIPE DAY SELECTOR
-        available_servers_wipe_days = {server.wipeday for server in self.servers}
+        available_servers_wipe_days = {server.wipe_day for server in self.servers}
         select_server_wipe_day = discord.ui.Select(
             select_type=discord.ComponentType.string_select,
             options=[
@@ -60,19 +60,20 @@ class BaseServerSelectView(discord.ui.View):
         return WeekDay(int(value))
 
     @property
-    def filtered_servers(self) -> list[CombinedServerData]:
-        return [server for server in self.servers if server.wipeday == self.selected_wipe_day]
+    def filtered_servers(self) -> list[MagicRustServerData]:
+        return [server for server in self.servers if server.wipe_day == self.selected_wipe_day]
 
     @property
-    def selected_server(self) -> CombinedServerData:
+    def selected_server(self) -> MagicRustServerData:
         for server in self.servers:
-            if server.title == self._server_select.values[0]:
+            if server.short_title == self._server_select.values[0]:
                 return server
 
     async def _select_server_wipe_day_callback(self, interaction: Interaction):
         self._server_select.options = [
             discord.SelectOption(
                 label=server.title,
+                value=server.short_title,
             )
             for server in self.filtered_servers
         ]

@@ -87,15 +87,16 @@ class CommandsTicketsCog(Cog):
 
     @ticket_group.command()
     async def test(self, ctx: discord.ApplicationContext):
-        from chat_exporter import chat_exporter
         import io
+
+        from chat_exporter import chat_exporter
 
         exported = await chat_exporter.export(
             channel=ctx.channel,
         )
         chat_history_file = discord.File(
             io.BytesIO(exported.encode()),
-            filename=f'forum-test.html',
+            filename='forum-test.html',
         )
 
         await ctx.author.send('форум', file=chat_history_file)
