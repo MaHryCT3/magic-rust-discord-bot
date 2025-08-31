@@ -40,7 +40,13 @@ class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Messag
         return threads + archived_threads
 
     async def _get_threads_export_messages(self, thread: discord.Thread) -> list[discord.Message]:
-        return [message async for message in thread.history(oldest_first=True)]
+        return [
+            message
+            async for message in thread.history(
+                oldest_first=True,
+                limit=None,
+            )
+        ]
 
     async def _is_thread_fit(self, thread: discord.Thread) -> bool:
         last_message = thread.last_message

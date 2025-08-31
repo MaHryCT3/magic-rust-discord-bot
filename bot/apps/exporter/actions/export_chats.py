@@ -38,6 +38,7 @@ class ExportChatsAction(AbstractAction[dict[discord.TextChannel, list[discord.Me
             async for message in channel.history(
                 before=self.date_to,
                 after=self.date_from,
+                limit=None,
                 oldest_first=True,
             )
         ]
