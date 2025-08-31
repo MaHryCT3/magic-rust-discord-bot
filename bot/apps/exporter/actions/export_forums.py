@@ -37,7 +37,7 @@ class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Messag
         async for thread in channel.archived_threads(limit=None):
             archived_threads.append(thread)
 
-            if not self._is_thread_fit(thread):
+            if not await self._is_thread_fit(thread):
                 break
 
         threads: list[discord.Thread] = [thread for thread in channel.threads if await self._is_thread_fit(thread)]
