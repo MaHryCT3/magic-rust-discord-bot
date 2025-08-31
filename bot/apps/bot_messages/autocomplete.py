@@ -7,7 +7,7 @@ from dateutil.rrule import HOURLY, MINUTELY, rrule
 from bot.apps.bot_messages.exceptions import SendTimeInPastError, SendTimeParseError
 from bot.config import settings
 from bot.constants import DATETIME_FORMAT, TIME_FORMAT
-from core.utils.date_time import add_timezone_info
+from core.utils.date_time import add_timezone
 from core.utils.math import round_to_value
 
 SUGGESTION_COUNT: Final[int] = 10
@@ -32,7 +32,7 @@ def parse_autocomplete_time(raw_time: str) -> datetime.datetime | None:
 def _parse_complete_time(raw_time: str) -> datetime.datetime:
     if '.' in raw_time:
         dt = datetime.datetime.strptime(raw_time, DATETIME_FORMAT)
-        dt = add_timezone_info(dt, settings.TIMEZONE)
+        dt = add_timezone(dt, settings.TIMEZONE)
         return dt
 
     hour, minute = raw_time.split(':')

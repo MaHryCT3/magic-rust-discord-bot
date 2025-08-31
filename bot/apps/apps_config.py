@@ -61,4 +61,7 @@ APPS = {
     'voice_records': AppConfig(
         intents=Intents.none(),
     ),
+    'exporter': AppConfig(
+        Intents.none(),
+    ),
 }
