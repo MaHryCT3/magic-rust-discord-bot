@@ -28,7 +28,7 @@ class Month(IntEnum):
     DECEMBER = 12
 
 
-def add_timezone_info(dt: datetime, tz: timezone) -> datetime:
+def add_timezone(dt: datetime, tz: timezone) -> datetime:
     """Добавляет таймзону не изменяя время"""
     return datetime.combine(dt.date(), dt.time(), tzinfo=tz)
 

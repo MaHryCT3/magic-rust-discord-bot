@@ -9,6 +9,7 @@ from bot.apps.servicing_posts.services.settings import ServicingPostsSettingsSer
 from bot.dynamic_settings import dynamic_settings
 from core.localization import LocaleEnum
 from core.logger import logger
+from core.shortcuts import get_or_fetch_channel
 
 if TYPE_CHECKING:
     from bot import MagicRustBot
@@ -24,6 +25,7 @@ class SettingsCog(commands.Cog):
         ),
         contexts={discord.InteractionContextType.guild},
     )
+
     find_friends_subgroup = settings_group.create_subgroup(
         'find_friends',
         description='Настройка команды поиска друга',
@@ -46,6 +48,11 @@ class SettingsCog(commands.Cog):
     voice_activity_subgroup = settings_group.create_subgroup(
         'voice_activity',
         description='Настройка голосовой активности',
+    )
+
+    export = settings_group.create_subgroup(
+        'export',
+        description='Настройка выгрузки',
     )
 
     def __init__(self, bot: 'MagicRustBot'):
@@ -326,6 +333,83 @@ class SettingsCog(commands.Cog):
         await ctx.respond(
             f'Роль {role.mention} убрана из игнора сбор активности',
             delete_after=10,
+            ephemeral=True,
+        )
+
+    @export.command(
+        name='add_channel',
+        description='Добавить канал для выгрузки',
+    )
+    async def export_add_channel(
+        self,
+        ctx: discord.ApplicationContext,
+        channel: discord.TextChannel | discord.ForumChannel,
+    ):
+        channels = dynamic_settings.default_export_channels
+        if channel.id in channels:
+            await ctx.respond(
+                f'Канал {channels.mention} уже добавлен',
+                delete_after=10,
+                ephemeral=True,
+            )
+            return
+
+        channels.append(channel.id)
+        dynamic_settings.default_export_channels = channels
+
+        logger.info(f'{ctx.author}:{ctx.author.id} добавил {channel.mention}|{channel.id} в выгрузку')
+        await ctx.respond(
+            f'Канал {channel.mention} добавлен в выгрузку',
+            delete_after=10,
+            ephemeral=True,
+        )
+
+    @export.command(
+        name='delete_chanel',
+        description='Удалить канал из выгрузки',
+    )
+    async def export_delete_channel(
+        self,
+        ctx: discord.ApplicationContext,
+        channel: discord.TextChannel | discord.ForumChannel,
+    ):
+        channels = dynamic_settings.default_export_channels
+        if channel.id not in channels:
+            await ctx.respond(
+                f'Канал {channel.mention} и так не в списке',
+                delete_after=10,
+                ephemeral=True,
+            )
+            return
+
+        channels.remove(channel.id)
+        dynamic_settings.ticket_roles_ids = channels
+
+        logger.info(f'{ctx.author}:{ctx.author.id} убрал {channel.mention}|{channel.id} из экспорта')
+        await ctx.respond(
+            f'Канал {channel.mention} убрана из выгрузки',
+            delete_after=10,
+            ephemeral=True,
+        )
+
+    @export.command(
+        name='view_channels',
+        description='Посмотреть список каналов для выгрузки',
+    )
+    async def export_view_channels(self, ctx: discord.ApplicationContext):
+        channels_ids = dynamic_settings.default_export_channels
+
+        discord_channels: list[discord.TextChannel | discord.ForumChannel] = []
+        for channel_id in channels_ids:
+            discord_channel = await get_or_fetch_channel(ctx.guild, channel_id)
+            if discord_channel:
+                discord_channels.append(discord_channel)
+
+        channels_mentions = ', '.join([channel.mention for channel in discord_channels])
+        message = f'Каналы в выгрузке {channels_mentions}'
+        await ctx.respond(
+            message,
+            delete_after=len(channels_mentions) * 4,
             ephemeral=True,
         )
 
