@@ -27,7 +27,6 @@ class MakeExportFile(AbstractAction[discord.File]):
                 'id': message.id,
                 'message': message.content,
                 'time': int(message.created_at.timestamp()),
-                'room': message.channel.name,
                 'user': {
                     'id': message.author.id,
                     'username': message.author.name,
