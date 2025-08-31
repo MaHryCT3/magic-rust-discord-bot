@@ -48,7 +48,7 @@ class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Messag
             history = thread.history(limit=1)
             try:
                 last_message = await anext(history)
-            except StopIteration:
+            except StopAsyncIteration:
                 last_message = None
 
         if last_message:
