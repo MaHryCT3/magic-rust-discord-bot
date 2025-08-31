@@ -35,10 +35,10 @@ class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Messag
     async def _get_channel_threads(self, channel: discord.ForumChannel) -> list[discord.Thread]:
         archived_threads = []
         async for thread in channel.archived_threads(limit=None):
-            archived_threads.append(thread)
-
             if not await self._is_thread_fit(thread):
                 break
+
+            archived_threads.append(thread)
 
         threads: list[discord.Thread] = [thread for thread in channel.threads if await self._is_thread_fit(thread)]
         return threads + archived_threads
