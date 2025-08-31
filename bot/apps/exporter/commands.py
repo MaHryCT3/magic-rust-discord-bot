@@ -36,14 +36,24 @@ class ExporterCommandCog(commands.Cog):
         if not date_to:
             date_to = datetime.datetime.now(tz=settings.TIMEZONE)
 
+        await ctx.respond(
+            'Выгрузка в скором времени будет направлена в личные сообщения',
+            ephemeral=True,
+            delete_after=15,
+        )
+
         action = ExportChatsPipeline(
             guild=ctx.guild,
             date_from=date_from,
             date_to=date_to,
         )
-        files = await action.execute()
 
-        await ctx.followup.send(
+        try:
+            files = await action.execute()
+        except Exception:
+            return await ctx.author.send('Произошла непредвиденная ошибка при выгрузке чатов :(')
+
+        await ctx.author.send(
             f'Выгрузка чатов и форумов {date_from.strftime(DATE_FORMAT)} - {date_to.strftime(DATE_FORMAT)}',
             files=files,
         )
