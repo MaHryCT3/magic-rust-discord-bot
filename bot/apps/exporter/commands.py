@@ -43,8 +43,7 @@ class ExporterCommandCog(commands.Cog):
         )
         files = await action.execute()
 
-        await ctx.respond(
+        await ctx.followup.send(
             f'Выгрузка чатов и форумов {date_from.strftime(DATE_FORMAT)} - {date_to.strftime(DATE_FORMAT)}',
             files=files,
-            ephemeral=True,
         )
