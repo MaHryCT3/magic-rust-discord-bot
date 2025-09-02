@@ -1,7 +1,9 @@
+import datetime
 from enum import IntEnum, StrEnum
 
 from pydantic import BaseModel, Field, field_validator
 
+from bot.config import settings
 from core.utils.date_time import WeekDay
 
 
@@ -54,6 +56,17 @@ class MagicRustServerData(BaseModel):
         elif value not in Maps:
             return Maps.CUSTOM
         return value
+
+
+class MagicRustBan(BaseModel):
+    steamid: str
+    nickname: str
+    reason: str
+    time: int
+
+    @property
+    def date_time(self) -> datetime.datetime:
+        return datetime.datetime.fromtimestamp(self.time, tz=settings.TIMEZONE)
 
 
 LIMIT_LABELS = {

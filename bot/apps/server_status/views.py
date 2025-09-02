@@ -13,8 +13,8 @@ from bot.apps.server_status.select_buttons import (
     WipeDaySelect,
 )
 from core.api_clients.magic_rust import (
+    MagicRustAPI,
     MagicRustServerData,
-    MagicRustServerDataAPI,
     Maps,
 )
 from core.localization import LocaleEnum
@@ -66,7 +66,7 @@ class ServerFilterView(discord.ui.View):
         self._set_availible_selects()
 
     async def update_server_data(self):
-        self.server_data = await MagicRustServerDataAPI().get_server_data()
+        self.server_data = await MagicRustAPI().get_server_data()
         self.server_data.sort(key=lambda item: item.server_number)
 
     @property

@@ -3,7 +3,7 @@ from math import ceil
 
 from PIL import Image
 
-from core.api_clients.magic_rust import MagicRustServerData, MagicRustServerDataAPI
+from core.api_clients.magic_rust import MagicRustAPI, MagicRustServerData
 from global_constants import DISCORD_ONLINE_PRESENCE_KEY, DISCORD_VOICE_PRESENCE_KEY
 from image_generator.exceptions import NoAPIDataException
 from image_generator.image_templates import Header, ServerCard
@@ -42,7 +42,7 @@ def load_image(path: str) -> Image.Image:
 
 
 async def get_combined_servers_data() -> list[MagicRustServerData]:
-    return await MagicRustServerDataAPI().get_server_data()
+    return await MagicRustAPI().get_server_data()
 
 
 def get_server_status_image() -> Image.Image:

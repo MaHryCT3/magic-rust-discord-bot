@@ -12,7 +12,7 @@ from bot.apps.reports.ui.server_select_view import (
     CheaterServerSelectView,
     LimitServerSelectView,
 )
-from core.api_clients.magic_rust import MagicRustServerDataAPI
+from core.api_clients.magic_rust import MagicRustAPI
 from core.localization import LocaleEnum, LocalizationDict
 
 
@@ -45,7 +45,7 @@ class BaseReportButton(discord.ui.Button):
         ):
             raise UserReportCooldownError(cooldown_end_timestamp=cooldown_end_at, locale=self.locale)
 
-        servers_data = await MagicRustServerDataAPI().get_server_data()
+        servers_data = await MagicRustAPI().get_server_data()
 
         select_server_view = self.select_view_class(servers_data, self.locale)
         await interaction.respond(

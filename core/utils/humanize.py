@@ -49,7 +49,7 @@ TIME_UNITS = [
 ]
 
 
-def human_time(seconds: int, locale: LocaleEnum, max_units: int = 2) -> str:
+def human_time(seconds: int, locale: LocaleEnum = LocaleEnum.ru, max_units: int = 2) -> str:
     units_forms = units_locale[locale]
     text_parts = []
 
