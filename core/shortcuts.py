@@ -40,3 +40,8 @@ async def get_or_fetch_user_message(bot: discord.Client, user_id: int, message_i
 
     user = await get_or_fetch_user(bot, user_id)
     return await user.fetch_message(message_id)
+
+
+async def fetch_active_forum_threads(channel: discord.ForumChannel) -> list[discord.Thread]:
+    active_threads = await channel.guild.active_threads()
+    return [thread for thread in active_threads if thread.parent_id == channel.id]

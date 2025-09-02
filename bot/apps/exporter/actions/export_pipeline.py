@@ -34,10 +34,10 @@ class ExportChatsPipeline(AbstractAction):
 
     @property
     def filename_template(self) -> str:
-        return 'exported_{}_{}_{}.json'.format(
+        return 'exported_{}_{}-{}.json'.format(
             '{}',
-            self.date_from.strftime('%Y%m%d'),
-            self.date_to.strftime('%Y%m%d'),
+            self.date_from.strftime('%d_%m_%Y'),
+            self.date_to.strftime('%d_%m_%y'),
         )
 
     async def action(self) -> list[discord.File]:

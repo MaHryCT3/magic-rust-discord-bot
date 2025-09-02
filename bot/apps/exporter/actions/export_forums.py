@@ -5,7 +5,7 @@ import discord
 
 from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction
-from core.shortcuts import get_or_fetch_channel
+from core.shortcuts import fetch_active_forum_threads, get_or_fetch_channel
 
 
 @dataclass
@@ -40,7 +40,9 @@ class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Messag
 
             archived_threads.append(thread)
 
-        threads: list[discord.Thread] = [thread for thread in channel.threads if await self._is_thread_fit(thread)]
+        threads: list[discord.Thread] = [
+            thread for thread in await fetch_active_forum_threads(channel) if await self._is_thread_fit(thread)
+        ]
         return threads + archived_threads
 
     async def _get_threads_export_messages(self, thread: discord.Thread) -> list[discord.Message]:
