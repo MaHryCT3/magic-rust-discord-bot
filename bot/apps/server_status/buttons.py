@@ -1,6 +1,6 @@
 import discord
 
-from core.api_clients.magic_rust import MagicRustServerDataAPI
+from core.api_clients.magic_rust import MagicRustAPI
 from core.localization import LocaleEnum, LocalizationDict
 
 
@@ -23,7 +23,7 @@ class FindServerButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         from bot.apps.server_status.views import ServerFilterView
 
-        server_data = await MagicRustServerDataAPI().get_server_data()
+        server_data = await MagicRustAPI().get_server_data()
         await interaction.response.send_message(
             view=ServerFilterView(locale=self.locale, server_data=server_data),
             ephemeral=True,
