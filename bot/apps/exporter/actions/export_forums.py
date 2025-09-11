@@ -3,45 +3,33 @@ from dataclasses import dataclass
 
 import discord
 
-from bot.dynamic_settings import dynamic_settings
 from core.actions.abstract import AbstractAction
-from core.shortcuts import fetch_active_forum_threads, get_or_fetch_channel
+from core.shortcuts import fetch_active_forum_threads
 
 
 @dataclass
-class ExportForumsAction(AbstractAction[dict[discord.Thread, list[discord.Message]]]):
-    guild: discord.Guild
+class ExportForumAction(AbstractAction[dict[discord.Thread, list[discord.Message]]]):
     date_from: datetime.datetime
     date_to: datetime.datetime
-    channels: list[discord.ForumChannel] | None = None
+    forum: discord.ForumChannel
 
     async def action(self) -> dict[discord.Thread, list[discord.Message]]:
-        channels = self.channels or await self._get_default_export_channels()
-
         result: dict[discord.Thread, list[discord.Message]] = {}
-        for channel in channels:
-            threads = await self._get_channel_threads(channel)
-            for thread in threads:
-                result[thread] = await self._get_threads_export_messages(thread)
+        threads = await self._get_channel_threads()
+        for thread in threads:
+            result[thread] = await self._get_threads_export_messages(thread)
         return result
 
-    async def _get_default_export_channels(self) -> list[discord.ForumChannel]:
-        channels = [
-            await get_or_fetch_channel(self.guild, channel_id)
-            for channel_id in dynamic_settings.default_export_channels
-        ]
-        return [channel for channel in channels if isinstance(channel, discord.ForumChannel)]
-
-    async def _get_channel_threads(self, channel: discord.ForumChannel) -> list[discord.Thread]:
+    async def _get_channel_threads(self) -> list[discord.Thread]:
         archived_threads = []
-        async for thread in channel.archived_threads(limit=None):
+        async for thread in self.forum.archived_threads(limit=None):
             if not await self._is_thread_fit(thread):
                 break
 
             archived_threads.append(thread)
 
         threads: list[discord.Thread] = [
-            thread for thread in await fetch_active_forum_threads(channel) if await self._is_thread_fit(thread)
+            thread for thread in await fetch_active_forum_threads(self.forum) if await self._is_thread_fit(thread)
         ]
         return threads + archived_threads
 

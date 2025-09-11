@@ -348,7 +348,7 @@ class SettingsCog(commands.Cog):
         channels = dynamic_settings.default_export_channels
         if channel.id in channels:
             await ctx.respond(
-                f'Канал {channels.mention} уже добавлен',
+                f'Канал {channel.mention} уже добавлен',
                 delete_after=10,
                 ephemeral=True,
             )
