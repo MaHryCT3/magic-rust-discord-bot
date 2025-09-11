@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 import discord
 
+from bot.config import settings
+from bot.constants import DATETIME_FORMAT
 from core.actions.abstract import AbstractAction
 
 
@@ -26,7 +28,7 @@ class MakeExportFile(AbstractAction[discord.File]):
             {
                 'id': message.id,
                 'message': message.content,
-                'time': int(message.created_at.timestamp()),
+                'time': message.created_at.astimezone(tz=settings.TIMEZONE).strftime(DATETIME_FORMAT),
                 'user': {
                     'id': message.author.id,
                     'username': message.author.name,
