@@ -101,7 +101,6 @@ class LimitSelect(BaseFilterSelect):
 
 class WipeDaySelect(BaseFilterSelect):
     placeholder_localization = {LocaleEnum.ru: 'День вайпа', LocaleEnum.en: 'Wipe day'}
-    POSSIBLE_DAYS = {WeekDay.MONDAY, WeekDay.THURSDAY, WeekDay.FRIDAY}
 
     @classmethod
     def build(cls, filter_view: 'ServerFilterView'):
@@ -114,7 +113,7 @@ class WipeDaySelect(BaseFilterSelect):
 
     @classmethod
     def _get_default_options(cls, locale: LocaleEnum):
-        options = [discord.SelectOption(label=day_name(day, locale), value=str(day)) for day in cls.POSSIBLE_DAYS]
+        options = [discord.SelectOption(label=day_name(day, locale), value=str(day)) for day in WeekDay]
         options.insert(0, discord.SelectOption(label='-', value=EmptyEnum.EMPTY))
         return options
 
