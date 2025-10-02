@@ -44,7 +44,7 @@ APPS = {
         intents=Intents.none() + Intents.guilds,
     ),
     'tickets': AppConfig(
-        intents=Intents.none() + Intents.guilds + Intents.members,
+        intents=Intents.none() + Intents.guilds + Intents.members + Intents.messages + Intents.message_content,
     ),
     'unban_tickets': AppConfig(
         intents=Intents.none() + Intents.guilds + Intents.guild_messages + Intents.message_content,

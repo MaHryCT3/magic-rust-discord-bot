@@ -1,6 +1,6 @@
 import asyncio
 
-from discord import Cog
+from discord.ext.commands import Cog
 from discord.ext import tasks
 
 from bot import MagicRustBot
@@ -9,7 +9,7 @@ from bot.apps.tickets.actions.review_timeout import ReviewTimeoutAction
 from core.utils.decorators import suppress_exceptions
 
 
-class TasksCog(Cog):
+class TicketTasksCog(Cog):
     def __init__(self, bot: MagicRustBot):
         self.bot = bot
         self.guild = None
