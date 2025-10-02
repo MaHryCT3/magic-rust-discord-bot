@@ -1,7 +1,7 @@
 import asyncio
 
-from discord.ext.commands import Cog
 from discord.ext import tasks
+from discord.ext.commands import Cog
 
 from bot import MagicRustBot
 from bot.apps.tickets.actions.close_resolved_tickets import CloseResolvedTicketsAction

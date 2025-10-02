@@ -1,5 +1,5 @@
-from discord.ext.commands import Cog
 import discord
+from discord.ext.commands import Cog
 
 from bot import MagicRustBot
 from bot.apps.tickets.actions.mark_ticket_as_resolved import MarkTicketAsResolvedAction

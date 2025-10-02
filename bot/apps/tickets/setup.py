@@ -1,8 +1,8 @@
 from bot.bot import MagicRustBot
 
 from .commands import CommandsTicketsCog
-from .tasks import TicketTasksCog
 from .events import TicketEventsCog
+from .tasks import TicketTasksCog
 
 
 def setup(bot: MagicRustBot):
