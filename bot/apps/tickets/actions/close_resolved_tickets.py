@@ -6,7 +6,7 @@ import sentry_sdk
 from discord import NotFound
 
 from bot.apps.tickets.actions.close_ticket import CloseTicketAction
-from bot.apps.tickets.constants import HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
+from bot.apps.tickets.constants import MINUTES_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
 from bot.apps.tickets.services.opened_tickets import (
     OpenedTicketsService,
     OpenedTicketStruct,
@@ -36,7 +36,9 @@ class CloseResolvedTicketsAction(AbstractAction):
             if ticket.resolved_at is None:
                 continue
 
-            remove_ticket_at = ticket.resolved_at + datetime.timedelta(hours=HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED)
+            remove_ticket_at = ticket.resolved_at + datetime.timedelta(
+                minutes=MINUTES_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
+            )
             if datetime.datetime.now(tz=settings.TIMEZONE) >= remove_ticket_at:
                 try:
                     await self._close_ticket(ticket)

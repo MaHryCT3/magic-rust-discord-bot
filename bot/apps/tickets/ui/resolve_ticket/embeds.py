@@ -3,7 +3,7 @@ from typing import Self
 
 import discord
 
-from bot.apps.tickets.constants import HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
+from bot.apps.tickets.constants import MINUTES_TO_CLOSE_TICKET_MARKED_AS_RESOLVED
 from bot.config import settings
 from bot.constants import MAIN_COLOR
 from core.localization import LocaleEnum
@@ -20,8 +20,8 @@ class ResolveTicketEmbed(discord.Embed):
     }
 
     footer_localization: dict[LocaleEnum, str] = {
-        LocaleEnum.ru: f'Тикет автоматически закроется через {HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED} час',
-        LocaleEnum.en: f'The ticket will automatically close after {HOURS_TO_CLOSE_TICKET_MARKED_AS_RESOLVED} hours',
+        LocaleEnum.ru: f'Тикет автоматически закроется через {MINUTES_TO_CLOSE_TICKET_MARKED_AS_RESOLVED} минут',
+        LocaleEnum.en: f'The ticket will automatically close after {MINUTES_TO_CLOSE_TICKET_MARKED_AS_RESOLVED} minutes',
     }
 
     @classmethod

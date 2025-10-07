@@ -26,7 +26,7 @@ class TicketTasksCog(Cog):
         self.close_resolved_tickets.stop()
         self.timeout_all_reviews.stop()
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=3)
     @suppress_exceptions
     async def close_resolved_tickets(self):
         await asyncio.sleep(10)
